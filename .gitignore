@@ -1,3 +1,8 @@
+# added for project so no one can get to your domain/data
+gam/*
+!gam/README.txt
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
