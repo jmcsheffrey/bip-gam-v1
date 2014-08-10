@@ -7,15 +7,19 @@ import os
 # setup to find GAM
 varCommandGam = "python ./gam/gam.py"
 
-varUserName = "crashtestdummy3"
-varFirstName = "Crash3"
-varLastName = `"Test Dummy"`
-varPassword = "BuckleUp"
-varUserAlias = "idontwearseatbelts3"
+varUserName = "joe_student@student.sscps.org"
+varFirstName = "Joe"
+varLastName = `"Student"`
+varPassword = ""
+varUserAlias = ""
 
+# general testing
 #argList=["info", "domain"]
-argList=["create", "user", varUserName, "firstname", varFirstName, "lastname", varLastName, "password", varPassword]
-print argList
-#os.system('python ./gam/gam.py %s' % ' '.join(argList))
-os.system(varCommandGam + ' %s' % ' '.join(argList))
+#argList=["create", "user", varUserName, "firstname", varFirstName, "lastname", varLastName, "password", varPassword]
+#print argList
+#os.system(varCommandGam + ' %s' % ' '.join(argList))
 
+# test get user information
+argList=["info", "user", varUserName, "noaliases nogroups"]
+print argList
+os.system(varCommandGam + ' %s' % ' '.join(argList))

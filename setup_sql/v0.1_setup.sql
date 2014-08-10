@@ -1,9 +1,31 @@
+CREATE TABLE `groups` (
+ `unique_id` varchar(8) CHARACTER SET latin1 NOT NULL,
+ `name` varchar(100) CHARACTER SET latin1 NOT NULL,
+ `group_name` varchar(100) CHARACTER SET latin1 NOT NULL,
+ `group_email` varchar(100) CHARACTER SET latin1 NOT NULL,
+ PRIMARY KEY (`unique_id`),
+ UNIQUE KEY `unique_id` (`unique_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `groups_members` (
+ `unique_id_group` varchar(8) CHARACTER SET latin1 NOT NULL,
+ `unique_id_user` varchar(8) CHARACTER SET latin1 NOT NULL,
+ `member_type` varchar(3) CHARACTER SET latin1 NOT NULL,
+ PRIMARY KEY (`unique_id_group`,`unique_id_user`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `sync_config` (
+ `config_name` varchar(20) CHARACTER SET latin1 NOT NULL,
+ `config_value` varchar(250) CHARACTER SET latin1 NOT NULL,
+ PRIMARY KEY (`config_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `sync_destination` (
  `sync_dest_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
  `sync_dest_name` varchar(100) NOT NULL,
  PRIMARY KEY (`sync_dest_id`),
  UNIQUE KEY `sync_dest_name` (`sync_dest_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=1003 DEFAULT CHARSET=utf8
+) ENGINE=InnoDB AUTO_INCREMENT=1003 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `sync_status_user` (
  `sync_dest_id` int(11) NOT NULL,
@@ -11,7 +33,7 @@ CREATE TABLE `sync_status_user` (
  `status` varchar(5) NOT NULL,
  `last_update` datetime NOT NULL,
  PRIMARY KEY (`sync_dest_id`,`unique_id_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `users` (
  `unique_id` varchar(8) NOT NULL,
@@ -26,14 +48,14 @@ CREATE TABLE `users` (
  PRIMARY KEY (`unique_id`),
  UNIQUE KEY `user_name` (`user_name`),
  UNIQUE KEY `email_address` (`email_address`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `users_stuviewers` (
  `unique_id_stu` varchar(8) CHARACTER SET utf8 NOT NULL,
  `unique_id_viewer` varchar(8) CHARACTER SET utf8 NOT NULL,
  `relationship` varchar(20) CHARACTER SET utf8 NOT NULL,
  UNIQUE KEY `stu_key` (`unique_id_stu`,`unique_id_viewer`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `systems` (
  `unique_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -74,4 +96,4 @@ CREATE TABLE `systems` (
  `NextYearLocation` varchar(50) DEFAULT NULL,
  PRIMARY KEY (`InternalSystemsID`),
  UNIQUE KEY `InternalSystemsID` (`InternalSystemsID`)
-) ENGINE=InnoDB AUTO_INCREMENT=200045 DEFAULT CHARSET=utf8
+) ENGINE=InnoDB AUTO_INCREMENT=200045 DEFAULT CHARSET=utf8;
