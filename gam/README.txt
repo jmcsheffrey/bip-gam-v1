@@ -16,7 +16,7 @@ basic steps.
   06.  Run "python gam.py info domain".
   07.  Choose appropriate scopes.
   08.  Authorize in appropriate method (local browser or "nobrowser.txt").
-  09.  Run "./test.py".
+  09.  Run "./test.py" (unless creating a test user is not appropriate).
   10.  Verify that user crashtestdummy@domain.org & alias of idontwearseatbelts
        were created.
 Additional help can be found at:

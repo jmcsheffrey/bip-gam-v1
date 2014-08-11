@@ -94,6 +94,6 @@ CREATE TABLE `systems` (
  `PurchaseDate` date DEFAULT NULL,
  `LastUpdateDate` date DEFAULT NULL,
  `NextYearLocation` varchar(50) DEFAULT NULL,
- PRIMARY KEY (`InternalSystemsID`),
- UNIQUE KEY `InternalSystemsID` (`InternalSystemsID`)
+ PRIMARY KEY (`unique_id`),
+ UNIQUE KEY `unique_id` (`unique_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=200045 DEFAULT CHARSET=utf8;

@@ -1,4 +1,4 @@
-# changes to be replicated on other systems
+-- changes to be replicated on other systems
 ALTER TABLE  `users_stuviewers` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 ALTER TABLE  `users` ADD  `referredto_name` VARCHAR( 100 ) NOT NULL ;
 ALTER TABLE  `sync_status_user` CHANGE  `unique_id`  `unique_id_user` VARCHAR( 8 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ;
