@@ -35,11 +35,11 @@ varRunTest = False
 if varRunTest:
   os.system('clear')
   varArgList=["info", "user", varUserName, "noaliases nogroups"]
-  print varArgList
+  #print varArgList
   os.system(varCommandGam + ' %s' % ' '.join(varArgList))
 
 
-# test user exists
+# test user exists & grab output
 varRunTest = False
 #varUserName = "blahblahblah@student.sscps.org"
 #varUserName = "joe_student@student.sscps.org"
@@ -57,17 +57,36 @@ if varRunTest:
   else:
     print varResults
 
-# get data from MySQLdb
+# create folder for user & grab folderId
 varRunTest = True
+varUserName = "sstaff@sscps.org"
+varToCreateFolderName = '"TPS Reports"'
+if varRunTest:
+  os.system('clear')
+  varArgList=["user", varUserName, "add drivefile drivefilename ", varToCreateFolderName, " mimetype gfolder"]
+  varResultsProc = subprocess.Popen([varCommandGam + ' %s' % ' '.join(varArgList)], stdout=subprocess.PIPE, shell=True)
+  (varResults, varErrors) = varResultsProc.communicate()
+  varFolderID = varResults[varResults.rfind("ID ") + 3:]
+  print varFolderID
+
+
+
+# get data from MySQLdb
+varRunTest = False
 if varRunTest:
   os.system('clear')
   varDBConnection = MySQLdb.connect(host=varMySQLHost, db=varMySQLDB, user=varMySQLUser, passwd=varMySQLPassword)
   varDBCursor = varDBConnection.cursor()
-  varDBCursor.execute('SELECT * FROM users WHERE email_address like %s',('%@student.sscps.org%',))
-  varDBResults = varDBCursor.fetchall()
-  print type(varDBResults)
-  print varDBResults[2]
-  #for i in varDBResults:
-    #print i.split()
+  varDBCursor.execute('SELECT first_name, last_name, user_name, email_address FROM users WHERE email_address like %s',('%@student.sscps.org%',))
+  #varDBResults = varDBCursor.fetchall()
+  #print varDBResults[2]
+  for (first_name, last_name, user_name, email_address) in varDBCursor:
+    print "user_name:  ", user_name
+  varDBCursor.close()
+  varDBConnection.close()
+
+
+
+
 
 

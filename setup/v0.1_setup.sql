@@ -1,22 +1,25 @@
 CREATE TABLE `groups` (
- `unique_id` varchar(8) CHARACTER SET latin1 NOT NULL,
- `name` varchar(100) CHARACTER SET latin1 NOT NULL,
- `group_name` varchar(100) CHARACTER SET latin1 NOT NULL,
- `group_email` varchar(100) CHARACTER SET latin1 NOT NULL,
+ `unique_id` varchar(8) NOT NULL,
+ `group_name` varchar(100) NOT NULL,
+ `group_email` varchar(100) NOT NULL,
+ `grouping` varchar(8) NOT NULL,
+ `department` varchar(50) NOT NULL,
+ `cohort` varchar(50) NOT NULL,
+ `schedule` varchar(100) NOT NULL,
  PRIMARY KEY (`unique_id`),
  UNIQUE KEY `unique_id` (`unique_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `groups_members` (
- `unique_id_group` varchar(8) CHARACTER SET latin1 NOT NULL,
- `unique_id_user` varchar(8) CHARACTER SET latin1 NOT NULL,
- `member_type` varchar(3) CHARACTER SET latin1 NOT NULL,
+ `unique_id_group` varchar(8) NOT NULL,
+ `unique_id_user` varchar(8) NOT NULL,
+ `member_type` varchar(3) NOT NULL,
  PRIMARY KEY (`unique_id_group`,`unique_id_user`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `sync_config` (
- `config_name` varchar(20) CHARACTER SET latin1 NOT NULL,
- `config_value` varchar(250) CHARACTER SET latin1 NOT NULL,
+ `config_name` varchar(20) NOT NULL,
+ `config_value` varchar(250) NOT NULL,
  PRIMARY KEY (`config_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -51,9 +54,9 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `users_stuviewers` (
- `unique_id_stu` varchar(8) CHARACTER SET utf8 NOT NULL,
- `unique_id_viewer` varchar(8) CHARACTER SET utf8 NOT NULL,
- `relationship` varchar(20) CHARACTER SET utf8 NOT NULL,
+ `unique_id_stu` varchar(8) NOT NULL,
+ `unique_id_viewer` varchar(8) NOT NULL,
+ `relationship` varchar(20) NOT NULL,
  UNIQUE KEY `stu_key` (`unique_id_stu`,`unique_id_viewer`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
