@@ -1,12 +1,23 @@
+CREATE TABLE `groupings` (
+ `unique_id` int(11) NOT NULL AUTO_INCREMENT,
+ `population` varchar(3) CHARACTER SET latin1 NOT NULL,
+ `name_short` varchar(2) CHARACTER SET latin1 NOT NULL,
+ `name_long` varchar(100) CHARACTER SET latin1 NOT NULL,
+ `google_id_folder` varchar(100) CHARACTER SET latin1 NOT NULL,
+ PRIMARY KEY (`unique_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
 CREATE TABLE `groups` (
  `unique_id` varchar(8) NOT NULL,
  `group_name` varchar(100) NOT NULL,
  `group_email` varchar(100) NOT NULL,
+ `group_folder` varchar(100) NOT NULL,
  `grouping` varchar(8) NOT NULL,
  `department` varchar(50) NOT NULL,
  `cohort` varchar(50) NOT NULL,
  `schedule` varchar(100) NOT NULL,
- PRIMARY KEY (`unique_id`),
+ `google_id_folder` varchar(100) NOT NULL,
+PRIMARY KEY (`unique_id`),
  UNIQUE KEY `unique_id` (`unique_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -18,7 +29,7 @@ CREATE TABLE `groups_members` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `sync_config` (
- `config_name` varchar(20) NOT NULL,
+ `config_name` varchar(50) NOT NULL,
  `config_value` varchar(250) NOT NULL,
  PRIMARY KEY (`config_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

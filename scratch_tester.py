@@ -5,6 +5,7 @@
 import os         # os.system for clearing screen and simple gam calls
 import subprocess # subprocess.Popen is to capture gam output (needed for user info in particular)
 import MySQLdb    # MySQLdb is to get data from relevant tables
+import csv        # CSV is used to read output of drive commands that supply data in CSV form
 
 
 # setup to find GAM
@@ -57,19 +58,49 @@ if varRunTest:
   else:
     print varResults
 
-# create folder for user & grab folderId
-varRunTest = True
-varUserName = "sstaff@sscps.org"
-varToCreateFolderName = '"TPS Reports"'
+# find folder/file by name & get folderId, NOTE:  only outputs first hit for multiple folders/files with same name
+varRunTest = False
+varUserName = "admin.google@sscps.org"
+varFolderNameToFind = `'SSCPS-TestDocs'`
+varFolderNameQueryToPass = ' query "title = ' + varFolderNameToFind + '"'
 if varRunTest:
   os.system('clear')
-  varArgList=["user", varUserName, "add drivefile drivefilename ", varToCreateFolderName, " mimetype gfolder"]
+  varArgList=["user", varUserName, " show filelist ", varFolderNameQueryToPass, " id"]
+  varResultsProc = subprocess.Popen([varCommandGam + ' %s' % ' '.join(varArgList)], stdout=subprocess.PIPE, shell=True)
+  (varResults, varErrors) = varResultsProc.communicate()
+  #to remove header row, not necessary if parse for CSV
+  #varResults = ''.join(varResults.splitlines(True)[1:])
+  varCSVDataSet = csv.reader(varResults.split('\n'), delimiter=',')
+  varCSVHeaders=[]
+  varCSVData=[]
+  varIDColumn = 999
+  varRowCount = 0
+  for row in varCSVDataSet:
+    varColCount = 0
+    for col in row:
+      if varRowCount == 0:
+        varCSVHeaders.append(col)
+        if col == 'id': 
+          varIDColumn = varColCount
+      elif varRowCount == 1:
+        varCSVData.append(col)
+      varColCount += 1
+    varRowCount += 1
+  print varCSVData[varIDColumn]
+
+
+
+# create folder for user & grab folderId
+varRunTest = False
+varUserName = "sstaff@sscps.org"
+varFolderNameToCreate = '"TPS Reports"'
+if varRunTest:
+  os.system('clear')
+  varArgList=["user", varUserName, "add drivefile drivefilename ", varFolderNameToCreate, " mimetype gfolder"]
   varResultsProc = subprocess.Popen([varCommandGam + ' %s' % ' '.join(varArgList)], stdout=subprocess.PIPE, shell=True)
   (varResults, varErrors) = varResultsProc.communicate()
   varFolderID = varResults[varResults.rfind("ID ") + 3:]
   print varFolderID
-
-
 
 # get data from MySQLdb
 varRunTest = False

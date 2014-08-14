@@ -1,11 +1,18 @@
 -- insert sample data
 
+-- for groupings
+INSERT INTO `sscpssynctest`.`groupings` (`unique_id`, `population`, `name_short`, `name_long`, `google_id_folder`) VALUES (NULL, 'STU', 'HS', 'Level HS', '0Byc5mfoLgdM3anpjY3Bpek1va0U');
+INSERT INTO `sscpssynctest`.`groupings` (`unique_id`, `population`, `name_short`, `name_long`, `google_id_folder`) VALUES (NULL, 'STU', '1', 'Level 1', '0Byc5mfoLgdM3ZWNvSUkxSUNzNUk');
+INSERT INTO `sscpssynctest`.`groupings` (`unique_id`, `population`, `name_short`, `name_long`, `google_id_folder`) VALUES (NULL, 'STU', '2', 'Level 2', '0Byc5mfoLgdM3ajhaMTJTRUs1Y0E');
+INSERT INTO `sscpssynctest`.`groupings` (`unique_id`, `population`, `name_short`, `name_long`, `google_id_folder`) VALUES (NULL, 'STU', '3', 'Level 3', '0Byc5mfoLgdM3SVFvZDJsbGU4b1U');
+INSERT INTO `sscpssynctest`.`groupings` (`unique_id`, `population`, `name_short`, `name_long`, `google_id_folder`) VALUES (NULL, 'STU', '4', 'Level 4', '0Byc5mfoLgdM3Z2Z0YjdZcG9zSWs');
+
 -- for groups
-INSERT INTO `groups` VALUES ('0013-01', 'Math5 - CJD (Sam)', 'CLS-Math5-CJD-Sam', '03', 'MATH', 'CJD', '');
-INSERT INTO `groups` VALUES ('0013-02', 'Math5 - CJD (Mr. T)', 'CLS-Math5-CJD-MrT', '03', 'MATH', 'CJD', '');
-INSERT INTO `groups` VALUES ('0019-01', 'Geometry - Block C (Sam)', 'CLS-Geometry-BlockC-Sam', 'HS', 'MATH', '', 'C12345');
-INSERT INTO `groups` VALUES ('0020-01', 'Stats - Block C (Mr. T)', 'CLS-Stats-BlockC-MrT', 'HS', 'MATH', '', 'C12345');
-INSERT INTO `groups` VALUES ('0022-01', 'Another Thing for HS FIT - Block A (Sam)', 'CLS-AnotherThingforHSFIT-BlockA-Sam', 'HS', 'FIT', '', 'A12345');
+INSERT INTO `groups` VALUES ('0013-01', 'CLS - Math5 - CJD (Sam)', 'cls-math5-cjd-sam@sscps.org', 'Math5 - CJD (Sam)', '03', 'MATH', 'CJD', '', '');
+INSERT INTO `groups` VALUES ('0013-02', 'CLS - Math5 - CJD (Mr. T)', 'cls-math5-cjd-mrt@sscps.org', 'Math5 - CJD (Mr. T)', '03', 'MATH', 'CJD', '', '');
+INSERT INTO `groups` VALUES ('0019-01', 'CLS - Geometry - Block C (Sam)', 'cls-geometry-blockc-sam@sscps.org', 'Geometry - Block C (Sam)', 'HS', 'MATH', '', 'C12345', '');
+INSERT INTO `groups` VALUES ('0020-01', 'CLS - Stats - Block C (Mr. T)', 'CLS-stats-blockc-mrt@sscps.org', 'Stats - Block C (Mr. T)', 'HS', 'MATH', '', 'C12345', '');
+INSERT INTO `groups` VALUES ('0022-01', 'CLS - Another Thing for HS FIT - Block A (Sam)', 'cls-anotherthingforhsfit-blocka-sam@sscps.org', 'Another Thing for HS FIT - Block A (Sam)', 'HS', 'FIT', '', 'A12345', '');
 
 -- for groups_members
 INSERT INTO `groups_members` VALUES ("0013-01","98101000","OWN");
@@ -59,7 +66,13 @@ insert into users_stuviewers values ("98101004", "97101000", "parent");
 insert into users_stuviewers values ("98101005", "97101001", "parent");
 insert into users_stuviewers values ("99101000", "98101000", "teacher");
 
+-- for sync_config
+INSERT INTO `sync_config` VALUES ('google_admin_owner', 'admin.google@sscps.org');
+INSERT INTO `sync_config` VALUES ('google_folder_base', '0Byc5mfoLgdM3WU82MS1WeWVDc2M');
+INSERT INTO `sync_config` VALUES ('google_folder_student', '0Byc5mfoLgdM3RG9fZnFrckwwOGM');
+
 -- for sync_destination table
 insert into sync_destination values ("1001", "Active Directory");
 insert into sync_destination values ("1002", "Google Apps");
+
 
