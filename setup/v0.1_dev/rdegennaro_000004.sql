@@ -23,8 +23,6 @@ PRIMARY KEY (`unique_id`),
  UNIQUE KEY `unique_id` (`unique_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-
 -- table mods
 ALTER TABLE  `groups` ADD  `google_id_folder` VARCHAR( 100 ) NOT NULL ;
 ALTER TABLE  `sync_config` CHANGE  `config_name` `config_name` VARCHAR( 50 ) NOT NULL ;
