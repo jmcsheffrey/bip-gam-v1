@@ -1,8 +1,7 @@
-GAM (https://code.google.com/p/google-apps-manager/) should reside here, in a 
-directory named "gam".  All other source files should look for GAM at that
-location.  
+GAM (http://www.ditoweb.com/dito-gam) should reside here, in a directory named 
+"gam".  All other source files should look for GAM at that location.  
 
-Activated versions of GAM It _MUST NOT_ be stored in GIT for security reasons.
+Activated versions of GAM _MUST NOT_ be stored in GIT for security reasons.
 The .gitignore file is set to ignore the ./gam/ directory.  Please download GAM
 and appropriate auth files manually.
 
@@ -20,7 +19,7 @@ basic steps.
   10.  Verify that user crashtestdummy@domain.org & alias of idontwearseatbelts
        were created.
 Additional help can be found at:
-  https://code.google.com/p/google-apps-manager/wiki/GettingStarted
+  https://github.com/jay0lee/GAM/wiki
 
 NOTES for step #04:
   Current APIs in use are:
