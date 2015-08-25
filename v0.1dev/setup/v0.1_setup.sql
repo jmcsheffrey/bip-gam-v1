@@ -1,3 +1,93 @@
+CREATE TABLE `import_employees` (
+ `PKEY` int(11) NOT NULL AUTO_INCREMENT,
+ `APID` varchar(5) DEFAULT NULL,
+ `Name` varchar(100) DEFAULT NULL,
+ `Unique ID` varchar(8) DEFAULT NULL,
+ `Status` varchar(8) DEFAULT NULL,
+ `First Name` varchar(50) DEFAULT NULL,
+ `Middle Name` varchar(50) DEFAULT NULL,
+ `Last Name` varchar(50) DEFAULT NULL,
+ `School Email` varchar(100) DEFAULT NULL,
+ `HOMEROOM` varchar(3) DEFAULT NULL,
+ `Referred To As` varchar(50) DEFAULT NULL,
+ `GENDER` varchar(1) DEFAULT NULL,
+ `BIRTHDATE` varchar(10) DEFAULT NULL,
+ `DATE OF HIRE` varchar(10) DEFAULT NULL,
+ `POSITION` varchar(100) DEFAULT NULL,
+ PRIMARY KEY (`PKEY`),
+ UNIQUE KEY `#` (`PKEY`),
+ UNIQUE KEY `Unique ID` (`Unique ID`),
+ KEY `#_2` (`PKEY`),
+ KEY `Unique ID_2` (`Unique ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=627 DEFAULT CHARSET=utf8
+
+CREATE TABLE `import_students` (
+ `PKEY` int(11) NOT NULL AUTO_INCREMENT,
+ `APID` varchar(5) DEFAULT NULL,
+ `Name` varchar(100) DEFAULT NULL,
+ `Unique ID` varchar(8) DEFAULT NULL,
+ `Status` varchar(8) DEFAULT NULL,
+ `First Name` varchar(50) DEFAULT NULL,
+ `Middle Name` varchar(50) DEFAULT NULL,
+ `Last Name` varchar(50) DEFAULT NULL,
+ `SCHOOL EMAIL` varchar(100) DEFAULT NULL,
+ `HOMEROOM` varchar(3) DEFAULT NULL,
+ `Grade` varchar(2) DEFAULT NULL,
+ `GENDER` varchar(1) DEFAULT NULL,
+ `BIRTH DATE` varchar(10) DEFAULT NULL,
+ `ENTRY DATE` varchar(10) DEFAULT NULL,
+ PRIMARY KEY (`PKEY`),
+ UNIQUE KEY `#` (`PKEY`),
+ UNIQUE KEY `Unique ID` (`Unique ID`),
+ KEY `#_2` (`PKEY`),
+ KEY `Unique ID_2` (`Unique ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=627 DEFAULT CHARSET=utf8
+
+CREATE TABLE `staging_employees` (
+ `PKEY` int(11) NOT NULL AUTO_INCREMENT,
+ `APID` varchar(5) DEFAULT NULL,
+ `Name` varchar(100) DEFAULT NULL,
+ `Unique ID` varchar(8) DEFAULT NULL,
+ `Status` varchar(8) DEFAULT NULL,
+ `First Name` varchar(50) DEFAULT NULL,
+ `Middle Name` varchar(50) DEFAULT NULL,
+ `Last Name` varchar(50) DEFAULT NULL,
+ `School Email` varchar(100) DEFAULT NULL,
+ `HOMEROOM` varchar(3) DEFAULT NULL,
+ `Referred To As` varchar(50) DEFAULT NULL,
+ `GENDER` varchar(1) DEFAULT NULL,
+ `BIRTHDATE` date DEFAULT NULL,
+ `DATE OF HIRE` date DEFAULT NULL,
+ `POSITION` varchar(100) DEFAULT NULL,
+ PRIMARY KEY (`PKEY`),
+ UNIQUE KEY `#` (`PKEY`),
+ UNIQUE KEY `Unique ID` (`Unique ID`),
+ KEY `#_2` (`PKEY`),
+ KEY `Unique ID_2` (`Unique ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+CREATE TABLE `staging_students` (
+ `PKEY` int(11) NOT NULL AUTO_INCREMENT,
+ `APID` varchar(5) DEFAULT NULL,
+ `Name` varchar(100) DEFAULT NULL,
+ `Unique ID` varchar(8) DEFAULT NULL,
+ `Status` varchar(8) DEFAULT NULL,
+ `First Name` varchar(50) DEFAULT NULL,
+ `Middle Name` varchar(50) DEFAULT NULL,
+ `Last Name` varchar(50) DEFAULT NULL,
+ `SCHOOL EMAIL` varchar(100) DEFAULT NULL,
+ `HOMEROOM` varchar(3) DEFAULT NULL,
+ `Grade` varchar(2) DEFAULT NULL,
+ `GENDER` varchar(1) DEFAULT NULL,
+ `BIRTH DATE` date DEFAULT NULL,
+ `ENTRY DATE` date DEFAULT NULL,
+ PRIMARY KEY (`PKEY`),
+ UNIQUE KEY `#` (`PKEY`),
+ UNIQUE KEY `Unique ID` (`Unique ID`),
+ KEY `#_2` (`PKEY`),
+ KEY `Unique ID_2` (`Unique ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=626 DEFAULT CHARSET=utf8
+
 CREATE TABLE `groupings` (
  `unique_id` int(11) NOT NULL AUTO_INCREMENT,
  `population` varchar(3) CHARACTER SET latin1 NOT NULL,
