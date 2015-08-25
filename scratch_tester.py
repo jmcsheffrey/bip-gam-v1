@@ -60,7 +60,7 @@ if varRunTest:
 
 
 # test get user information
-varRunTest = True
+varRunTest = False
 if varRunTest:
   #varUserName = "blahblahblah@student.sscps.org"
   #varUserName = "joe_student@student.sscps.org"
@@ -131,7 +131,7 @@ if varRunTest:
       for col in row:
         if varRowCount == 0:
           varCSVHeaders.append(col)
-          if col == 'id': 
+          if col == 'id':
             varIDColumn = varColCount
         elif varRowCount == 1:
           varCSVData.append(col)
@@ -169,9 +169,3 @@ if varRunTest:
     print "user_name:  ", user_name
   varDBCursor.close()
   varDBConnection.close()
-
-
-
-
-
-
