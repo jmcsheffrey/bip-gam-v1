@@ -1,92 +1,72 @@
-CREATE TABLE `import_employees` (
- `PKEY` int(11) NOT NULL AUTO_INCREMENT,
- `APID` varchar(5) DEFAULT NULL,
- `Name` varchar(100) DEFAULT NULL,
- `Unique ID` varchar(8) DEFAULT NULL,
- `Status` varchar(8) DEFAULT NULL,
- `First Name` varchar(50) DEFAULT NULL,
- `Middle Name` varchar(50) DEFAULT NULL,
- `Last Name` varchar(50) DEFAULT NULL,
- `School Email` varchar(100) DEFAULT NULL,
- `HOMEROOM` varchar(3) DEFAULT NULL,
- `Referred To As` varchar(50) DEFAULT NULL,
- `GENDER` varchar(1) DEFAULT NULL,
- `BIRTHDATE` varchar(10) DEFAULT NULL,
- `DATE OF HIRE` varchar(10) DEFAULT NULL,
- `POSITION` varchar(100) DEFAULT NULL,
- PRIMARY KEY (`PKEY`),
- UNIQUE KEY `#` (`PKEY`),
- UNIQUE KEY `Unique ID` (`Unique ID`),
- KEY `#_2` (`PKEY`),
- KEY `Unique ID_2` (`Unique ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=627 DEFAULT CHARSET=utf8
-
+-- TODO:  Need to re add user, import_, stagin_, changes_ tables
 CREATE TABLE `import_students` (
  `PKEY` int(11) NOT NULL AUTO_INCREMENT,
  `APID` varchar(5) DEFAULT NULL,
- `Name` varchar(100) DEFAULT NULL,
- `Unique ID` varchar(8) DEFAULT NULL,
- `Status` varchar(8) DEFAULT NULL,
- `First Name` varchar(50) DEFAULT NULL,
- `Middle Name` varchar(50) DEFAULT NULL,
- `Last Name` varchar(50) DEFAULT NULL,
- `SCHOOL EMAIL` varchar(100) DEFAULT NULL,
- `HOMEROOM` varchar(3) DEFAULT NULL,
- `Grade` varchar(2) DEFAULT NULL,
- `GENDER` varchar(1) DEFAULT NULL,
- `BIRTH DATE` varchar(10) DEFAULT NULL,
- `ENTRY DATE` varchar(10) DEFAULT NULL,
+ `full_name` varchar(100) DEFAULT NULL,
+ `unique_id` varchar(8) DEFAULT NULL,
+ `status` varchar(8) DEFAULT NULL,
+ `first_name` varchar(50) DEFAULT NULL,
+ `middle_name` varchar(50) DEFAULT NULL,
+ `last_name` varchar(50) DEFAULT NULL,
+ `school_email` varchar(100) DEFAULT NULL,
+ `grade` varchar(2) DEFAULT NULL,
+ `homeroom` varchar(3) DEFAULT NULL,
+ `referred_to_as` varchar(50) DEFAULT NULL,
+ `gender` varchar(1) DEFAULT NULL,
+ `birthdate` varchar(10) DEFAULT NULL,
+ `entry_date` varchar(10) DEFAULT NULL,
  PRIMARY KEY (`PKEY`),
  UNIQUE KEY `#` (`PKEY`),
- UNIQUE KEY `Unique ID` (`Unique ID`),
+ UNIQUE KEY `Unique ID` (`unique_id`),
  KEY `#_2` (`PKEY`),
- KEY `Unique ID_2` (`Unique ID`)
+ KEY `Unique ID_2` (`unique_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=627 DEFAULT CHARSET=utf8
 
-CREATE TABLE `staging_employees` (
+CREATE TABLE `import_employees` (
  `PKEY` int(11) NOT NULL AUTO_INCREMENT,
  `APID` varchar(5) DEFAULT NULL,
- `Name` varchar(100) DEFAULT NULL,
- `Unique ID` varchar(8) DEFAULT NULL,
- `Status` varchar(8) DEFAULT NULL,
- `First Name` varchar(50) DEFAULT NULL,
- `Middle Name` varchar(50) DEFAULT NULL,
- `Last Name` varchar(50) DEFAULT NULL,
- `School Email` varchar(100) DEFAULT NULL,
- `HOMEROOM` varchar(3) DEFAULT NULL,
- `Referred To As` varchar(50) DEFAULT NULL,
- `GENDER` varchar(1) DEFAULT NULL,
- `BIRTHDATE` date DEFAULT NULL,
- `DATE OF HIRE` date DEFAULT NULL,
- `POSITION` varchar(100) DEFAULT NULL,
+ `full_name` varchar(100) DEFAULT NULL,
+ `unique_id` varchar(8) DEFAULT NULL,
+ `status` varchar(8) DEFAULT NULL,
+ `first_name` varchar(50) DEFAULT NULL,
+ `middle_name` varchar(50) DEFAULT NULL,
+ `last_name` varchar(50) DEFAULT NULL,
+ `school_email` varchar(100) DEFAULT NULL,
+ `homeroom` varchar(6) DEFAULT NULL,
+ `referred_to_as` varchar(50) DEFAULT NULL,
+ `gender` varchar(1) DEFAULT NULL,
+ `birthdate` varchar(10) DEFAULT NULL,
+ `date_of_hire` varchar(10) DEFAULT NULL,
+ `position` varchar(100) DEFAULT NULL,
  PRIMARY KEY (`PKEY`),
  UNIQUE KEY `#` (`PKEY`),
- UNIQUE KEY `Unique ID` (`Unique ID`),
+ UNIQUE KEY `Unique ID` (`unique_id`),
  KEY `#_2` (`PKEY`),
- KEY `Unique ID_2` (`Unique ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+ KEY `Unique ID_2` (`unique_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8
 
-CREATE TABLE `staging_students` (
- `PKEY` int(11) NOT NULL AUTO_INCREMENT,
- `APID` varchar(5) DEFAULT NULL,
- `Name` varchar(100) DEFAULT NULL,
- `Unique ID` varchar(8) DEFAULT NULL,
- `Status` varchar(8) DEFAULT NULL,
- `First Name` varchar(50) DEFAULT NULL,
- `Middle Name` varchar(50) DEFAULT NULL,
- `Last Name` varchar(50) DEFAULT NULL,
- `SCHOOL EMAIL` varchar(100) DEFAULT NULL,
- `HOMEROOM` varchar(3) DEFAULT NULL,
- `Grade` varchar(2) DEFAULT NULL,
- `GENDER` varchar(1) DEFAULT NULL,
- `BIRTH DATE` date DEFAULT NULL,
- `ENTRY DATE` date DEFAULT NULL,
- PRIMARY KEY (`PKEY`),
- UNIQUE KEY `#` (`PKEY`),
- UNIQUE KEY `Unique ID` (`Unique ID`),
- KEY `#_2` (`PKEY`),
- KEY `Unique ID_2` (`Unique ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=626 DEFAULT CHARSET=utf8
+CREATE TABLE `users` (
+ `unique_id` varchar(8) NOT NULL,
+ `status` varchar(8) NOT NULL,
+ `manual_entry` varchar(2) NOT NULL DEFAULT 'N',
+ `population` varchar(3) NOT NULL,
+ `first_name` varchar(50) NOT NULL,
+ `middle_name` varchar(50) NOT NULL,
+ `last_name` varchar(50) NOT NULL,
+ `user_name` varchar(20) NOT NULL,
+ `school_email` varchar(100) DEFAULT NULL,
+ `grade` varchar(2) DEFAULT NULL,
+ `homeroom` varchar(6) DEFAULT NULL,
+ `referred_to_as` varchar(50) DEFAULT NULL,
+ `gender` varchar(1) NOT NULL,
+ `birthdate` date NOT NULL,
+ `start_date` date NOT NULL,
+ `position` varchar(100) NOT NULL,
+ `description` varchar(100) NOT NULL,
+ PRIMARY KEY (`unique_id`),
+ UNIQUE KEY `user_name` (`user_name`),
+ UNIQUE KEY `email_address` (`school_email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
 CREATE TABLE `groupings` (
  `unique_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -137,21 +117,6 @@ CREATE TABLE `sync_status_user` (
  `status` varchar(5) NOT NULL,
  `last_update` datetime NOT NULL,
  PRIMARY KEY (`sync_dest_id`,`unique_id_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `users` (
- `unique_id` varchar(8) NOT NULL,
- `status` varchar(6) NOT NULL,
- `population` varchar(3) NOT NULL,
- `first_name` varchar(50) NOT NULL,
- `middle_name` varchar(50) NOT NULL,
- `last_name` varchar(50) NOT NULL,
- `user_name` varchar(100) NOT NULL,
- `email_address` varchar(100) NOT NULL,
- `referredto_name` varchar(100) NOT NULL,
- PRIMARY KEY (`unique_id`),
- UNIQUE KEY `user_name` (`user_name`),
- UNIQUE KEY `email_address` (`email_address`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `users_stuviewers` (
