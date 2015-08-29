@@ -1,4 +1,27 @@
 -- TODO:  Need to re add user, import_, stagin_, changes_ tables
+CREATE TABLE `import_employees` (
+ `PKEY` int(11) NOT NULL AUTO_INCREMENT,
+ `APID` varchar(5) DEFAULT NULL,
+ `full_name` varchar(100) DEFAULT NULL,
+ `unique_id` varchar(8) DEFAULT NULL,
+ `status` varchar(8) DEFAULT NULL,
+ `first_name` varchar(50) DEFAULT NULL,
+ `middle_name` varchar(50) DEFAULT NULL,
+ `last_name` varchar(50) DEFAULT NULL,
+ `school_email` varchar(100) DEFAULT NULL,
+ `homeroom` varchar(6) DEFAULT NULL,
+ `referred_to_as` varchar(50) DEFAULT NULL,
+ `gender` varchar(1) DEFAULT NULL,
+ `birthdate` varchar(10) DEFAULT NULL,
+ `date_of_hire` varchar(10) DEFAULT NULL,
+ `position` varchar(100) DEFAULT NULL,
+ PRIMARY KEY (`PKEY`),
+ UNIQUE KEY `#` (`PKEY`),
+ UNIQUE KEY `Unique ID` (`unique_id`),
+ KEY `#_2` (`PKEY`),
+ KEY `Unique ID_2` (`unique_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8
+
 CREATE TABLE `import_students` (
  `PKEY` int(11) NOT NULL AUTO_INCREMENT,
  `APID` varchar(5) DEFAULT NULL,
@@ -22,7 +45,7 @@ CREATE TABLE `import_students` (
  KEY `Unique ID_2` (`unique_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=627 DEFAULT CHARSET=utf8
 
-CREATE TABLE `import_employees` (
+CREATE TABLE `staging_employees` (
  `PKEY` int(11) NOT NULL AUTO_INCREMENT,
  `APID` varchar(5) DEFAULT NULL,
  `full_name` varchar(100) DEFAULT NULL,
@@ -35,8 +58,8 @@ CREATE TABLE `import_employees` (
  `homeroom` varchar(6) DEFAULT NULL,
  `referred_to_as` varchar(50) DEFAULT NULL,
  `gender` varchar(1) DEFAULT NULL,
- `birthdate` varchar(10) DEFAULT NULL,
- `date_of_hire` varchar(10) DEFAULT NULL,
+ `birthdate` date DEFAULT NULL,
+ `date_of_hire` date DEFAULT NULL,
  `position` varchar(100) DEFAULT NULL,
  PRIMARY KEY (`PKEY`),
  UNIQUE KEY `#` (`PKEY`),
@@ -44,6 +67,29 @@ CREATE TABLE `import_employees` (
  KEY `#_2` (`PKEY`),
  KEY `Unique ID_2` (`unique_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8
+
+CREATE TABLE `staging_students` (
+ `PKEY` int(11) NOT NULL AUTO_INCREMENT,
+ `APID` varchar(5) DEFAULT NULL,
+ `full_name` varchar(100) DEFAULT NULL,
+ `unique_id` varchar(8) DEFAULT NULL,
+ `status` varchar(8) DEFAULT NULL,
+ `first_name` varchar(50) DEFAULT NULL,
+ `middle_name` varchar(50) DEFAULT NULL,
+ `last_name` varchar(50) DEFAULT NULL,
+ `school_email` varchar(100) DEFAULT NULL,
+ `grade` varchar(2) DEFAULT NULL,
+ `homeroom` varchar(3) DEFAULT NULL,
+ `referred_to_as` varchar(50) DEFAULT NULL,
+ `gender` varchar(1) DEFAULT NULL,
+ `birthdate` date DEFAULT NULL,
+ `entry_date` date DEFAULT NULL,
+ PRIMARY KEY (`PKEY`),
+ UNIQUE KEY `#` (`PKEY`),
+ UNIQUE KEY `Unique ID` (`unique_id`),
+ KEY `#_2` (`PKEY`),
+ KEY `Unique ID_2` (`unique_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=626 DEFAULT CHARSET=utf8
 
 CREATE TABLE `users` (
  `unique_id` varchar(8) NOT NULL,
