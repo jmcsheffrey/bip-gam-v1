@@ -7,7 +7,7 @@
 
 insert into users
   select `unique_id`, `status`, 'N' as `manual_entry`, 'STU' as `population`, `first_name`, `middle_name`, `last_name`,
-    concat(lower(first_name), lower(last_name)) as `user_name`,
+    concat(lower(first_name), '_', lower(last_name)) as `user_name`,
     concat(lower(first_name), '_', lower(last_name), '@student.sscps.org') as `school_email`,
     `grade`, `homeroom`, `referred_to_as`, `gender`,
     STR_TO_DATE(`birthdate`,'%m/%d/%Y'),
@@ -29,3 +29,5 @@ insert into users
     'SSCSPS Employee' as description
   from import_employees
   order by last_name, first_name, middle_name;
+
+SELECT * FROM `users` where population = 'STU' order by school_email

@@ -4,10 +4,12 @@
 -- results should be zero
 select * from import_students where grade in ('3','4','5','6','7','8','9');
 
--- homerooms for students should be 3 digit room number
-select * from import_students where not (upper(homeroom) REGEXP '^-?[0-9]+$');
+-- homerooms for ACTIVE students should be 3 digit room number
+-- results should be zero
+select * from import_students where status = 'ACTIVE' and not (upper(homeroom) REGEXP '^-?[0-9]+$');
 
 -- homerooms for employees should be 3 digit room number, or "OFF" or "A" & then number
+-- results should be zero
 select *
   from import_employees
   where (
@@ -18,9 +20,32 @@ select *
       and (substring(upper(homeroom),1,5) != 'NURSE')
       and (substring(upper(homeroom),1,6) != 'RECEPT')
     )
-  )
+  );
 
--- get list of users that are of "classes" of users that exist in live data, but not in import
---  * can ignore users in live data that status = 'INACTIVE'
---  * can ignore users in live data that manual_entry != 'N'
-select * from users
+-- check for school_email that is non-empty & different between users and import_
+-- results should be zero
+select *
+  from users
+  join import_students on users.unique_id = import_students.unique_id
+  where users.school_email != import_students.school_email;
+-- results should be zero
+select *
+  from users
+  join import_employees on users.unique_id = import_employees.unique_id
+  where users.school_email != import_employees.school_email;
+
+-- check for names with more then even chance of being problematic
+-- results should be zero
+select *
+  from import_students
+  join users on import_students.unique_id = users.unique_id
+  where length(concat(import_students.first_name,import_students.last_name)) > 19
+    and import_students.school_email = NULL
+    and import_students.status != 'INACTIVE'
+-- results should be zero
+select *
+  from import_employees
+  join users on import_employees.unique_id = users.unique_id
+  where length(concat(import_employees.first_name,import_employees.last_name)) > 19
+    and import_employees.school_email = NULL
+    and import_employees.status != 'INACTIVE'
