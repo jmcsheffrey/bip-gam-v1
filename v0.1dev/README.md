@@ -22,3 +22,6 @@ Below are notes about expected values or other nuances for information in fields
     STU = Student
     TST = Test
 * grade:  should only be empty if population != STU
+
+# ToDo, forget me nots
+* Login mapping needs some folders to exist before first time login on windows creates them (https://sscps.freshdesk.com/helpdesk/tickets/159832).
