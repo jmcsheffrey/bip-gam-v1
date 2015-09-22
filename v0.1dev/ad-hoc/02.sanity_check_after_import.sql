@@ -1,3 +1,7 @@
+-- TODO
+--  1.  check for malformed email addresses
+--  2.  check for expected_grad_year that isn't YYYY
+
 -- run these checks to see if data looks bad
 
 -- no grades for students should be without leading zeros
@@ -49,3 +53,6 @@ select *
   where length(concat(import_employees.first_name,import_employees.last_name)) > 19
     and import_employees.school_email = NULL
     and import_employees.status != 'INACTIVE'
+
+-- check for malformed email addresses
+-- results should be zero
