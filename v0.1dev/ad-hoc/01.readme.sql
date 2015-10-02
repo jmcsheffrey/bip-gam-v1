@@ -5,6 +5,9 @@
 
 -- the stuff below is just scratch so I don't loose it
 
+truncate import_students
+truncate import_employees
+
 insert into users
   select `unique_id`, `status`, 'N' as `manual_entry`, 'STU' as `population`, `first_name`, `middle_name`, `last_name`,
     concat(lower(first_name), '_', lower(last_name)) as `user_name`,

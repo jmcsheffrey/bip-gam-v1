@@ -39,6 +39,11 @@ if varRunTest:
   else:
     print varResults
 
+# test if group exists, grab list of users, add calendar to all those users
+varRunTest = False
+if varRunTest:
+
+
 # create a user
 varRunTest = False
 if varRunTest:

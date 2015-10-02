@@ -18,18 +18,15 @@ update users
     users.birthdate = staging_students.birthdate,
     users.start_date = staging_students.entry_date,
     users.position = '',
-    users.description = concat('SSCPS Grade ',staging_students.grade,' Student'
-  where
-    staging_students.unique_id in (select unique_id from users)
-
+    users.description = concat('SSCPS Grade ',staging_students.grade,' Student')
 
 -- insert new student records
 insert into users
   select
     staging_students.unique_id,
     staging_students.status,
-    'N', --manual_entry
-    'STU', --population
+    'N' as manual_entry,
+    'STU' as population,
     staging_students.first_name,
     staging_students.middle_name,
     staging_students.last_name,
@@ -41,9 +38,9 @@ insert into users
     staging_students.referred_to_as,
     staging_students.gender,
     staging_students.birthdate,
-    staging_students.start_date,
-    '',
-    concat('SSCPS Grade ',staging_students.grade,' Student'
+    staging_students.entry_date,
+    '' as position,
+    concat('SSCPS Grade ',staging_students.grade,' Student') as description
   from staging_students
   where
-    staging_students.unique_id not in (select unique_id from users)
+    staging_students.unique_id not in (select users.unique_id from users)
