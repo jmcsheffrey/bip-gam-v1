@@ -20,6 +20,35 @@ varMySQLPassword = "longwater1009"
 varMySQLDB = "sscpssynctest"
 
 
+# test if user exists, if not create.  then adds user to group
+varRunTest = False
+if varRunTest:
+
+
+# test if group exists, grab list of users, add calendar to all those users
+# NOT complete
+varRunTest = False
+if varRunTest:
+    varGroupName = "facstaff_lhs@sscps.org"
+    os.system('clear')
+    varArgList=["info", "group", varGroupName]
+    varResultsProc = subprocess.Popen([varCommandGam + ' %s' % ' '.join(varArgList)], stdout=subprocess.PIPE, shell=True)
+    (varResults, varErrors) = varResultsProc.communicate()
+    os.system('clear')
+    #print varResults
+    #print type(varResults)
+    #print varResults.find("Group Settings:")
+    if varResults.find("Group Settings:") < 0:
+        print "Group does not exist."
+    else:
+        print varResults
+    # generic way to add calendar to user
+    #varArguments = " user " + varUserName + " add calendar " + varCalendarEmail + " selected true hidden false"
+    #varCommandToExecute = varCommandGam + varArguments
+    #print varCommandToExecute
+    #os.system(varCommandToExecute)
+
+
 # test group exists & grab output
 varRunTest = False
 if varRunTest:
@@ -38,10 +67,6 @@ if varRunTest:
     print "Group does not exist."
   else:
     print varResults
-
-# test if group exists, grab list of users, add calendar to all those users
-varRunTest = False
-if varRunTest:
 
 
 # create a user
