@@ -15,14 +15,30 @@ import csv        # CSV is used to read output of drive commands that supply dat
 varCommandGam = "python ./gam/gam.py"
 # setup for MySQLdb connection
 varMySQLHost = "localhost"
-varMySQLUser = "sscpssynctest"
-varMySQLPassword = "longwater1009"
-varMySQLDB = "sscpssynctest"
+varMySQLUser = "sscpssyncprod"
+varMySQLPassword = "ZEN@2014sufu"
+varMySQLDB = "sscpssyncprod"
 
 
 # test if user exists, if not create.  then adds user to group
 varRunTest = False
 if varRunTest:
+
+# get list of all users, check if user in DB & ACTIVE, if not mark suspended
+varRunTest = True
+if varRunTest:
+    os.system('clear')
+    varArgList=["info", "user", varGroupName]
+    varResultsProc = subprocess.Popen([varCommandGam + ' %s' % ' '.join(varArgList)], stdout=subprocess.PIPE, shell=True)
+    (varResults, varErrors) = varResultsProc.communicate()
+    os.system('clear')
+    #print varResults
+    #print type(varResults)
+    #print varResults.find("Group Settings:")
+    if varResults.find("Group Settings:") < 0:
+        print "Group does not exist."
+    else:
+        print varResults
 
 
 # test if group exists, grab list of users, add calendar to all those users

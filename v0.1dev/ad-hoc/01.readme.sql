@@ -5,8 +5,6 @@
 
 -- the stuff below is just scratch so I don't loose it
 
-truncate import_students
-truncate import_employees
 
 insert into users
   select `unique_id`, `status`, 'N' as `manual_entry`, 'STU' as `population`, `first_name`, `middle_name`, `last_name`,
@@ -34,3 +32,7 @@ insert into users
   order by last_name, first_name, middle_name;
 
 SELECT * FROM `users` where population = 'STU' order by school_email
+
+select * from users
+  left join staging_students as stu on users.unique_id = stu.unique_id
+  where users.status = 'ACTIVE' and stu.unique_id is not null

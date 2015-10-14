@@ -2,11 +2,22 @@
 --  1.  check for malformed email addresses
 --  2.  check for expected_grad_year that isn't YYYY
 
--- run these checks to see if data looks bad
+
+-- Run these two before importing data
+truncate import_students;
+truncate import_employees;
+
+-- SCRIPTS TO RUN (after import)
+-- check for bad grade year
+-- results should be zero
+select * from import_students
+  where length(expected_grad_year) < 4
+select * from import_students
+  where not (upper(expected_grad_year) REGEXP '^-?[0-9]+$');
 
 -- no grades for students should be without leading zeros
 -- results should be zero
-select * from import_students where grade in ('3','4','5','6','7','8','9');
+select * from import_students where grade in ('K','k','1','2','3','4','5','6','7','8','9');
 
 -- homerooms for ACTIVE students should be 3 digit room number
 -- results should be zero

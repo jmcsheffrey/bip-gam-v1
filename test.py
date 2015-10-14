@@ -19,16 +19,25 @@ varCalendarEmail = "sscps.org_hvj4dnr5jebek8srk9q09l91tc@group.calendar.google.c
 #print argList
 #os.system('python ./gam/gam.py %s' % ' '.join(argList))
 
+# Create user
 #varArguments = " create user " + varUserName + " firstname " + varFirstName + " lastname " + varLastName + " password " + varPassword
 #varCommandToExecute = varCommandGam + varArguments
 #print varCommandToExecute
 #os.system(varCommandToExecute)
 
+# Create alias on user
 #varArguments = " create alias " + varUserAlias + " user " + varUserName
 #varCommandToExecute = varCommandGam + varArguments
 #print varCommandToExecute
 #os.system(varCommandToExecute)
 
+# Add calendar to user
+#varArguments = " user " + varUserName + " add calendar " + varCalendarEmail + " selected true hidden false"
+#varCommandToExecute = varCommandGam + varArguments
+#print varCommandToExecute
+#os.system(varCommandToExecute)
+
+# get list of all users
 varArguments = " user " + varUserName + " add calendar " + varCalendarEmail + " selected true hidden false"
 varCommandToExecute = varCommandGam + varArguments
 print varCommandToExecute

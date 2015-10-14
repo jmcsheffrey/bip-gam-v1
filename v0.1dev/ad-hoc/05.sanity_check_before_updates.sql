@@ -1,18 +1,31 @@
 -- what to check before update/insert of records to main users table
 
 -- TODO
---  1.  check for malformed email addresses
+-- check for any unique_id changed by using school_email to connect tables
+-- check for any unique_id changed by using name fields to connect tables
 
--- get list of users that are of "classes" of users that exist in live data, but not in import
---  * can ignore users in live data that status = 'INACTIVE'
---  * can ignore users in live data that manual_entry != 'N'
--- all information should come from SIS
+
+-- SCRIPTS TO RUN
+-- check for users who exists in USERS and is ACTIVE but not in STAGING as any status and manual_entry != 'N'
+-- results should be zero
 select * from users
-
-
-
--- find out if any unique_id changed by using school_email to connect tables
+  left join staging_students as stu on users.unique_id = stu.unique_id
+  where users.status = 'ACTIVE' and users.manual_entry = 'N' and stu.status is null
+  order by users.unique_id desc
 select * from users
+  left join staging_employees as emp on users.unique_id = emp.unique_id
+  where users.status = 'ACTIVE' and users.manual_entry = 'N' and emp.status is null
+  order by users.unique_id desc
+
+-- check for duplicate email addresses where unique_id is not same between USERS & STAGING
+-- results should be zero
+select * from staging_students as stu
+  left join users on stu.school_email = users.school_email
+  where stu.unique_id != users.unique_id
+select * from staging_employees as emp
+  left join users on emp.school_email = users.school_email
+  where emp.unique_id != users.unique_id
+
 
 -- find users who don't have correct emails.  this is very simple, should be improved
 -- results should be zero
