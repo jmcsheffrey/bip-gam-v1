@@ -49,7 +49,7 @@ CREATE TABLE `users` (
  `first_name` varchar(50) NOT NULL,
  `middle_name` varchar(50) NOT NULL,
  `last_name` varchar(50) NOT NULL,
- `user_name` varchar(20) NOT NULL,
+ `user_name` varchar(20) DEFAULT NULL,
  `school_email` varchar(100) DEFAULT NULL,
  `grade` varchar(2) DEFAULT NULL,
  `expected_grad_year` int(11) NOT NULL,
@@ -63,12 +63,12 @@ CREATE TABLE `users` (
  `position` varchar(100) NOT NULL,
  `description` varchar(100) NOT NULL,
  PRIMARY KEY (`unique_id`),
- UNIQUE KEY `user_name` (`user_name`),
  UNIQUE KEY `unique_id` (`unique_id`),
+ UNIQUE KEY `user_name` (`user_name`),
  UNIQUE KEY `email_address` (`school_email`),
  KEY `unique_id_2` (`unique_id`),
  KEY `unique_id_3` (`unique_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
 CREATE TABLE `import_students` (
  `PKEY` int(11) NOT NULL AUTO_INCREMENT,

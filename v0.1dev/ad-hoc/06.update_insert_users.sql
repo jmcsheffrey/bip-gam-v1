@@ -21,7 +21,8 @@ update users
     users.birthdate = staging_students.birthdate,
     users.start_date = staging_students.entry_date,
     users.position = '',
-    users.description = concat('SSCPS Grade ',staging_students.grade,' Student');
+    users.description = concat('SSCPS Grade ',staging_students.grade,' Student')
+  where users.unique_id = staging_students.unique_id;
 
 -- insert new student records
 insert into users

@@ -22,23 +22,24 @@ varMySQLDB = "sscpssyncprod"
 
 # test if user exists, if not create.  then adds user to group
 varRunTest = False
-if varRunTest:
 
 # get list of all users, check if user in DB & ACTIVE, if not mark suspended
 varRunTest = True
 if varRunTest:
-    os.system('clear')
-    varArgList=["info", "user", varGroupName]
-    varResultsProc = subprocess.Popen([varCommandGam + ' %s' % ' '.join(varArgList)], stdout=subprocess.PIPE, shell=True)
-    (varResults, varErrors) = varResultsProc.communicate()
-    os.system('clear')
-    #print varResults
-    #print type(varResults)
-    #print varResults.find("Group Settings:")
-    if varResults.find("Group Settings:") < 0:
-        print "Group does not exist."
-    else:
-        print varResults
+  os.system('clear')
+  varUserFieldsToPrint = ""
+  varArgList=["print", "users", varUserFieldsToPrint]
+  varResultsProc = subprocess.Popen([varCommandGam + ' %s' % ' '.join(varArgList)], stdout=subprocess.PIPE, shell=True)
+  (varResults, varErrors) = varResultsProc.communicate()
+  os.system('clear')
+  #print varResults
+  #print type(varResults)
+  for (email_address) in varResults:
+    print "email:  ", email_address
+  #if varResults.find("Group Settings:") < 0:
+  #  print "Group does not exist."
+  #else:
+  #  print varResults
 
 
 # test if group exists, grab list of users, add calendar to all those users

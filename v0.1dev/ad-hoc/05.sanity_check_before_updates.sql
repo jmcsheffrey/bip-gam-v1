@@ -28,6 +28,24 @@ select * from staging_employees as emp
   where emp.unique_id != users.unique_id
 
 
+-- check for duplicate user_name where unique_id is not same between USERS & STAGING
+-- results should be zero
+select * from staging_students as stu
+  left join users on substring(stu.school_email,1,instr(stu.school_email, '@')-1) = users.user_name
+  where stu.unique_id != users.unique_id
+select * from staging_employees as emp
+  left join users on emp.school_email = users.school_email
+  where emp.unique_id != users.unique_id
+
+
+-- check for "soon to be" duplicate user_names
+-- results should be zero
+select substring(stu.school_email,1,instr(stu.school_email, '@')-1) as new_user_name, stu.unique_id, users.unique_id as existing_unique_id
+  from staging_students as stu
+  left join users on substring(stu.school_email,1,instr(stu.school_email, '@')-1) = users.user_name
+  where stu.unique_id != users.unique_id
+
+
 -- find users who don't have correct (but existing) emails.  this is very simple, should be improved
 -- results should be zero
 select *
