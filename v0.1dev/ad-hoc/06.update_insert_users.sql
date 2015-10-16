@@ -1,8 +1,7 @@
 -- update existing student records
 update users
-  join staging_students on users.unique_id = staging_students.unique_id
-  set users.unique_id = staging_students.unique_id,
-    users.update_date = now(),
+  left join staging_students on users.unique_id = staging_students.unique_id
+  set users.update_date = now(),
     users.status = staging_students.status,
     users.manual_entry = 'N',
     users.population = 'STU',

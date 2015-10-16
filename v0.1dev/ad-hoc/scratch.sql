@@ -1,4 +1,19 @@
 -----------------------------------------------------------------------------
+-- dev based queries
+-----------------------------------------------------------------------------
+-- run these separately, unless full output can be done by default
+SHOW CREATE TABLE systems
+SHOW CREATE TABLE users
+SHOW CREATE TABLE import_students
+SHOW CREATE TABLE import_employees
+SHOW CREATE TABLE staging_students
+SHOW CREATE TABLE staging_employees
+SHOW CREATE TABLE groupings
+SHOW CREATE TABLE groupings_users
+
+
+
+-----------------------------------------------------------------------------
 -- systems based queries
 -----------------------------------------------------------------------------
 -- select mac addresses for all windows workstations

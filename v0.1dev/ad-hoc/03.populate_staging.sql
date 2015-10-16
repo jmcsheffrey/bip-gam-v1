@@ -7,7 +7,7 @@ truncate staging_employees;
 
 -- move appropriate data from import_ tables to stagin_ tables
 insert into staging_students
-  select `PKEY`, `APID`, `full_name`, `unique_id`, `status`, 'household_id', `first_name`, `middle_name`, `last_name`,
+  select `PKEY`, `APID`, `full_name`, `unique_id`, `status`, `household_id`, `first_name`, `middle_name`, `last_name`,
     `school_email`, `grade`, convert(expected_grad_year, UNSIGNED INTEGER), `homeroom`, `homeroom_teacher_first`, `homeroom_teacher_last`, `referred_to_as`, `gender`,
     STR_TO_DATE(`birthdate`,'%m/%d/%Y'),
     STR_TO_DATE(`entry_date`,'%m/%d/%Y')
@@ -31,7 +31,7 @@ update staging_students
       , '_'
       , replace(replace(replace(replace(replace(lower(last_name),char(46),char(0)),char(45),char(0)),char(44),char(0)),char(39),char(0)),char(32),char(0))
     ),1,21), '@student.sscps.org')
-  where isnull(school_email) or school_email = ''
+  where (isnull(school_email) or school_email = '') and grade in ('03','04','05','06','07','08','09','10','11','12');
 update staging_employees
   set school_email =
     concat(substring(concat(
