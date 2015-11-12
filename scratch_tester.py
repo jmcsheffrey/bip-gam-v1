@@ -23,7 +23,40 @@ varMySQLDB = "sscpssyncprod"
 # test if user exists, if not create.  then adds user to group
 varRunTest = False
 
+# sets specific folder to have owner specified & (optionally) sets prevent editors from changing permissions
+# NOT complete
+varRunTest = True
+if varRunTest:
+    #varDriveFolderToChangeID = ""
+    varDriveFolderToChangeID = "0B__r4r8A8JL_ZTl1Qm8yUXQwQk0" # Velma's FY2015 folder
+    varNewOwner = "admin.school@sscps.org"
+    varSetPECPermissions = True
+    # need to find current owner of folder
+    os.system('clear')
+    varFolderNameQueryToPass = ' query "ID = ' + varDriveFolderToChangeID + '"'
+    varArgList=["all users show filelist ", varFolderNameQueryToPass, " id"]
+    varCommandToExecute = varCommandGam + ' %s' % ' '.join(varArgList)
+    varResultsProc = subprocess.Popen([varCommandToExecute], stdout=subprocess.PIPE, shell=True)
+    (varResults, varErrors) = varResultsProc.communicate()
+    print varResults
+    #varOldOwner = ""
+    # below changes the owner
+    #os.system('clear')
+    #varUserFieldsToPrint = ""
+    #varArgList=["user", varOldOwner, "update", "drivefileacl", varDriveFolderToChangeID, "user", varNewOwner, "role owner transferownership true"]
+    #varResultsProc = subprocess.Popen([varCommandGam + ' %s' % ' '.join(varArgList)], stdout=subprocess.PIPE, shell=True)
+    #(varResults, varErrors) = varResultsProc.communicate()
+    #print varResults
+    # below changes permissions if set above
+    #os.system('clear')
+    #if varSetPECPermissions:
+        #varArgList=["user", varNewOwner, "update", "drivefile", "id"", varDriveFolderToChangeID, "writercantshare"]
+    #varResultsProc = subprocess.Popen([varCommandGam + ' %s' % ' '.join(varArgList)], stdout=subprocess.PIPE, shell=True)
+    #(varResults, varErrors) = varResultsProc.communicate()
+
+
 # get list of all users, check if user in DB & ACTIVE, if not mark suspended
+# NOT complete
 varRunTest = True
 if varRunTest:
   os.system('clear')
@@ -67,6 +100,7 @@ if varRunTest:
 
 
 # test group exists & grab output
+# complete
 varRunTest = False
 if varRunTest:
   #varGroupName = "prn-prnadmin@sscps.org"
@@ -87,6 +121,7 @@ if varRunTest:
 
 
 # create a user
+# complete
 varRunTest = False
 if varRunTest:
   varUserName = '"deletemenow@student.sscps.org"'
@@ -107,6 +142,7 @@ if varRunTest:
 
 
 # test get user information
+# complete
 varRunTest = False
 if varRunTest:
   #varUserName = "blahblahblah@student.sscps.org"
@@ -125,6 +161,7 @@ if varRunTest:
   print varResults
 
 # test user exists & grab output
+# complete
 varRunTest = False
 if varRunTest:
   #varUserName = "blahblahblah@student.sscps.org"
@@ -148,6 +185,7 @@ if varRunTest:
     print varResults
 
 # find folder/file by name & get folderId, NOTE:  only outputs first hit for multiple folders/files with same name
+# complete
 varRunTest = False
 if varRunTest:
   varUserName = "admin.google@sscps.org"
@@ -187,6 +225,7 @@ if varRunTest:
     print varCSVData[varIDColumn]
 
 # create folder for user & grab folderId
+# complete
 varRunTest = False
 varUserName = "admin.google@sscps.org"
 varFolderNameToCreate = '"TPS Reports"'
@@ -203,6 +242,7 @@ if varRunTest:
   print varFolderID
 
 # get data from MySQLdb
+# complete
 varRunTest = False
 if varRunTest:
   os.system('clear')
