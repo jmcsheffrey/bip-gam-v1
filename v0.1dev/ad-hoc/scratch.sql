@@ -60,6 +60,30 @@ select concat(school_email,char(44))
   where grade in ('05','06','07','08','09','10','11','12') and status = 'ACTIVE' and unique_id not in (select unique_id from users)
   order by grade DESC, school_email
 
+-- list removes duplicate records, assumes PKEY is primary (could be added)
+--make temporary table
+DROP TABLE IF EXISTS UniqueIDs;
+CREATE Temporary table UniqueIDs (PKEY int(11));
+--populate temporary table with records TO KEEP
+insert into UniqueIDs
+  (select PKEY FROM `import_students` a
+  inner join (SELECT max(APID) as APID, unique_id FROM `import_students` group by unique_id) b
+  on (a.APID = b.APID and a.unique_id = b.unique_id));
+--remove records not in temporary table
+delete from import_students where PKEY not in (select PKEY from UniqueIDs);
+
+
+
+
+
+
+
+
+
+
+
+
+
 -- describe this!!!!
 select
     users.unique_id,

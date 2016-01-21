@@ -21,6 +21,7 @@ varMySQLDB = "sscpssyncprod"
 
 
 # test if user exists, if not create.  then adds user to group
+# NOT complete
 varRunTest = False
 
 # sets specific folder to have owner specified & (optionally) sets prevent editors from changing permissions
@@ -103,8 +104,6 @@ if varRunTest:
 # complete
 varRunTest = False
 if varRunTest:
-  #varGroupName = "prn-prnadmin@sscps.org"
-  #varGroupName = "somenamethatshouldnotexist@sscps.org"
   varGroupName = "admin.google@sscps.org"
   os.system('clear')
   varArgList=["info", "group", varGroupName]
@@ -164,10 +163,7 @@ if varRunTest:
 # complete
 varRunTest = False
 if varRunTest:
-  #varUserName = "blahblahblah@student.sscps.org"
-  #varUserName = "joe_student@student.sscps.org"
   varUserName = "whatever@sscps.org"
-  #varUserName = "sstaff@sscps.org"
   os.system('clear')
   varArgList=["info", "user", varUserName, "noaliases nogroups"]
   #print varArgList
