@@ -1,3 +1,4 @@
+# "archive" users based on output from data extraction sql script
 python ./gam/gam.py update user adebellis@sscps.org suspended on org /Archive/Aging/Employees
 python ./gam/gam.py update user afauteux@sscps.org suspended on org /Archive/Aging/Employees
 python ./gam/gam.py update user ahenry@sscps.org suspended on org /Archive/Aging/Employees
