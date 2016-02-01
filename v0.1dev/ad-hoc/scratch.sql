@@ -73,6 +73,14 @@ insert into UniqueIDs
 delete from import_students where PKEY not in (select PKEY from UniqueIDs);
 
 
+-- class of query
+select concat(users.school_email, ",")
+  from users
+  where users.status = 'ACTIVE'
+    and users.population = 'STU'
+    and users.expected_grad_year = '2017'
+  order by users.school_email
+
 
 
 

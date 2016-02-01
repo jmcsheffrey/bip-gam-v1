@@ -68,6 +68,26 @@ select concat(
   where users.status = 'INACTIVE'
   order by users.population, users.school_email
 
+
+  -- ****************************************************
+  -- Create users for Google, via GAM
+  -- ****************************************************
+  -- just copied from another query, need to see GAM can create/update based on
+  --   existing user (and not reset password)
+select concat(
+      'python ./gam/gam.py'
+      , ' update user '
+      , users.school_email
+      , ' suspended on'
+      ,(case when users.population = 'STU' then ' org /Archive/Aging/Students'
+        when users.population = 'EMP' then ' org /Archive/Aging/Employees'
+        else 'ERROR' end)
+    )
+  from users
+  where users.status = 'INACTIVE'
+  order by users.population, users.school_email
+
+
 -- ****************************************************
 -- Re-import to AdminPlus
 -- ****************************************************
