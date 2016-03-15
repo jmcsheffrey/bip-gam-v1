@@ -69,11 +69,11 @@ select concat(
   order by users.population, users.school_email
 
 
-  -- ****************************************************
-  -- Create users for Google, via GAM
-  -- ****************************************************
-  -- just copied from another query, need to see GAM can create/update based on
-  --   existing user (and not reset password)
+-- ****************************************************
+-- Create users for Google, via GAM
+-- ****************************************************
+-- just copied from another query, need to see GAM can create/update based on
+--   existing user (and not reset password)
 select concat(
       'python ./gam/gam.py'
       , ' update user '
