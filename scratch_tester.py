@@ -16,7 +16,7 @@ varCommandGam = "python ./gam/gam.py"
 # setup for MySQLdb connection
 varMySQLHost = "localhost"
 varMySQLUser = "sscpssyncprod"
-varMySQLPassword = "ZEN@2014sufu"
+varMySQLPassword = "changemenow!!!!"
 varMySQLDB = "sscpssyncprod"
 
 
