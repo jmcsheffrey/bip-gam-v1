@@ -2,7 +2,7 @@
 
 
 -- ****************************************************
--- New users for Google, for upload
+-- New users for Google, via CSV upload
 -- ****************************************************
 -- export students
 select
@@ -52,7 +52,7 @@ select
 
 
 -- ****************************************************
--- Inactive users for Google, via GAM
+-- Inactive users for Google, via GAM script
 -- ****************************************************
 -- suspend inactive users
 select concat(
@@ -70,7 +70,7 @@ select concat(
 
 
 -- ****************************************************
--- Create users for Google, via GAM
+-- Create users for Google, via GAM script
 -- ****************************************************
 -- just copied from another query, need to see GAM can create/update based on
 --   existing user (and not reset password)
@@ -89,7 +89,7 @@ select concat(
 
 
 -- ****************************************************
--- Re-import to AdminPlus
+-- Re-import to AdminPlus via CSV upload
 -- ****************************************************
 -- load email addresses, needs just unique_id & school_email
 -- only do after verified Google Apps accounts are good
@@ -110,7 +110,7 @@ select
 
 
 -- ****************************************************
--- Library data for Joomla _lendee table,
+-- Library data for Joomla _lendee table via SQL script
 --    contact info done separately, but can use below in a spreadsheet
 --    =(CONCATENATE("update s7rh8_booklibrary_lendee set contactname = '",A2,"' where lendeecode = '",C2,"';"))
 --    =(CONCATENATE("update s7rh8_booklibrary_lendee set contactemail = '",B2,"' where lendeecode = '",C2,"';"))
@@ -142,7 +142,8 @@ select
 
 
 -- ****************************************************
--- Library cards/book, note: contact info is separate table
+-- Library cards/book via CSV upload
+--   note: contact info is separate table
 -- ****************************************************
 -- export students
 select
@@ -180,7 +181,7 @@ select
 
 
 -- ****************************************************
--- Naviance data
+-- Naviance data via CSV upload
 -- ****************************************************
 -- export students
 select
