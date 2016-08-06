@@ -1,3 +1,6 @@
+-- items below are old, use CSV files in SampleData folder
+
+
 -- insert sample data
 
 -- for groupings
@@ -74,5 +77,3 @@ INSERT INTO `sync_config` VALUES ('google_folder_student', '0Byc5mfoLgdM3RG9fZnF
 -- for sync_destination table
 insert into sync_destination values ("1001", "Active Directory");
 insert into sync_destination values ("1002", "Google Apps");
-
-

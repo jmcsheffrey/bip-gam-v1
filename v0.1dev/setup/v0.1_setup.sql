@@ -1,3 +1,4 @@
+-- hardware/sofware related tables
 CREATE TABLE `systems` (
  `unique_id` int(11) NOT NULL AUTO_INCREMENT,
  `LocationPrimary` varchar(50) DEFAULT NULL,
@@ -37,10 +38,12 @@ CREATE TABLE `systems` (
  `NextYearLocation` varchar(50) DEFAULT NULL,
  PRIMARY KEY (`unique_id`),
  UNIQUE KEY `InternalSystemsID` (`unique_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=200151 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=135711 DEFAULT CHARSET=utf8;
 
+-- user related tables
 CREATE TABLE `users` (
- `unique_id` varchar(8) NOT NULL,
+ `unique_id` varchar(8) NOT NULL DEFAULT '',
+ `current_year_id` varchar(5) NOT NULL,
  `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
  `status` varchar(8) NOT NULL,
  `manual_entry` varchar(2) NOT NULL DEFAULT 'N',
@@ -63,11 +66,9 @@ CREATE TABLE `users` (
  `position` varchar(100) NOT NULL,
  `description` varchar(100) NOT NULL,
  PRIMARY KEY (`unique_id`),
- UNIQUE KEY `unique_id` (`unique_id`),
- UNIQUE KEY `user_name` (`user_name`),
- UNIQUE KEY `email_address` (`school_email`),
- KEY `unique_id_2` (`unique_id`),
- KEY `unique_id_3` (`unique_id`)
+ UNIQUE KEY `current_year_id` (`current_year_id`),
+ UNIQUE KEY `unique_user_name` (`user_name`),
+ UNIQUE KEY `unique_email_address` (`school_email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
 CREATE TABLE `import_students` (
@@ -91,11 +92,32 @@ CREATE TABLE `import_students` (
  `birthdate` varchar(10) DEFAULT NULL,
  `entry_date` varchar(10) DEFAULT NULL,
  PRIMARY KEY (`PKEY`),
- UNIQUE KEY `#` (`PKEY`),
- UNIQUE KEY `Unique ID` (`unique_id`),
- KEY `#_2` (`PKEY`),
- KEY `Unique ID_2` (`unique_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=utf8;
+ UNIQUE KEY `unique_id` (`unique_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8
+
+CREATE TABLE `staging_students` (
+ `PKEY` int(11) NOT NULL AUTO_INCREMENT,
+ `APID` varchar(5) DEFAULT NULL,
+ `full_name` varchar(100) DEFAULT NULL,
+ `unique_id` varchar(8) DEFAULT NULL,
+ `status` varchar(8) DEFAULT NULL,
+ `household_id` varchar(20) DEFAULT NULL,
+ `first_name` varchar(50) DEFAULT NULL,
+ `middle_name` varchar(50) DEFAULT NULL,
+ `last_name` varchar(50) DEFAULT NULL,
+ `school_email` varchar(100) DEFAULT NULL,
+ `grade` varchar(2) DEFAULT NULL,
+ `expected_grad_year` int(11) DEFAULT NULL,
+ `homeroom_room` varchar(3) DEFAULT NULL,
+ `homeroom_teacher_first` varchar(50) DEFAULT NULL,
+ `homeroom_teacher_last` varchar(50) DEFAULT NULL,
+ `referred_to_as` varchar(50) DEFAULT NULL,
+ `gender` varchar(1) DEFAULT NULL,
+ `birthdate` date DEFAULT NULL,
+ `entry_date` date DEFAULT NULL,
+ PRIMARY KEY (`PKEY`),
+ UNIQUE KEY `unique_unique_id` (`unique_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8
 
 CREATE TABLE `import_employees` (
  `PKEY` int(11) NOT NULL AUTO_INCREMENT,
@@ -114,38 +136,8 @@ CREATE TABLE `import_employees` (
  `date_of_hire` varchar(10) DEFAULT NULL,
  `position` varchar(100) DEFAULT NULL,
  PRIMARY KEY (`PKEY`),
- UNIQUE KEY `#` (`PKEY`),
- UNIQUE KEY `Unique ID` (`unique_id`),
- KEY `#_2` (`PKEY`),
- KEY `Unique ID_2` (`unique_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `staging_students` (
- `PKEY` int(11) NOT NULL AUTO_INCREMENT,
- `APID` varchar(5) DEFAULT NULL,
- `full_name` varchar(100) DEFAULT NULL,
- `unique_id` varchar(8) DEFAULT NULL,
- `status` varchar(8) DEFAULT NULL,
- `household_id` varchar(20) DEFAULT NULL,
- `first_name` varchar(50) DEFAULT NULL,
- `middle_name` varchar(50) DEFAULT NULL,
- `last_name` varchar(50) DEFAULT NULL,
- `school_email` varchar(100) DEFAULT NULL,
- `grade` varchar(2) DEFAULT NULL,
- `expected_grad_year` int(11) NOT NULL,
- `homeroom_room` varchar(3) DEFAULT NULL,
- `homeroom_teacher_first` varchar(50) DEFAULT NULL,
- `homeroom_teacher_last` varchar(50) DEFAULT NULL,
- `referred_to_as` varchar(50) DEFAULT NULL,
- `gender` varchar(1) DEFAULT NULL,
- `birthdate` date DEFAULT NULL,
- `entry_date` date DEFAULT NULL,
- PRIMARY KEY (`PKEY`),
- UNIQUE KEY `#` (`PKEY`),
- UNIQUE KEY `Unique ID` (`unique_id`),
- KEY `#_2` (`PKEY`),
- KEY `Unique ID_2` (`unique_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=152 DEFAULT CHARSET=utf8;
+ UNIQUE KEY `unique_unique_id` (`unique_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8
 
 CREATE TABLE `staging_employees` (
  `PKEY` int(11) NOT NULL AUTO_INCREMENT,
@@ -164,12 +156,10 @@ CREATE TABLE `staging_employees` (
  `date_of_hire` date DEFAULT NULL,
  `position` varchar(100) DEFAULT NULL,
  PRIMARY KEY (`PKEY`),
- UNIQUE KEY `#` (`PKEY`),
- UNIQUE KEY `Unique ID` (`unique_id`),
- KEY `#_2` (`PKEY`),
- KEY `Unique ID_2` (`unique_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8;
+ UNIQUE KEY `unique_unique_id` (`unique_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
+-- groups for users related tables
 CREATE TABLE `groupings` (
  `unique_id` int(11) NOT NULL AUTO_INCREMENT,
  `population` varchar(3) CHARACTER SET latin1 NOT NULL,
@@ -187,3 +177,106 @@ CREATE TABLE `groupings_users` (
  `unique_id_user` varchar(8) NOT NULL,
  PRIMARY KEY (`unique_id_grouping`,`unique_id_user`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `import_courses` (
+ `PKEY` int(11) NOT NULL AUTO_INCREMENT,
+ `num` varchar(4) NOT NULL,
+ `alias` varchar(8) NOT NULL,
+ `name` varchar(254) NOT NULL,
+ `level` varchar(3) NOT NULL,
+ `description` varchar(254) NOT NULL,
+ `credits` decimal(11,0) NOT NULL,
+ `weight` decimal(11,0) NOT NULL,
+ `gpa` decimal(11,0) NOT NULL,
+ `opt` decimal(11,0) NOT NULL,
+ `length` varchar(3) NOT NULL,
+ `department` varchar(254) NOT NULL,
+ `prior` varchar(254) NOT NULL,
+ `link` varchar(254) NOT NULL,
+ `count_honorroll` varchar(3) NOT NULL,
+ `count_gpa` varchar(3) NOT NULL,
+ `long_description` varchar(254) NOT NULL,
+ `skip` varchar(4) NOT NULL,
+ `letter` varchar(2) NOT NULL,
+ `instruction_level` varchar(254) NOT NULL,
+ `district_coursecode` varchar(254) NOT NULL,
+ `state_coursecode` varchar(254) NOT NULL,
+ `display_name` varchar(254) NOT NULL,
+ `display_level` varchar(254) NOT NULL,
+ `display_department` varchar(254) NOT NULL,
+ `ignore_for_sync` varchar(1) NOT NULL,
+ `wa08_teacher_assign` varchar(254) NOT NULL,
+ `job_classification` varchar(254) NOT NULL,
+ `highly_qual_wa14` varchar(254) NOT NULL,
+ `sub_mat_comp_wa15` varchar(254) NOT NULL,
+ `nclb_wa13` varchar(254) NOT NULL,
+ PRIMARY KEY (`PKEY`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1
+
+CREATE TABLE `import_sections` (
+ `PKEY` int(11) NOT NULL AUTO_INCREMENT,
+ `course_name` varchar(254) NOT NULL,
+ `course_id` varchar(254) NOT NULL,
+ `section_id` varchar(254) NOT NULL,
+ `department` varchar(254) NOT NULL,
+ `teacher_id` varchar(5) NOT NULL,
+ `teacher_name` varchar(254) NOT NULL,
+ `room_number` varchar(254) NOT NULL,
+ `schedule` varchar(254) NOT NULL,
+ `term` varchar(254) NOT NULL,
+ `credits` decimal(10,0) NOT NULL,
+ `weight` decimal(10,0) NOT NULL,
+ `gpa` decimal(10,0) NOT NULL,
+ `opt` varchar(254) NOT NULL,
+ `max_students` int(11) NOT NULL,
+ `course_alias` varchar(254) NOT NULL,
+ `course_level` varchar(254) NOT NULL,
+ `course_description` varchar(254) NOT NULL,
+ `priority` varchar(254) NOT NULL,
+ `course_link` varchar(254) NOT NULL,
+ `count_honorroll` varchar(3) NOT NULL,
+ `count_gpa` varchar(3) NOT NULL,
+ `table_name` varchar(254) NOT NULL,
+ `field_name` varchar(254) NOT NULL,
+ `field_value` varchar(254) NOT NULL,
+ PRIMARY KEY (`PKEY`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1
+
+CREATE TABLE `import_schedules` (
+ `PKEY` int(11) NOT NULL AUTO_INCREMENT,
+ `unique_id` varchar(8) NOT NULL,
+ `apid` varchar(5) NOT NULL,
+ `formal_name` varchar(254) NOT NULL,
+ `course_number` varchar(254) NOT NULL,
+ `section_number` varchar(254) NOT NULL,
+ `course_name` varchar(254) NOT NULL,
+ `course_description` varchar(254) NOT NULL,
+ `course_alias` varchar(254) NOT NULL,
+ `teacher_id` varchar(5) NOT NULL,
+ `teacher_name` varchar(254) NOT NULL,
+ `schedules` varchar(254) NOT NULL,
+ `term` varchar(254) NOT NULL,
+ `room_number` varchar(254) NOT NULL,
+ `min_grade` varchar(254) NOT NULL,
+ `max_grade` varchar(254) NOT NULL,
+ `size_best` int(11) NOT NULL,
+ `size_current` int(11) NOT NULL,
+ `locked` varchar(3) NOT NULL,
+ `sectionx_record_num` varchar(254) NOT NULL,
+ `long_description` varchar(254) NOT NULL,
+ `skip` varchar(4) NOT NULL,
+ `letter` varchar(254) NOT NULL,
+ `instruction_level` varchar(254) NOT NULL,
+ `district_course_code` varchar(254) NOT NULL,
+ `state_course_code` varchar(254) NOT NULL,
+ `display_name` varchar(254) NOT NULL,
+ `display_level` varchar(254) NOT NULL,
+ `display_department` varchar(254) NOT NULL,
+ `ignore_for_sync` varchar(254) NOT NULL,
+ `wa08_teacher_assign` varchar(254) NOT NULL,
+ `job_classification` varchar(254) NOT NULL,
+ `highly_qual_wa14` varchar(254) NOT NULL,
+ `sub_mat_comp_wa15` varchar(254) NOT NULL,
+ `nclb_wa13` varchar(254) NOT NULL,
+ PRIMARY KEY (`PKEY`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1
