@@ -47,12 +47,12 @@ select *
 select users.unique_id, users.first_name, users.last_name, users.school_email as existing_email, import.school_email as new_email
   from users
   left join import_students as import on users.unique_id = import.unique_id
-  where users.school_email != import.school_email and import.school_email != ''
+  where users.school_email != import.school_email and import.school_email != '';
 -- results should be zero
 select users.unique_id, users.first_name, users.last_name, users.school_email as existing_email, import.school_email as new_email
   from users
   left join import_employees as import on users.unique_id = import.unique_id
-  where users.school_email != import.school_email and import.school_email != ''
+  where users.school_email != import.school_email and import.school_email != '';
 
 -- check for names with more then even chance of being problematic
 -- results should be zero
@@ -61,11 +61,11 @@ select *
   left join users on import.unique_id = users.unique_id
   where length(concat(import.first_name,import.last_name)) > 19
     and import.school_email = NULL
-    and import.status != 'INACTIVE'
+    and import.status != 'INACTIVE';
 -- results should be zero
 select *
   from import_employees as import
   left join users on import.unique_id = users.unique_id
   where length(concat(import.first_name,import.last_name)) > 19
     and import.school_email = NULL
-    and import.status != 'INACTIVE'
+    and import.status != 'INACTIVE';

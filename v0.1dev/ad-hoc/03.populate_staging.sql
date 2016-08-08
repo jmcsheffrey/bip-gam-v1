@@ -24,6 +24,52 @@ update staging_students
       , replace(replace(replace(replace(replace(lower(last_name),char(46),char(0)),char(45),char(0)),char(44),char(0)),char(39),char(0)),char(32),char(0))
     ),1,21), '@student.sscps.org')
   where (isnull(school_email) or school_email = '') and grade in ('03','04','05','06','07','08','09','10','11','12');
+-- here are two new queries that I don't want to lose - rdegennaro
+-- find next number value to use
+select substring(max(school_email),instr(school_email, '@')-3,3)+1 as next_number,
+  substring(max(school_email),instr(school_email, '@')-3,3) as max_number,
+  substring(max(school_email),1,instr(school_email, '@')-4) as max_name
+from users
+where population = 'STU'
+group by substring(school_email,1,instr(school_email, '@')-4)
+-- combine next number value with what should be user_name
+--    need to update as go & truncate to just 6 characters of last name
+select concat(
+  replace(
+    replace(
+      replace(
+        replace(
+          replace(substring(lower(first_name),1,1),char(46),char(0)),char(45),char(0)),char(44),char(0)),char(39),char(0)),char(32),char(0))
+  ,replace(
+    replace(
+      replace(
+        replace(
+          replace(lower(last_name),char(46),char(0)),char(45),char(0)),char(44),char(0)),char(39),char(0)),char(32),char(0))
+  ,case
+      when next.next_number is null then '001'
+      else next.next_number
+      end
+  ,'@student.sscps.org') as new_email
+from staging_students as stage
+left join (select substring(max(school_email),instr(school_email, '@')-3,3)+1 as next_number,
+  substring(max(school_email),instr(school_email, '@')-3,3) as max_number,
+  substring(max(school_email),1,instr(school_email, '@')-4) as max_name
+from users
+where population = 'STU'
+group by substring(school_email,1,instr(school_email, '@')-4)) as next on next.max_name = concat(
+  replace(
+    replace(
+      replace(
+        replace(
+          replace(substring(lower(first_name),1,1),char(46),char(0)),char(45),char(0)),char(44),char(0)),char(39),char(0)),char(32),char(0))
+  ,replace(
+    replace(
+      replace(
+        replace(
+          replace(lower(last_name),char(46),char(0)),char(45),char(0)),char(44),char(0)),char(39),char(0)),char(32),char(0)))
+
+
+
 -- make school_email null for everyone else so no duplicates (i.e. null is not checked as duplicate)
 update staging_students
   set school_email = null
@@ -46,7 +92,10 @@ update staging_employees
   set school_email =
     concat(substring(concat(
       replace(replace(replace(replace(replace(lower(substring(first_name,1,1)),char(46),char(0)),char(45),char(0)),char(44),char(0)),char(39),char(0)),char(32),char(0))
-      , '_'
       , replace(replace(replace(replace(replace(lower(last_name),char(46),char(0)),char(45),char(0)),char(44),char(0)),char(39),char(0)),char(32),char(0))
     ),1,21), '@sscps.org')
-  where isnull(school_email) or school_email = ''
+  where isnull(school_email) or school_email = '';
+  -- make school_email null for everyone else so no duplicates (i.e. null is not checked as duplicate)
+  update staging_employees
+    set school_email = null
+    where school_email = '';
