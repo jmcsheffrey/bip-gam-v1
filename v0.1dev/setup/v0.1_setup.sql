@@ -119,6 +119,52 @@ CREATE TABLE `staging_students` (
  UNIQUE KEY `unique_unique_id` (`unique_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8
 
+CREATE VIEW staging_students_prefix AS
+select PKEY, unique_id, first_name, last_name
+  , concat(
+      replace(
+        replace(
+          replace(
+            replace(
+              replace(substring(lower(first_name),1,1),
+                char(46),char(0)),char(45),char(0)),char(44),char(0)),char(39),char(0)),char(32),char(0))
+      ,replace(
+        replace(
+          replace(
+            replace(
+              replace(substring(lower(last_name),1,6),
+                char(46),char(0)),char(45),char(0)),char(44),char(0)),char(39),char(0)),char(32),char(0))
+      ) as prefix
+from staging_students
+where (isnull(school_email) or school_email = '') and grade in ('03','04','05','06','07','08','09','10','11','12')
+group by prefix
+
+CREATE VIEW users_nextsuffix AS
+select substring(max(school_email),1,instr(school_email, '@')-4) as max_name,
+  substring(max(school_email),instr(school_email, '@')-3,3) as max_number,
+  substring(max(school_email),instr(school_email, '@')-3,3)+1 as next_number
+from users
+where population = 'STU'
+group by substring(school_email,1,instr(school_email, '@')-4)
+
+CREATE VIEW staging_students_nextsuffix AS
+select substring(max(school_email),1,instr(school_email, '@')-4) as max_name,
+  substring(max(school_email),instr(school_email, '@')-3,3) as max_number,
+  substring(max(school_email),instr(school_email, '@')-3,3)+1 as next_number
+from staging_students
+where school_email is not null and school_email != ''
+group by substring(school_email,1,instr(school_email, '@')-4)
+
+CREATE VIEW overall_nextsuffix AS
+select max_name, max_number, next_number from users_nextsuffix
+union
+select max_name, max_number, next_number from staging_students_nextsuffix
+
+CREATE VIEW nextsuffix AS
+select max_name, max(max_number) as max_number, max(next_number) as next_number
+from overall_nextsuffix
+group by max_name
+
 CREATE TABLE `import_employees` (
  `PKEY` int(11) NOT NULL AUTO_INCREMENT,
  `APID` varchar(5) DEFAULT NULL,
