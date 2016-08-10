@@ -2,6 +2,7 @@
 insert into users
   select
     stage.unique_id,
+    stage.APID,
     now(),
     stage.status,
     'N' as manual_entry,
@@ -32,6 +33,7 @@ insert into users
 update users
   left join staging_students as stage on users.unique_id = stage.unique_id
   set users.update_date = now(),
+    users.current_year_id = stage.APID,
     users.status = stage.status,
     users.manual_entry = 'N',
     users.population = 'STU',
@@ -61,6 +63,7 @@ update users
 insert into users
   select
     stage.unique_id,
+    stage.APID,
     now(),
     stage.status,
     'N' as manual_entry,
@@ -90,6 +93,7 @@ insert into users
 update users
   left join staging_employees as stage on users.unique_id = stage.unique_id
   set users.update_date = now(),
+    users.current_year_id = stage.APID,
     users.status = stage.status,
     users.manual_entry = 'N',
     users.population = 'EMP',
