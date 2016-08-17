@@ -1,3 +1,8 @@
+-- ****************************************************
+-- Keep order of items because of new/update flag
+-- ****************************************************
+
+
 -- insert new student records
 insert into users
   select
@@ -5,6 +10,7 @@ insert into users
     stage.APID,
     now(),
     stage.status,
+    stage.newthisrun,
     'N' as manual_entry,
     'STU' as population,
     stage.household_id,
@@ -35,6 +41,7 @@ update users
   set users.update_date = now(),
     users.current_year_id = stage.APID,
     users.status = stage.status,
+    users.newthisrun = stage.newthisrun,
     users.manual_entry = 'N',
     users.population = 'STU',
     users.household_id = stage.household_id,
@@ -66,6 +73,7 @@ insert into users
     stage.APID,
     now(),
     stage.status,
+    stage.newthisrun,
     'N' as manual_entry,
     'EMP' as population,
     ''  as household_id,
@@ -95,6 +103,7 @@ update users
   set users.update_date = now(),
     users.current_year_id = stage.APID,
     users.status = stage.status,
+    users.newthisrun = stage.newthisrun,
     users.manual_entry = 'N',
     users.population = 'EMP',
     users.household_id = '',

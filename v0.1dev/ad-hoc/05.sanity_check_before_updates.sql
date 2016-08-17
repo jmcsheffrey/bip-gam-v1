@@ -3,7 +3,9 @@
 -- check for any unique_id changed by using name fields to connect tables
 
 
--- SCRIPTS TO RUN
+-- ****************************************************
+-- Scripts to run after import of source data.
+-- ****************************************************
 -- in order to make sure users are appropriately marked INACTIVE, anyone marked ACTIVE & manual_entry = N
 --   needs to have an record in staging_students or staging_employees
 -- results should be zero
