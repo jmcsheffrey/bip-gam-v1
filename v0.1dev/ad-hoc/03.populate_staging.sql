@@ -3,6 +3,7 @@
 -- TODO:
 --   01) fixup groupings to keep PKEY in staging like other data areas
 --   02) don't need the google data fields in the staging table for sections
+--   03) for groupings stage statements, there should be "import" or "stage" as prefix, not sections
 
 -- ***********************************************************
 -- copy appropriate data from import_ tables to stagin_ tables
@@ -145,3 +146,33 @@ insert into staging_groupings
   left join section_cohorts as cohorts on sections.course_id = cohorts.course_id and sections.section_id = cohorts.section_id
   where sections.table_name = ''
   order by concat(sections.course_id, '-',sections.section_id,'-','fy17');
+
+-- ** groupings_users statements
+-- remove groupings data from previous runs
+truncate staging_groupings_users;
+-- insert teacher related records (from import_sections)
+insert into staging_groupings_users
+  select
+    '' as PKEY
+    , import.course_id
+    , import.section_id
+    , 'fy17' as current_year
+    , users.unique_id as person_id
+    , 'TCH' as person_population
+  from import_sections as import
+  left join users on import.teacher_id = users.current_year_id
+  where import.table_name = ''
+  order by import.course_id, import.section_id;
+-- insert student related records (from import_sections)
+insert into staging_groupings_users
+  select
+    '' as PKEY
+    , import.course_number
+    , import.section_number
+    , 'fy17' as current_year
+    , import.unique_id
+    , 'STU' as person_population
+  from import_schedules as import
+  order by import.course_number, import.section_number;
+-- set the unique_id to used
+update staging_groupings_users as stage set tobe_unique_id = concat(stage.course_id, '-',stage.section_id,'-','fy17');

@@ -344,9 +344,7 @@ CREATE TABLE `groupings` (
  PRIMARY KEY (`unique_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
-ALTER ALGORITHM=UNDEFINED DEFINER=`rdegennaro`@`%` SQL SECURITY DEFINER VIEW `section_cohorts` AS
-
-CREATE VIEW users_nextsuffix AS
+CREATE VIEW section_cohorts AS
 select `import_sections`.`PKEY` AS `PKEY`
   ,`import_sections`.`course_id` AS `course_id`
   ,`import_sections`.`section_id` AS `section_id`
@@ -355,3 +353,22 @@ select `import_sections`.`PKEY` AS `PKEY`
   ,`import_sections`.`field_value` AS `cohort`
 from `import_sections`
 where ((`import_sections`.`table_name` = 'TEACHERS') and (`import_sections`.`field_name` = 'COHORT'))
+
+CREATE TABLE `staging_groupings_users` (
+ `PKEY` int(11) NOT NULL AUTO_INCREMENT,
+ `course_id` varchar(250) CHARACTER SET utf8 NOT NULL,
+ `section_id` varchar(250) CHARACTER SET utf8 NOT NULL,
+ `current_year` varchar(4) CHARACTER SET utf8 NOT NULL,
+ `person_id` varchar(8) CHARACTER SET utf8 NOT NULL,
+ `person_population` varchar(250) CHARACTER SET utf8 NOT NULL,
+ `tobe_unique_id` varchar(250) CHARACTER SET utf8 NOT NULL,
+ PRIMARY KEY (`PKEY`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+CREATE TABLE `groupings_users` (
+ `unique_id_grouping` varchar(250) NOT NULL,
+ `unique_id_user` varchar(8) NOT NULL,
+ `user_type` varchar(3) NOT NULL,
+ `status` varchar(8) NOT NULL,
+ PRIMARY KEY (`unique_id_grouping`,`unique_id_user`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8

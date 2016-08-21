@@ -3,6 +3,9 @@
 -- ****************************************************
 
 
+-- ****************************************************
+-- Populate users with student records
+-- ****************************************************
 -- insert new student records
 insert into users
   select
@@ -34,7 +37,6 @@ insert into users
   where
     stage.unique_id not in (select users.unique_id from users);
     -- and stage.grade in ('03','04','05','06','07','08','09','10','11','12');
-
 -- update existing student records
 update users
   left join staging_students as stage on users.unique_id = stage.unique_id
@@ -66,6 +68,9 @@ update users
     -- and stage.grade in ('03','04','05','06','07','08','09','10','11','12');
 
 
+-- ****************************************************
+-- Populate users with employee records
+-- ****************************************************
 -- insert new employee records
 insert into users
   select
@@ -96,7 +101,6 @@ insert into users
   from staging_employees as stage
   where
     stage.unique_id not in (select users.unique_id from users);
-
 -- update existing employee records
 update users
   left join staging_employees as stage on users.unique_id = stage.unique_id
@@ -126,6 +130,10 @@ update users
   where
     users.unique_id = stage.unique_id;
 
+-- ****************************************************
+-- Populate groupings for Google Classrooms
+-- ****************************************************
+-- be sure to adjust current_year for the current year running
 -- mark all last year courses inactive
 update groupings set status = 'INACTIVE' where current_year != 'FY17';
 -- insert new groupings
@@ -160,4 +168,31 @@ update groupings
     , groupings.google_id = stage.google_id
   where groupings.unique_id = stage.unique_id;
 
-  
+-- ****************************************************
+-- Populate groupings_users for Google Classrooms
+-- ****************************************************
+-- need distinction between new & old so can run multiple times a year
+-- insert new schedules
+insert into groupings_users
+  select
+    stage.tobe_unique_id as unique_id_grouping
+    , stage.person_id as unique_id_user
+    , stage.person_population as user_type
+    , 'ACTIVE' as status
+  from staging_groupings_users as stage
+  left join groupings_users as gu on stage.tobe_unique_id = gu.unique_id_grouping
+    and stage.person_id = gu.unique_id_user
+  where gu.unique_id_user is null
+  order by concat(stage.course_id, '-', stage.section_id, '-', stage.current_year);
+-- mark missing schedules as INACTIVE, this servers two purposes:
+--    1) automatically mark last year schedules as INACTIVE
+--    2) any removals are kept track of
+update groupings_users as gu
+  left join staging_groupings_users as stage on stage.tobe_unique_id = gu.unique_id_grouping and stage.person_id = gu.unique_id_user
+  set gu.status = 'INACTIVE'
+  where stage.tobe_unique_id is null and stage.person_id is null;
+-- now update rows in case someone was added, removed and added back
+update groupings_users as gu
+  inner join staging_groupings_users as stage on stage.tobe_unique_id = gu.unique_id_grouping and stage.person_id = gu.unique_id_user
+  set gu.user_type = stage.person_population
+    , gu.status = 'ACTIVE';

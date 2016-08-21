@@ -1,7 +1,8 @@
 -- ****************************************************
 -- Keep order of items for everything before CSV outputs
 -- ****************************************************
-
+-- ToDo:
+--   1)  figure out how to deal with archiving last year classrooms
 
 -- ****************************************************
 -- Inactive users for Google, via GAM script
@@ -78,8 +79,34 @@ select concat(
 -- ****************************************************
 -- Setup Google Classrooms, via GAM script
 -- ****************************************************
--- create classrooms
--- gam create course [alias <alias>] [name <name>] [section <section>] [heading <heading>] [description <description>] [room <room>] [teacher <teacher email>] [status <PROVISIONED|ACTIVE|ARCHIVED|DECLINED>]
+-- be sure to adjust current_year to match correctly
+-- unique_id must be alias to be able to connect to classroom without knowing Google ID
+
+-- archive appropriate classrooms
+-- gam update course <alias> status ARCHIVED
+-- not needed for first year, it should be in ToDo
+
+-- create classrooms; teacher must be set so admin user is not added by default
+-- gam create course [alias <alias>] [name <name>] [section <section>] teacher <teacher email> status ACTIVE
+select concat(
+      'python ./gam/gam.py'
+      , ' create course ', g.unique_id
+      , 'teacher ', teachers.school_email
+      , 'name ', concat(g.name, ' - ', g.time_block, '(', teachers.referred_to_as, ')')
+    )
+  from groupings as g
+  left join groupings_users as gu
+    on g.unique_id = gu.unique_id_grouping and gu.user_type = 'TCH'
+  left join users as teachers on gu.unique_id_user = teachers.unique_id
+  where g.status = 'ACTIVE'
+  order by g.unique_id;
+
+-- assign teachers to Classrooms
+-- gam course <alias> add teacher <email address>
+-- not needed until set multiple teachers to one section (manually or from adminplus)
+
+-- assign students to Classrooms
+-- gam course <alias> add student <email address>
 
 
 -- ****************************************************
@@ -87,54 +114,3 @@ select concat(
 -- ****************************************************
 -- ****************************************************
 -- ****************************************************
-
-
-
--- ****************************************************
--- New users for Google, via CSV upload
--- ****************************************************
--- export students
-select
-    users.first_name as 'First Name',
-    users.last_name as 'Last Name',
-    users.school_email as 'Email Address',
-    'sscps123' as 'Password',
-    '' as 'Secondary Email',
-    '' as 'Work Phone 1',
-    '' as 'Home Phone 1',
-    '' as 'Mobile Phone 1',
-    '' as 'Work address 1',
-    '' as 'Home address 1',
-    users.unique_id as 'Employee Id',
-    '' as 'Employee Type',
-    '' as 'Employee Title',
-    '' as 'Manager',
-    users.grade as 'Department',
-    users.status as 'Cost Center'
-  from users
-  left join import_students as import on users.unique_id = import.unique_id
-  where users.status = 'ACTIVE' and users.population = 'STU'
-    and users.school_email != '' and import.school_email = ''
-  order by users.school_email
--- export employees
-select
-    first_name as 'First Name',
-    last_name as 'Last Name',
-    school_email as 'Email Address',
-    'sscps123' as 'Password',
-    '' as 'Secondary Email',
-    '' as 'Work Phone 1',
-    '' as 'Home Phone 1',
-    '' as 'Mobile Phone 1',
-    '' as 'Work address 1',
-    '' as 'Home address 1',
-    unique_id as 'Employee Id',
-    '' as 'Employee Type',
-    '' as 'Employee Title',
-    '' as 'Manager',
-    '' as 'Department',
-    users.status as 'Cost Center'
-  from users
-  where users.status = 'ACTIVE' and users.population = 'STU'
-    and users.school_email != '' and import.school_email = ''
-  order by school_email

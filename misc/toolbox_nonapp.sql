@@ -13,3 +13,5 @@ SHOW CREATE TABLE import_sections;
 SHOW CREATE TABLE import_schedules;
 SHOW CREATE TABLE staging_groupings;
 SHOW CREATE TABLE groupings;
+SHOW CREATE TABLE staging_groupings_users;
+SHOW CREATE TABLE groupings_users;
