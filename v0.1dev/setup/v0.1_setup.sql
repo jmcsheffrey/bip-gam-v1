@@ -209,24 +209,6 @@ CREATE TABLE `staging_employees` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
 -- groups for users related tables
-CREATE TABLE `groupings` (
- `unique_id` int(11) NOT NULL AUTO_INCREMENT,
- `population` varchar(3) CHARACTER SET latin1 NOT NULL,
- `name_short` varchar(2) CHARACTER SET latin1 NOT NULL,
- `name_long` varchar(100) CHARACTER SET latin1 NOT NULL,
- `email` varchar(100) NOT NULL,
- `folder` varchar(100) NOT NULL,
- `google_orgunit` varchar(100) NOT NULL,
- `google_id_folder` varchar(100) CHARACTER SET latin1 NOT NULL,
- PRIMARY KEY (`unique_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
-
-CREATE TABLE `groupings_users` (
- `unique_id_grouping` int(11) NOT NULL,
- `unique_id_user` varchar(8) NOT NULL,
- PRIMARY KEY (`unique_id_grouping`,`unique_id_user`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 CREATE TABLE `import_courses` (
  `PKEY` int(11) NOT NULL AUTO_INCREMENT,
  `num` varchar(4) NOT NULL,
@@ -329,3 +311,47 @@ CREATE TABLE `import_schedules` (
  `nclb_wa13` varchar(254) NOT NULL,
  PRIMARY KEY (`PKEY`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1
+
+CREATE TABLE `staging_groupings` (
+ `unique_id` varchar(250) NOT NULL,
+ `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ `status` varchar(10) NOT NULL,
+ `current_year` varchar(4) NOT NULL,
+ `time_block` varchar(8) NOT NULL,
+ `level` varchar(2) NOT NULL,
+ `name` varchar(250) NOT NULL,
+ `section` varchar(250) NOT NULL,
+ `email_teachers` varchar(250) NOT NULL,
+ `email_students` varchar(250) NOT NULL,
+ `folder_teachers` varchar(250) NOT NULL,
+ `google_id` varchar(250) NOT NULL,
+ PRIMARY KEY (`unique_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+CREATE TABLE `groupings` (
+ `unique_id` varchar(250) NOT NULL,
+ `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ `status` varchar(10) NOT NULL,
+ `current_year` varchar(4) NOT NULL,
+ `time_block` varchar(8) NOT NULL,
+ `level` varchar(2) NOT NULL,
+ `name` varchar(250) NOT NULL,
+ `section` varchar(250) NOT NULL,
+ `email_teachers` varchar(250) NOT NULL,
+ `email_students` varchar(250) NOT NULL,
+ `folder_teachers` varchar(250) NOT NULL,
+ `google_id` varchar(250) NOT NULL,
+ PRIMARY KEY (`unique_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+ALTER ALGORITHM=UNDEFINED DEFINER=`rdegennaro`@`%` SQL SECURITY DEFINER VIEW `section_cohorts` AS
+
+CREATE VIEW users_nextsuffix AS
+select `import_sections`.`PKEY` AS `PKEY`
+  ,`import_sections`.`course_id` AS `course_id`
+  ,`import_sections`.`section_id` AS `section_id`
+  ,`import_sections`.`teacher_id` AS `teacher_id`
+  ,`import_sections`.`schedule` AS `schedule`
+  ,`import_sections`.`field_value` AS `cohort`
+from `import_sections`
+where ((`import_sections`.`table_name` = 'TEACHERS') and (`import_sections`.`field_name` = 'COHORT'))

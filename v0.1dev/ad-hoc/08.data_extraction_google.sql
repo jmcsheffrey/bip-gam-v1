@@ -24,7 +24,7 @@ select concat(
 -- Active users for Google, via GAM script
 -- ****************************************************
 -- create new users
-# gam create user <email address> firstname <First Name> lastname <Last Name> password <Password> changepassword on org <Org Name> externalid employeeID <unique_id>
+-- gam create user <email address> firstname <First Name> lastname <Last Name> password <Password> changepassword on org <Org Name> externalid employeeID <unique_id>
 select concat(
       'python ./gam/gam.py'
       , ' create user ', users.school_email
@@ -74,6 +74,12 @@ select concat(
   where users.status = 'ACTIVE' and users.newthisrun = 'N' and users.school_email != ''
   order by users.population, users.school_email;
 
+
+-- ****************************************************
+-- Setup Google Classrooms, via GAM script
+-- ****************************************************
+-- create classrooms
+-- gam create course [alias <alias>] [name <name>] [section <section>] [heading <heading>] [description <description>] [room <room>] [teacher <teacher email>] [status <PROVISIONED|ACTIVE|ARCHIVED|DECLINED>]
 
 
 -- ****************************************************

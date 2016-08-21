@@ -1,5 +1,8 @@
 -- don't ever empty import_ tables until process is done, only do it when importing
 -- stuff below is for "down & dirty" direct workings on the database
+-- TODO:
+--   01) fixup groupings to keep PKEY in staging like other data areas
+--   02) don't need the google data fields in the staging table for sections
 
 -- ***********************************************************
 -- copy appropriate data from import_ tables to stagin_ tables
@@ -112,3 +115,33 @@ update staging_employees
   update staging_employees
     set school_email = null
     where school_email = '';
+
+
+-- ** groupings statements
+-- remove groupings data from previous runs
+truncate staging_groupings;
+-- insert new groupings
+insert into staging_groupings
+  select concat(sections.course_id, '-',sections.section_id,'-','fy17') as unique_id
+    , now() as update_date
+    , 'ACTIVE' as status
+    , 'FY17' as current_year
+    , (case
+      when courses.display_level = '3'
+      then cohorts.cohort
+      when substring(sections.schedule,1,1) = 'M'
+      then 'Workshop'
+      else concat ('Block ', substring(sections.schedule,1,1))
+      end) as time_block
+    , courses.display_level as level
+    , courses.display_name as name
+    , sections.section_id as section
+    , '' as email_teachers
+    , '' as email_students
+    , '' as folder_teachers
+    , '' as google_id
+  from `import_sections` as sections
+  left join import_courses as courses on sections.course_id = courses.num
+  left join section_cohorts as cohorts on sections.course_id = cohorts.course_id and sections.section_id = cohorts.section_id
+  where sections.table_name = ''
+  order by concat(sections.course_id, '-',sections.section_id,'-','fy17');

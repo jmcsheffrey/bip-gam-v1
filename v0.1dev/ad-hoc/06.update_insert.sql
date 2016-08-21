@@ -125,3 +125,39 @@ update users
     users.description = 'SSCPS Employee'
   where
     users.unique_id = stage.unique_id;
+
+-- mark all last year courses inactive
+update groupings set status = 'INACTIVE' where current_year != 'FY17';
+-- insert new groupings
+insert into groupings
+  select sections.unique_id
+    , now() as update_date
+    , sections.status
+    , sections.current_year
+    , sections.time_block
+    , sections.level
+    , sections.name
+    , sections.section
+    , sections.email_teachers
+    , sections.email_students
+    , sections.folder_teachers
+    , sections.google_id
+  from `staging_groupings` as sections
+  where sections.unique_id not in (select unique_id from groupings)
+  order by sections.unique_id;
+-- update existing groupings (in case run twice)
+update groupings
+  left join staging_groupings as stage on groupings.unique_id = stage.unique_id
+  set groupings.status = stage.status
+    , groupings.current_year = stage.current_year
+    , groupings.time_block = stage.time_block
+    , groupings.level = stage.level
+    , groupings.name = stage.name
+    , groupings.section = stage.section
+    , groupings.email_teachers = stage.email_teachers
+    , groupings.email_students = stage.email_students
+    , groupings.folder_teachers = stage.folder_teachers
+    , groupings.google_id = stage.google_id
+  where groupings.unique_id = stage.unique_id;
+
+  
