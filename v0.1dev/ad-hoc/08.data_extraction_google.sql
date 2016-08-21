@@ -79,20 +79,32 @@ select concat(
 -- ****************************************************
 -- Setup Google Classrooms, via GAM script
 -- ****************************************************
--- be sure to adjust current_year to match correctly
 -- unique_id must be alias to be able to connect to classroom without knowing Google ID
 
 -- archive appropriate classrooms
 -- gam update course <alias> status ARCHIVED
--- not needed for first year, it should be in ToDo
+select concat(
+      'python ./gam/gam.py'
+      , ' update course ', g.unique_id
+      , ' ARCHIVED'
+    )
+  from groupings as g
+  where g.status = 'INACTIVE'
+  order by g.unique_id;
 
 -- create classrooms; teacher must be set so admin user is not added by default
 -- gam create course [alias <alias>] [name <name>] [section <section>] teacher <teacher email> status ACTIVE
 select concat(
-      'python ./gam/gam.py'
-      , ' create course ', g.unique_id
-      , 'teacher ', teachers.school_email
-      , 'name ', concat(g.name, ' - ', g.time_block, '(', teachers.referred_to_as, ')')
+      'python ./gam/gam.py create course'
+      , ' alias ', g.unique_id
+      , ' teacher ', teachers.school_email
+      , ' name ', char(34), concat(g.name, ' - ', g.time_block, ' (', (case
+        when teachers.referred_to_as != ''
+        then teachers.referred_to_as
+        else teachers.first_name
+        end), ')')
+      , char(34)
+      , ' status', ' ACTIVE'
     )
   from groupings as g
   left join groupings_users as gu

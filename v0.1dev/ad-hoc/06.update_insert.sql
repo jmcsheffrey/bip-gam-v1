@@ -134,7 +134,7 @@ update users
 -- Populate groupings for Google Classrooms
 -- ****************************************************
 -- be sure to adjust current_year for the current year running
--- mark all last year courses inactive
+-- mark all prior years courses inactive
 update groupings set status = 'INACTIVE' where current_year != 'FY17';
 -- insert new groupings
 insert into groupings
@@ -172,6 +172,11 @@ update groupings
 -- Populate groupings_users for Google Classrooms
 -- ****************************************************
 -- need distinction between new & old so can run multiple times a year
+-- mark all prior years courses inactive
+update groupings_users as gu
+  left join groupings as g on gu.unique_id_grouping = g.unique_id
+  set gu.status = 'INACTIVE'
+  where g.current_year != 'FY17';
 -- insert new schedules
 insert into groupings_users
   select
