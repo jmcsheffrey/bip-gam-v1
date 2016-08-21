@@ -102,8 +102,8 @@ select concat(
         when teachers.referred_to_as != ''
         then teachers.referred_to_as
         else teachers.first_name
-        end), ')')
-      , char(34)
+        end), ')'), char(34)
+      , ' section ', char(34), concat(g.course_id, '/', g.section_id,'-',g.current_year), char(34)
       , ' status', ' ACTIVE'
     )
   from groupings as g
@@ -119,7 +119,14 @@ select concat(
 
 -- assign students to Classrooms
 -- gam course <alias> add student <email address>
-
+select concat(
+      'python ./gam/gam.py course'
+      , ' ', gu.unique_id_grouping
+      , ' add student ', students.school_email
+    )
+  from groupings_users as gu
+  inner join users as students on gu.unique_id_user = students.unique_id
+  where gu.user_type = 'STU' and gu.status = 'ACTIVE'
 
 -- ****************************************************
 -- ****************************************************

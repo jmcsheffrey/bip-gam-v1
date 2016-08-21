@@ -145,7 +145,8 @@ insert into groupings
     , sections.time_block
     , sections.level
     , sections.name
-    , sections.section
+    , sections.course_id
+    , sections.section_id
     , sections.email_teachers
     , sections.email_students
     , sections.folder_teachers
@@ -161,7 +162,8 @@ update groupings
     , groupings.time_block = stage.time_block
     , groupings.level = stage.level
     , groupings.name = stage.name
-    , groupings.section = stage.section
+    , groupings.course_id = stage.course_id
+    , groupings.section_id = stage.section_id
     , groupings.email_teachers = stage.email_teachers
     , groupings.email_students = stage.email_students
     , groupings.folder_teachers = stage.folder_teachers

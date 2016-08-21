@@ -136,7 +136,8 @@ insert into staging_groupings
       end) as time_block
     , courses.display_level as level
     , courses.display_name as name
-    , sections.section_id as section
+    , courses.num as course_id
+    , sections.section_id as section_id
     , '' as email_teachers
     , '' as email_students
     , '' as folder_teachers
