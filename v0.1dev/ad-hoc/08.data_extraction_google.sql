@@ -3,6 +3,7 @@
 -- ****************************************************
 -- ToDo:
 --   1)  figure out how to deal with archiving last year classrooms
+--   2)  cleanup parent email statements to be "official" as well as remove duplicates
 
 -- ****************************************************
 -- Inactive users for Google, via GAM script
@@ -133,3 +134,30 @@ select concat(
 -- ****************************************************
 -- ****************************************************
 -- ****************************************************
+
+
+
+-- temp stuff to extract parents for email list
+-- this grabs just home email address for:
+--   "DO NOT EMAIL" flag != Y
+--   "PARENT PORTAL ACCESS" = Y
+-- gam update group <group email> add owner|member|manager {user <email address> | group <group address> | org <org name> | file <file name> | all users}
+-- SHEETS formula:
+--   =concatenate("python ./gam/gam.py update group parents@sscps.org add member " & B2)
+--  Add test email addresses, don't actually use this, just examples
+-- this removes all users from group, maybe do a join with this statement?
+--   python ./gam/gam.py gam update group membersclub@acme.org remove group membersclub@acme.org
+-- this adds users to group
+--   python ./gam/gam.py update group parents@sscps.org add member testemailxyz@gmail.com
+select 'python ./gam/gam.py gam update group parents@sscps.org remove group parents@sscps.org' as statement
+  from import_mastercontacts as import_junk
+  limit 1
+union
+select concat(
+      'python ./gam/gam.py update'
+      , ' group', ' parents@sscps.org'
+      , ' add member ', import.CONTACT_HOME_EMAIL
+    ) as statement
+  from import_mastercontacts as import
+  where import.CONTACT_HOME_EMAIL != ''
+    and import.PARENT_PORTAL_ACCESS = 'Y' and import.DO_NOT_EMAIL != 'Y'
