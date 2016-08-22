@@ -8,6 +8,8 @@ SHOW CREATE TABLE staging_students;
 SHOW CREATE TABLE import_employees;
 SHOW CREATE TABLE staging_employees;
 
+SHOW CREATE TABLE import_mastercontacts;
+
 SHOW CREATE TABLE import_courses;
 SHOW CREATE TABLE import_sections;
 SHOW CREATE TABLE import_schedules;
