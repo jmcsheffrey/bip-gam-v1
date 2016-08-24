@@ -149,6 +149,18 @@ select 'python ./gam/gam.py gam update group parents@sscps.org remove group pare
   from import_mastercontacts as import_junk
   limit 1
 union
+select 'python ./gam/gam.py gam update group parents@sscps.org add owner asavage@sscps.org' as statement
+  from import_mastercontacts as import_junk
+  limit 1
+union
+select 'python ./gam/gam.py gam update group parents@sscps.org add owner mtondorf@sscps.org' as statement
+  from import_mastercontacts as import_junk
+  limit 1
+union
+select 'python ./gam/gam.py gam update group parents@sscps.org add owner rdegennaro@sscps.org' as statement
+  from import_mastercontacts as import_junk
+  limit 1
+union
 select concat(
       'python ./gam/gam.py update'
       , ' group', ' parents@sscps.org'
