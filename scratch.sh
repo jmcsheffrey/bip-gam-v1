@@ -19,9 +19,9 @@
 #python ./gam/gam.py course 9909-01-fy17 add student llearne125@student.sscps.org
 #python ./gam/gam.py course 9909-01-fy17 add student ffreshm101@student.sscps.org
 #python ./gam/gam.py course 9909-01-fy17 add student bbookwo102@student.sscps.org
-#python ./gam/gam.py course 9909-01-fy17 add student sschola102@student.sscps.org
 #python ./gam/gam.py course 9909-01-fy17 add student ssophom101@student.sscps.org
 #python ./gam/gam.py course 9909-01-fy17 add student ttender101@student.sscps.org
+#python ./gam/gam.py course 9909-01-fy17 add student sschola102@student.sscps.org
 #python ./gam/gam.py course 9909-01-fy17 add student sschola101@student.sscps.org
 #python ./gam/gam.py course 9909-01-fy17 add student jjunior101@student.sscps.org
 #python ./gam/gam.py course 9909-01-fy17 add student bbookwo101@student.sscps.org
