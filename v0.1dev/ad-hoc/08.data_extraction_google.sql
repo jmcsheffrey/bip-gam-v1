@@ -2,7 +2,11 @@
 -- Keep order of items for everything before CSV outputs
 -- ****************************************************
 -- ToDo:
---   1)  figure out how to deal with archiving last year classrooms
+--   * add SSCPS-GroupDocs to everyone's My drive
+--   * add calendars (Main, Athletics, FacStaff) to everyone's calendar
+--   * add Level calendars to folks?
+
+--   * figure out how to deal with archiving last year classrooms
 
 -- ****************************************************
 -- Inactive users for Google, via GAM script

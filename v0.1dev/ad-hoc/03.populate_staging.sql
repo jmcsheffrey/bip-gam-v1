@@ -160,6 +160,7 @@ insert into staging_groupings_users
     , 'fy17' as current_year
     , users.unique_id as person_id
     , 'TCH' as person_population
+    , '' as tobe_unique_id
   from import_sections as import
   left join users on import.teacher_id = users.current_year_id
   where import.table_name = ''
@@ -173,6 +174,7 @@ insert into staging_groupings_users
     , 'fy17' as current_year
     , import.unique_id
     , 'STU' as person_population
+    , '' as tobe_unique_id
   from import_schedules as import
   order by import.course_number, import.section_number;
 -- set the unique_id to used

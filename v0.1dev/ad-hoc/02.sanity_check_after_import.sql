@@ -1,11 +1,15 @@
 -- TODO
 --  * check for malformed email addresses
--- TODO - Classes/Courses
---  * after import, check for over lapping "pretty names"
+--  * after import of courses, check for over lapping "pretty names"
+--  * allow homerooms similar to "1107 & 7201"
 
 -- Run these two before importing data
 truncate import_students;
 truncate import_employees;
+truncate import_mastercontacts;
+truncate import_courses;
+truncate import_sections;
+truncate import_schedules;
 
 ---------------------------------
 -- SCRIPTS TO RUN (after import)
@@ -39,8 +43,8 @@ select *
       and (substring(upper(homeroom),1,6) != 'RECEPT')
     )
      and
+   );
     (status = 'ACTIVE')
-  );
 
 -- check for school_email that is non-empty & different between users and import_
 -- results should be zero
