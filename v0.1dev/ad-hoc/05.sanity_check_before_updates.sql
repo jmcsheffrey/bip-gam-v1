@@ -18,6 +18,9 @@ select users.unique_id, users.first_name, users.last_name, users.school_email fr
   where users.population = 'EMP' and users.status = 'ACTIVE' and users.manual_entry = 'N' and stage.status is null
   order by users.unique_id desc;
 
+-- all records from last year should null for current_year_id
+update users set current_year_id = NULL;
+
 -- check for duplicate email addresses where unique_id is not same between USERS & STAGING
 -- results should be zero
 select stage.unique_id as staging_id, users.unique_id as users_id,

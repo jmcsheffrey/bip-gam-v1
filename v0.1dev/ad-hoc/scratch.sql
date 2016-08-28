@@ -19,6 +19,8 @@ select * from staging_students where unique_id not in (select unique_id from use
 select * from staging_students where status = 'ACTIVE' and unique_id not in (select unique_id from users) order by grade DESC, school_email
 select * from staging_students where grade in ('09','10','11','12') and status = 'ACTIVE' and unique_id not in (select unique_id from users) order by grade DESC, school_email
 
+-- copy original list of users
+
 -- list students in existing data that do not have emails that are not in 3rd or 4th grade
 select * from users
   where users.status = 'ACTIVE' and users.population = 'STU' and users.grade not in ('03','04') and (users.school_email = '' or isnull(users.school_email))

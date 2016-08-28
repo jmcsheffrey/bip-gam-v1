@@ -4,9 +4,9 @@
 --SHOW CREATE TABLE <table name>
 SHOW CREATE TABLE import_students;
 SHOW CREATE TABLE staging_students;
-
 SHOW CREATE TABLE import_employees;
 SHOW CREATE TABLE staging_employees;
+SHOW CREATE TABLE users;
 
 SHOW CREATE TABLE import_mastercontacts;
 
