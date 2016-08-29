@@ -7,13 +7,13 @@
 -- Scripts to run after import of source data.
 -- ****************************************************
 -- in order to make sure users are appropriately marked INACTIVE, anyone marked ACTIVE & manual_entry = N
---   needs to have an record in staging_students or staging_employees
+--   needs to have an record in staging_students or staging_employees, anyone who isn't is listed
 -- results should be zero
-select users.unique_id, users.first_name, users.last_name, users.school_email from users
+select users.unique_id, users.first_name, users.last_name, users.school_email, users.status from users
   left join staging_students as stage on users.unique_id = stage.unique_id
   where users.population = 'STU' and users.status = 'ACTIVE' and users.manual_entry = 'N' and stage.status is null
   order by users.unique_id desc;
-select users.unique_id, users.first_name, users.last_name, users.school_email from users
+select users.unique_id, users.first_name, users.last_name, users.school_email, users.status from users
   left join staging_employees as stage on users.unique_id = stage.unique_id
   where users.population = 'EMP' and users.status = 'ACTIVE' and users.manual_entry = 'N' and stage.status is null
   order by users.unique_id desc;
@@ -23,17 +23,19 @@ update users set current_year_id = NULL;
 
 -- check for duplicate email addresses where unique_id is not same between USERS & STAGING
 -- results should be zero
-select stage.unique_id as staging_id, users.unique_id as users_id,
-    stage.school_email as staging_email, users.school_email as users_email,
-    stage.school_email as staging_first_name, users.school_email as users_first_name,
-    stage.school_email as staging_last_name, users.school_email as users_last_name
+select stage.unique_id as staging_id, users.unique_id as users_id
+    , stage.school_email as staging_email, users.school_email as users_email
+    , stage.first_name as staging_first_name, users.first_name as users_first_name
+    , stage.middle_name as staging_middle_name, users.middle_name as users_middle_name
+    , stage.last_name as staging_last_name, users.last_name as users_last_name
   from staging_students as stage
   left join users on stage.school_email = users.school_email
   where stage.unique_id != users.unique_id;
 select stage.unique_id as staging_id, users.unique_id as users_id,
-    stage.school_email as staging_email, users.school_email as users_email,
-    stage.first_name as staging_first_name, users.first_name as users_first_name,
-    stage.last_name as staging_last_name, users.last_name as users_last_name
+    , stage.school_email as staging_email, users.school_email as users_email
+    , stage.first_name as staging_first_name, users.first_name as users_first_name
+    , stage.middle_name as staging_middle_name, users.middle_name as users_middle_name
+    , stage.last_name as staging_last_name, users.last_name as users_last_name
   from staging_employees as stage
   left join users on stage.school_email = users.school_email
   where stage.unique_id != users.unique_id;
