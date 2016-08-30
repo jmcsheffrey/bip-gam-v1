@@ -2,6 +2,8 @@
 -- Keep order of items for everything before CSV outputs
 -- ****************************************************
 -- ToDo:
+--   * fix issue with pre-3rd graders that exist in users without UID confuse newthisrun
+--   * fix names so they are double quoted
 --   * add SSCPS-GroupDocs to everyone's My drive
 --   * add calendars (Main, Athletics, FacStaff) to everyone's calendar
 --   * add Level calendars to folks?
@@ -37,17 +39,17 @@ select concat(
       , ' lastname ', users.last_name
       , ' password sscps123'
       , ' changepassword on'
-      ,(case when users.population = 'EMP' then ' org /Test/Users-Normal/Employees'
-        when users.population = 'STU' and users.grade = '12' then ' org /Test/Users-Normal/Students/Level-HS'
-        when users.population = 'STU' and users.grade = '11' then ' org /Test/Users-Normal/Students/Level-HS'
-        when users.population = 'STU' and users.grade = '10' then ' org /Test/Users-Normal/Students/Level-HS'
-        when users.population = 'STU' and users.grade = '09' then ' org /Test/Users-Normal/Students/Level-HS'
-        when users.population = 'STU' and users.grade = '08' then ' org /Test/Users-Normal/Students/Level-4'
-        when users.population = 'STU' and users.grade = '07' then ' org /Test/Users-Normal/Students/Level-4'
-        when users.population = 'STU' and users.grade = '06' then ' org /Test/Users-Normal/Students/Level-3'
-        when users.population = 'STU' and users.grade = '05' then ' org /Test/Users-Normal/Students/Level-3'
-        when users.population = 'STU' and users.grade = '04' then ' org /Test/Users-Normal/Students/Level-2'
-        when users.population = 'STU' and users.grade = '03' then ' org /Test/Users-Normal/Students/Level-2'
+      ,(case when users.population = 'EMP' then ' org /Prod/Users-Normal/Employees'
+        when users.population = 'STU' and users.grade = '12' then ' org /Prod/Users-Normal/Students/Level-HS'
+        when users.population = 'STU' and users.grade = '11' then ' org /Prod/Users-Normal/Students/Level-HS'
+        when users.population = 'STU' and users.grade = '10' then ' org /Prod/Users-Normal/Students/Level-HS'
+        when users.population = 'STU' and users.grade = '09' then ' org /Prod/Users-Normal/Students/Level-HS'
+        when users.population = 'STU' and users.grade = '08' then ' org /Prod/Users-Normal/Students/Level-4'
+        when users.population = 'STU' and users.grade = '07' then ' org /Prod/Users-Normal/Students/Level-4'
+        when users.population = 'STU' and users.grade = '06' then ' org /Prod/Users-Normal/Students/Level-3'
+        when users.population = 'STU' and users.grade = '05' then ' org /Prod/Users-Normal/Students/Level-3'
+        when users.population = 'STU' and users.grade = '04' then ' org /Prod/Users-Normal/Students/Level-2'
+        when users.population = 'STU' and users.grade = '03' then ' org /Prod/Users-Normal/Students/Level-2'
         else 'ERROR' end)
       , ' externalid organization ', users.unique_id
     )
@@ -61,17 +63,17 @@ select concat(
       , ' update user ', users.school_email
       , ' firstname ', users.first_name
       , ' lastname ', users.last_name
-      ,(case when users.population = 'EMP' then ' org /Test/Users-Normal/Employees'
-        when users.population = 'STU' and users.grade = '12' then ' org /Test/Users-Normal/Students/Level-HS'
-        when users.population = 'STU' and users.grade = '11' then ' org /Test/Users-Normal/Students/Level-HS'
-        when users.population = 'STU' and users.grade = '10' then ' org /Test/Users-Normal/Students/Level-HS'
-        when users.population = 'STU' and users.grade = '09' then ' org /Test/Users-Normal/Students/Level-HS'
-        when users.population = 'STU' and users.grade = '08' then ' org /Test/Users-Normal/Students/Level-4'
-        when users.population = 'STU' and users.grade = '07' then ' org /Test/Users-Normal/Students/Level-4'
-        when users.population = 'STU' and users.grade = '06' then ' org /Test/Users-Normal/Students/Level-3'
-        when users.population = 'STU' and users.grade = '05' then ' org /Test/Users-Normal/Students/Level-3'
-        when users.population = 'STU' and users.grade = '04' then ' org /Test/Users-Normal/Students/Level-2'
-        when users.population = 'STU' and users.grade = '03' then ' org /Test/Users-Normal/Students/Level-2'
+      ,(case when users.population = 'EMP' then ' org /Prod/Users-Normal/Employees'
+        when users.population = 'STU' and users.grade = '12' then ' org /Prod/Users-Normal/Students/Level-HS'
+        when users.population = 'STU' and users.grade = '11' then ' org /Prod/Users-Normal/Students/Level-HS'
+        when users.population = 'STU' and users.grade = '10' then ' org /Prod/Users-Normal/Students/Level-HS'
+        when users.population = 'STU' and users.grade = '09' then ' org /Prod/Users-Normal/Students/Level-HS'
+        when users.population = 'STU' and users.grade = '08' then ' org /Prod/Users-Normal/Students/Level-4'
+        when users.population = 'STU' and users.grade = '07' then ' org /Prod/Users-Normal/Students/Level-4'
+        when users.population = 'STU' and users.grade = '06' then ' org /Prod/Users-Normal/Students/Level-3'
+        when users.population = 'STU' and users.grade = '05' then ' org /Prod/Users-Normal/Students/Level-3'
+        when users.population = 'STU' and users.grade = '04' then ' org /Prod/Users-Normal/Students/Level-2'
+        when users.population = 'STU' and users.grade = '03' then ' org /Prod/Users-Normal/Students/Level-2'
         else 'ERROR' end)
       , ' externalid organization ', users.unique_id
     )
