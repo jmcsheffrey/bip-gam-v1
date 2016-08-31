@@ -81,6 +81,14 @@ select concat(
   where users.status = 'ACTIVE' and users.newthisrun = 'N' and users.school_email != ''
   order by users.population, users.school_email;
 
+-- reimport to AdminPlus to update school_email field
+select unique_id, school_email
+  from users
+  where users.population = 'STU' and users.status = 'ACTIVE' and users.school_email != '';
+select unique_id, school_email
+  from users
+  where users.population = 'EMP' and users.status = 'ACTIVE' and users.school_email != '';
+
 
 -- ****************************************************
 -- Setup Google Classrooms, via GAM script
@@ -139,6 +147,13 @@ select concat(
 -- ****************************************************
 -- ****************************************************
 -- ****************************************************
+-- temp query to create list of students for levels
+SELECT grade, newthisrun as newthisyear, `unique_id`, `first_name`, `last_name`, `user_name`, `school_email`, `newthisrun`
+FROM `users`
+WHERE status = 'ACTIVE' and grade in ('05','06','07','08','09','10','11','12')
+ORDER BY grade, newthisrun, homeroom_teacher_first, homeroom_teacher_last, first_name, last_name
+
+
 -- temp stuff to extract parents for email list
 -- this grabs just home email address for:
 --   "DO NOT EMAIL" flag != Y
@@ -173,5 +188,15 @@ select concat(
       , ' add member ', import.CONTACT_HOME_EMAIL
     ) as statement
   from import_mastercontacts as import
-  where import.CONTACT_HOME_EMAIL != ''
-    and import.PARENT_PORTAL_ACCESS = 'Y' and import.DO_NOT_EMAIL != 'Y'
+  where (import.PRIMARY_CONTACT = 'Y' or import.PARENT_PORTAL_ACCESS = 'Y'
+    and import.DO_NOT_EMAIL != 'Y'
+    and import.CONTACT_HOME_EMAIL != ''
+
+-- select statement for just email addresses
+SELECT `CONTACT_HOME_EMAIL`, `PRIMARY_CONTACT`, `PARENT_PORTAL_ACCESS`, `DO_NOT_EMAIL`
+FROM `import_mastercontacts`
+WHERE (`PRIMARY_CONTACT` = 'Y' or `PARENT_PORTAL_ACCESS` = 'Y')
+  and `DO_NOT_EMAIL` != 'Y'
+  and `CONTACT_HOME_EMAIL` != ''
+GROUP BY `CONTACT_HOME_EMAIL`
+ORDER BY `PRIMARY_CONTACT`, `PARENT_PORTAL_ACCESS`, `CONTACT_HOME_EMAIL`
