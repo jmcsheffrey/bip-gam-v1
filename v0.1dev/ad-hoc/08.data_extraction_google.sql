@@ -166,19 +166,21 @@ ORDER BY grade, newthisrun, homeroom_teacher_first, homeroom_teacher_last, first
 --   python ./gam/gam.py gam update group membersclub@acme.org remove group membersclub@acme.org
 -- this adds users to group
 --   python ./gam/gam.py update group parents@sscps.org add member testemailxyz@gmail.com
-select 'python ./gam/gam.py gam update group parents@sscps.org remove group parents@sscps.org' as statement
+--
+-- this one is for parents@sscps.org
+select 'python ./gam/gam.py update group parents@sscps.org remove group parents@sscps.org' as statement
   from import_mastercontacts as import_junk
   limit 1
 union
-select 'python ./gam/gam.py gam update group parents@sscps.org add owner asavage@sscps.org' as statement
+select 'python ./gam/gam.py update group parents@sscps.org add owner asavage@sscps.org' as statement
   from import_mastercontacts as import_junk
   limit 1
 union
-select 'python ./gam/gam.py gam update group parents@sscps.org add owner mtondorf@sscps.org' as statement
+select 'python ./gam/gam.py update group parents@sscps.org add owner mtondorf@sscps.org' as statement
   from import_mastercontacts as import_junk
   limit 1
 union
-select 'python ./gam/gam.py gam update group parents@sscps.org add owner rdegennaro@sscps.org' as statement
+select 'python ./gam/gam.py update group parents@sscps.org add owner rdegennaro@sscps.org' as statement
   from import_mastercontacts as import_junk
   limit 1
 union
@@ -188,9 +190,35 @@ select concat(
       , ' add member ', import.CONTACT_HOME_EMAIL
     ) as statement
   from import_mastercontacts as import
-  where (import.PRIMARY_CONTACT = 'Y' or import.PARENT_PORTAL_ACCESS = 'Y'
+  where (import.PRIMARY_CONTACT = 'Y' or import.PARENT_PORTAL_ACCESS = 'Y')
     and import.DO_NOT_EMAIL != 'Y'
     and import.CONTACT_HOME_EMAIL != ''
+
+-- this one is for weeklyupdate@sscps.org
+select 'python ./gam/gam.py update group weeklyupdate@sscps.org remove group weeklyupdate@sscps.org' as statement
+  from import_mastercontacts as import_junk
+  limit 1
+union
+select 'python ./gam/gam.py update group weeklyupdate@sscps.org add owner palgera@sscps.org' as statement
+  from import_mastercontacts as import_junk
+  limit 1
+union
+select 'python ./gam/gam.py update group weeklyupdate@sscps.org add owner rdegennaro@sscps.org' as statement
+  from import_mastercontacts as import_junk
+  limit 1
+union
+select concat(
+      'python ./gam/gam.py update'
+      , ' group', ' weeklyupdate@sscps.org'
+      , ' add member ', import.CONTACT_HOME_EMAIL
+    ) as statement
+  from import_mastercontacts as import
+  where (import.PRIMARY_CONTACT = 'Y' or import.PARENT_PORTAL_ACCESS = 'Y')
+    and import.DO_NOT_EMAIL != 'Y'
+    and import.CONTACT_HOME_EMAIL != ''
+  group by import.CONTACT_HOME_EMAIL
+
+
 
 -- select statement for just email addresses
 SELECT `CONTACT_HOME_EMAIL`, `PRIMARY_CONTACT`, `PARENT_PORTAL_ACCESS`, `DO_NOT_EMAIL`
