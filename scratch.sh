@@ -1,3 +1,17 @@
+#python ./gam/gam.py user admin.google@sscps.org add drivefileacl 0Byc5mfoLgdM3MDE0YjEyOWEtMjIxNi00YTE0LTgxZDgtODQxOGEwODU5YjE3 user jen_student@student.sscps.org role reader
+
+#python ./gam/gam.py user admin.google@sscps.org show filelist todrive allfields
+
+#python ./gam/gam.py print courses teacher rdegennaro@sscps.org
+#python ./gam/gam.py course 2245052193 add alias 5620-01-fy17
+
+# manually create classrooms
+#python ./gam/gam.py create course alias 1407-01-fy17 teacher sconnors@sscps.org name "ELA7 - Green (Shawn)" section "1407/01-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 1408-01-fy17 teacher sconnors@sscps.org name "ELA8 - Red (Shawn)" section "1408/01-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 1408-02-fy17 teacher sconnors@sscps.org name "ELA8 - Purple (Shawn)" section "1408/02-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 5525-01-fy17 teacher jkostka@sscps.org name "Makers (Jenny)" section "5525/01-FY17" status ACTIVE
+
+
 #add students to google classrooms
 #python ./gam/gam.py course 9901-01-fy17 add student ssenior101@student.sscps.org
 #python ./gam/gam.py course 9902-01-fy17 add student ttender102@student.sscps.org

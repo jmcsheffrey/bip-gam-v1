@@ -4,10 +4,10 @@
 -- ToDo:
 --   * fix issue with pre-3rd graders that exist in users without UID confuse newthisrun
 --   * fix names so they are double quoted
---   * add SSCPS-GroupDocs to everyone's My drive
 --   * add calendars (Main, Athletics, FacStaff) to everyone's calendar
 --   * add Level calendars to folks?
-
+--   * create table for "owners" of email lists & then adjust SQL to add users
+--   * unshare SSCPS-GRoupDocs from inactive users
 --   * figure out how to deal with archiving last year classrooms
 
 -- ****************************************************
@@ -54,7 +54,7 @@ select concat(
       , ' externalid organization ', users.unique_id
     )
   from users
-  where users.status = 'ACTIVE' and users.newthisrun = 'Y' and users.school_email != ''
+  where users.status = 'ACTIVE' and users.school_email != '' and users.newthisrun = 'Y'
   order by users.population, users.school_email;
 -- update existing users
 --gam update user <email address> firstname <First Name> lastname <Last Name> org <Org Name> externalid employeeID <unique_id>
@@ -78,8 +78,87 @@ select concat(
       , ' externalid organization ', users.unique_id
     )
   from users
-  where users.status = 'ACTIVE' and users.newthisrun = 'N' and users.school_email != ''
+  where users.status = 'ACTIVE' and users.school_email != '' and users.newthisrun = 'N'
   order by users.population, users.school_email;
+
+-- ****************************************************
+-- Drive folders for users for Google, via GAM script
+-- ****************************************************
+-- re/add user view rights to SSCPS-GroupDocs
+--   gam user <user email> add drivefileacl <file id> [user|group|domain|anyone <value>] [withlink] [role <reader|commenter|writer|owner>] [sendemail] [emailmessage <message text>]
+--   python ./gam/gam.py user admin.google@sscps.org add drivefileacl 0Byc5mfoLgdM3MDE0YjEyOWEtMjIxNi00YTE0LTgxZDgtODQxOGEwODU5YjE3
+--          user jen_student@student.sscps.org role reader
+select concat(
+      'python ./gam/gam.py'
+      , ' user admin.google@sscps.org'
+      , ' add drivefileacl 0Byc5mfoLgdM3MDE0YjEyOWEtMjIxNi00YTE0LTgxZDgtODQxOGEwODU5YjE3'
+      , ' user ', users.school_email
+      , ' role reader')
+  from users
+  where users.status = 'ACTIVE' and users.school_email != ''
+  order by users.population, users.school_email;
+
+-- ****************************************************
+-- User/Google groups for users, via GAM script
+-- ****************************************************
+-- make sure google groups for levels is set correctly
+-- make sure employees@sscps.org is populated correctly
+--need to add in empty & re-add of owners
+select concat(
+      'python ./gam/gam.py update group '
+      , 'employees@sscps.org'
+      , ' add member ', users.school_email
+    ) as statement
+  from users
+  where users.status = 'ACTIVE' and users.school_email != ''
+    and users.population = 'EMP'
+  order by users.population, users.school_email;
+-- make sure facstaff@sscps.org is populated correctly
+--need to add in empty & re-add of owners
+select concat(
+      'python ./gam/gam.py update group '
+      , 'facstaff@sscps.org'
+      , ' add member ', users.school_email
+    ) as statement
+  from users
+  where users.status = 'ACTIVE' and users.school_email != ''
+    and users.population = 'EMP'
+  order by users.population, users.school_email;
+
+-- make sure students@sscps.org is populated correctly
+--need to add in empty & re-add of owners
+select concat(
+      'python ./gam/gam.py update group '
+      , 'students@sscps.org'
+      , ' add member ', users.school_email
+    ) as statement
+  from users
+  where users.status = 'ACTIVE' and users.school_email != ''
+    and users.population = 'STU'
+  order by users.population, users.grade, users.school_email;
+
+-- make sure students_<level>@ssscps.org are populated correctly
+--need to add in empty & re-add of owners
+select concat(
+      'python ./gam/gam.py update group '
+      ,(case when users.population = 'STU' and users.grade = '12' then 'students_lhs@sscps.org'
+        when users.population = 'STU' and users.grade = '11' then 'students_lhs@sscps.org'
+        when users.population = 'STU' and users.grade = '10' then 'students_lhs@sscps.org'
+        when users.population = 'STU' and users.grade = '09' then 'students_lhs@sscps.org'
+        when users.population = 'STU' and users.grade = '08' then 'students_l4@sscps.org'
+        when users.population = 'STU' and users.grade = '07' then 'students_l4@sscps.org'
+        when users.population = 'STU' and users.grade = '06' then 'students_l3@sscps.org'
+        when users.population = 'STU' and users.grade = '05' then 'students_l3@sscps.org'
+        when users.population = 'STU' and users.grade = '04' then 'students_l2@sscps.org'
+        when users.population = 'STU' and users.grade = '03' then 'students_l2@sscps.org'
+        else 'ERROR' end)
+      , ' add member ', users.school_email
+    ) as statement
+  from users
+  where users.status = 'ACTIVE' and users.school_email != ''
+    and users.population = 'STU'
+  order by users.population, users.grade, users.school_email;
+
 
 -- reimport to AdminPlus to update school_email field
 select unique_id, school_email

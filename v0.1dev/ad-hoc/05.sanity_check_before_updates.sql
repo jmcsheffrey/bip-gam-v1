@@ -19,8 +19,13 @@ select users.unique_id, users.first_name, users.last_name, users.school_email, u
   where users.population = 'EMP' and users.status = 'ACTIVE' and users.manual_entry = 'N' and stage.status is null
   order by users.unique_id desc;
 
--- all records from last year should null for current_year_id
-update users set current_year_id = NULL;
+-- check for duplicate current_year_id
+select * from (
+  select stage.APID, count(stage.APID) as count
+    from staging_students as stage
+    group by stage.APID
+    order by stage.APID) as stage_count
+  where stage_count.count > 1
 
 -- check for duplicate email addresses where unique_id is not same between USERS & STAGING
 -- results should be zero

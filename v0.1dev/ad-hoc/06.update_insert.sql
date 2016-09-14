@@ -3,6 +3,21 @@
 -- ****************************************************
 
 
+
+-- ****************************************************
+-- Pre-processing to get ready for insert/update
+-- ****************************************************
+-- mark all existing users not "newthisrun"
+update users set newthisrun = 'N';
+-- mark all appropriate users as INACTIVE
+update users
+  inner join staging_students as stage on users.unique_id = stage.unique_id
+    and stage.status = 'INACTIVE'
+  set users.update_date = now(),
+    users.status = 'INACTIVE';
+-- clear current_year_id because users may have been deleted from AdminPlus & ID reused
+update users set current_year_id = null;
+
 -- ****************************************************
 -- Populate users with student records
 -- ****************************************************

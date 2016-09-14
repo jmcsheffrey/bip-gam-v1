@@ -354,6 +354,7 @@ CREATE TABLE `import_schedules` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1
 
 CREATE TABLE `staging_groupings` (
+ `PKEY` int(11) NOT NULL AUTO_INCREMENT,
  `unique_id` varchar(250) NOT NULL,
  `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
  `status` varchar(10) NOT NULL,

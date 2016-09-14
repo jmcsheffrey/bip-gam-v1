@@ -46,6 +46,13 @@ select *
    );
     (status = 'ACTIVE')
 
+-- check for people in users and in import, but don't have emails in import, but do in users
+select users.unique_id, users.first_name, users.last_name, users.school_email as existing_email, import.school_email as new_email
+from import_students as import
+inner join users on import.unique_id = users.unique_id
+where users.school_email != '' and import.school_email = '';
+
+
 -- check for school_email that is non-empty & different between users and import_
 -- results should be zero
 select users.unique_id, users.first_name, users.last_name, users.school_email as existing_email, import.school_email as new_email

@@ -1,9 +1,10 @@
 -- don't ever empty import_ tables until process is done, only do it when importing
 -- stuff below is for "down & dirty" direct workings on the database
 -- TODO:
---   01) fixup groupings to keep PKEY in staging like other data areas
---   02) don't need the google data fields in the staging table for sections
---   03) for groupings stage statements, there should be "import" or "stage" as prefix, not sections
+--   * fixup groupings to keep PKEY in staging like other data areas
+--   * use cohorts for both level 3 & level 4
+--   * don't need the google data fields in the staging table for sections
+--   * for groupings stage statements, there should be "import" or "stage" as prefix, not sections
 
 -- ***********************************************************
 -- copy appropriate data from import_ tables to stagin_ tables
@@ -13,12 +14,14 @@
 truncate staging_students;
 -- copy students
 insert into staging_students
-  select `PKEY`, `APID`, `full_name`, `unique_id`, `status`, '', `household_id`, `first_name`, `middle_name`, `last_name`,
-    `school_email`, `grade`, convert(expected_grad_year, UNSIGNED INTEGER), `homeroom`, `homeroom_teacher_first`, `homeroom_teacher_last`, `referred_to_as`, `gender`,
-    STR_TO_DATE(`birthdate`,'%m/%d/%Y'),
-    STR_TO_DATE(`entry_date`,'%m/%d/%Y')
-  from import_students
-  order by grade, last_name, first_name, middle_name;
+  select `PKEY`, `APID`, `full_name`, `unique_id`, `status`, '', `household_id`, `first_name`, `middle_name`, `last_name`
+    , `school_email`, `grade`, convert(expected_grad_year, UNSIGNED INTEGER), `homeroom`, `homeroom_teacher_first`
+    , `homeroom_teacher_last`, `referred_to_as`, `gender`
+    , STR_TO_DATE(`birthdate`,'%m/%d/%Y')
+    , STR_TO_DATE(`entry_date`,'%m/%d/%Y')
+  from import_students as import
+  where import.grade in ('03','04','05','06','07','08','09','10','11','12')
+  order by import.grade, import.last_name, import.first_name, import.middle_name;
 -- update "newthisrun" based on existing records in users table
 update staging_students as stage
 inner join users
@@ -123,7 +126,8 @@ update staging_employees
 truncate staging_groupings;
 -- insert new groupings
 insert into staging_groupings
-  select concat(sections.course_id, '-',sections.section_id,'-','fy17') as unique_id
+  select sections.PKEY
+    , concat(sections.course_id, '-',sections.section_id,'-','fy17') as unique_id
     , now() as update_date
     , 'ACTIVE' as status
     , 'FY17' as current_year
