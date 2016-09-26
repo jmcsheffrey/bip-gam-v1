@@ -1,7 +1,8 @@
 -- TODO
 --  * check for malformed email addresses
 --  * after import of courses, check for over lapping "pretty names"
---  * allow homerooms similar to "1107 & 7201"
+--  * allow homerooms similar to "1107 & 7201" or alter how to ignore or just check for dupes on numbered homerooms
+
 
 -- Run these two before importing data
 truncate import_students;
@@ -43,8 +44,8 @@ select *
       and (substring(upper(homeroom),1,6) != 'RECEPT')
     )
      and
-   );
     (status = 'ACTIVE')
+  );
 
 -- check for people in users and in import, but don't have emails in import, but do in users
 select users.unique_id, users.first_name, users.last_name, users.school_email as existing_email, import.school_email as new_email

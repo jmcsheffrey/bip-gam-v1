@@ -50,8 +50,8 @@ insert into users
     concat('SSCPS Grade ',stage.grade,' Student') as description
   from staging_students as stage
   where
-    stage.unique_id not in (select users.unique_id from users);
-    -- and stage.grade in ('03','04','05','06','07','08','09','10','11','12');
+    stage.unique_id not in (select users.unique_id from users)
+      and stage.grade in ('03','04','05','06','07','08','09','10','11','12');
 -- update existing student records
 update users
   left join staging_students as stage on users.unique_id = stage.unique_id
@@ -79,8 +79,8 @@ update users
     users.position = '',
     users.description = concat('SSCPS Grade ',stage.grade,' Student')
   where
-    users.unique_id = stage.unique_id;
-    -- and stage.grade in ('03','04','05','06','07','08','09','10','11','12');
+    users.unique_id = stage.unique_id
+      and stage.grade in ('03','04','05','06','07','08','09','10','11','12');
 
 
 -- ****************************************************

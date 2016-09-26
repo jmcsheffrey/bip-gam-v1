@@ -37,7 +37,7 @@ select stage.unique_id as staging_id, users.unique_id as users_id
   from staging_students as stage
   left join users on stage.school_email = users.school_email
   where stage.unique_id != users.unique_id;
-select stage.unique_id as staging_id, users.unique_id as users_id,
+select stage.unique_id as staging_id, users.unique_id as users_id
     , stage.school_email as staging_email, users.school_email as users_email
     , stage.first_name as staging_first_name, users.first_name as users_first_name
     , stage.middle_name as staging_middle_name, users.middle_name as users_middle_name

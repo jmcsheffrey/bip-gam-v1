@@ -3,11 +3,13 @@
 -- ****************************************************
 -- ToDo:
 --   * fix issue with pre-3rd graders that exist in users without UID confuse newthisrun
---   * fix names so they are double quoted
---   * add calendars (Main, Athletics, FacStaff) to everyone's calendar
+--   * add field that is "newthisyear"
 --   * add Level calendars to folks?
 --   * create table for "owners" of email lists & then adjust SQL to add users
 --   * figure out how to deal with archiving last year classrooms
+--   * have a table for calendars & who should be added, sorta like groupings
+--   * for all groups, should have command to remove inactive users, don't empty & re-add
+--   * need to figure out how to test for a folder & create if missing, specifically for ePortfolio
 
 -- ****************************************************
 -- Inactive users for Google, via GAM script
@@ -34,8 +36,8 @@ select concat(
 select concat(
       'python ./gam/gam.py'
       , ' create user ', users.school_email
-      , ' firstname ', users.first_name
-      , ' lastname ', users.last_name
+      , ' firstname ', char(34), users.first_name, char(34)
+      , ' lastname ', char(34), users.last_name, char(34)
       , ' password sscps123'
       , ' changepassword on'
       ,(case when users.population = 'EMP' then ' org /Prod/Users-Normal/Employees'
@@ -53,15 +55,17 @@ select concat(
       , ' externalid organization ', users.unique_id
     )
   from users
-  where users.status = 'ACTIVE' and users.school_email != '' and users.newthisrun = 'Y'
+  where users.status = 'ACTIVE'
+    and users.school_email != ''
+    and users.newthisrun = 'Y'
   order by users.population, users.school_email;
 -- update existing users
 --gam update user <email address> firstname <First Name> lastname <Last Name> org <Org Name> externalid employeeID <unique_id>
 select concat(
       'python ./gam/gam.py'
       , ' update user ', users.school_email
-      , ' firstname ', users.first_name
-      , ' lastname ', users.last_name
+      , ' firstname ', char(34), users.first_name, char(34)
+      , ' lastname ', char(34), users.last_name, char(34)
       ,(case when users.population = 'EMP' then ' org /Prod/Users-Normal/Employees'
         when users.population = 'STU' and users.grade = '12' then ' org /Prod/Users-Normal/Students/Level-HS'
         when users.population = 'STU' and users.grade = '11' then ' org /Prod/Users-Normal/Students/Level-HS'
@@ -77,35 +81,11 @@ select concat(
       , ' externalid organization ', users.unique_id
     )
   from users
-  where users.status = 'ACTIVE' and users.school_email != '' and users.newthisrun = 'N'
+  where users.status = 'ACTIVE'
+    and users.school_email != ''
+    and users.newthisrun = 'N'
   order by users.population, users.school_email;
 
--- ****************************************************
--- Drive folders for users for Google, via GAM script
--- ****************************************************
--- re/add user view rights to SSCPS-GroupDocs
---   gam user <user email> add drivefileacl <file id> [user|group|domain|anyone <value>] [withlink] [role <reader|commenter|writer|owner>] [sendemail] [emailmessage <message text>]
---   python ./gam/gam.py user admin.google@sscps.org add drivefileacl 0Byc5mfoLgdM3MDE0YjEyOWEtMjIxNi00YTE0LTgxZDgtODQxOGEwODU5YjE3
---          user jen_student@student.sscps.org role reader
--- unshare with inactive users
-select concat(
-      'python ./gam/gam.py'
-      , ' user admin.google@sscps.org'
-      , ' delete drivefileacl 0Byc5mfoLgdM3MDE0YjEyOWEtMjIxNi00YTE0LTgxZDgtODQxOGEwODU5YjE3'
-      , ' user ', users.school_email)
-  from users
-  where users.status = 'INACTIVE' and users.school_email != ''
-  order by users.population, users.school_email;
--- unshare with active users
-select concat(
-      'python ./gam/gam.py'
-      , ' user admin.google@sscps.org'
-      , ' add drivefileacl 0Byc5mfoLgdM3MDE0YjEyOWEtMjIxNi00YTE0LTgxZDgtODQxOGEwODU5YjE3'
-      , ' user ', users.school_email
-      , ' role reader')
-  from users
-  where users.status = 'ACTIVE' and users.school_email != ''
-  order by users.population, users.school_email;
 
 -- ****************************************************
 -- User/Google groups for users, via GAM script
@@ -135,7 +115,6 @@ select concat(
   order by users.population, users.school_email;
 
 -- make sure students@sscps.org is populated correctly
---need to add in empty & re-add of owners
 select concat(
       'python ./gam/gam.py update group '
       , 'students@sscps.org'
@@ -169,7 +148,126 @@ select concat(
   order by users.population, users.grade, users.school_email;
 
 
--- reimport to AdminPlus to update school_email field
+-- ****************************************************
+-- Drive folders for users for Google, via GAM script
+-- ****************************************************
+-- requires that users be in proper groups first
+-- re/add user view rights to SSCPS-GroupDocs
+--   gam user <user email> add drivefileacl <file id> [user|group|domain|anyone <value>] [withlink] [role <reader|commenter|writer|owner>] [sendemail] [emailmessage <message text>]
+--   python ./gam/gam.py user admin.google@sscps.org add drivefileacl 0Byc5mfoLgdM3MDE0YjEyOWEtMjIxNi00YTE0LTgxZDgtODQxOGEwODU5YjE3
+--          user jen_student@student.sscps.org role reader
+-- unshare with inactive users
+select concat(
+      'python ./gam/gam.py'
+      , ' user admin.google@sscps.org'
+      , ' delete drivefileacl 0Byc5mfoLgdM3MDE0YjEyOWEtMjIxNi00YTE0LTgxZDgtODQxOGEwODU5YjE3'
+      , ' user ', users.school_email)
+  from users
+  where users.status = 'INACTIVE' and users.school_email != ''
+  order by users.population, users.school_email;
+-- share with active users
+-- gam user targetUser@domain.org update drivefile id  0B8aCWH-xLi2NckxXOEp5REUtNEE parentid root
+select concat(
+      'python ./gam/gam.py'
+      , ' user ', users.school_email
+      , ' update drivefile id 0Byc5mfoLgdM3MDE0YjEyOWEtMjIxNi00YTE0LTgxZDgtODQxOGEwODU5YjE3'
+      , ' parentid root')
+  from users
+  where users.status = 'ACTIVE'
+    and users.school_email != ''
+  order by users.population, users.school_email;
+-- below is old way, which shares individually
+-- select concat(
+--       'python ./gam/gam.py'
+--       , ' user admin.google@sscps.org'
+--       , ' add drivefileacl 0Byc5mfoLgdM3MDE0YjEyOWEtMjIxNi00YTE0LTgxZDgtODQxOGEwODU5YjE3'
+--       , ' user ', users.school_email
+--       , ' role reader')
+--   from users
+--   where users.status = 'ACTIVE'
+--     and users.school_email != ''
+--   order by users.population, users.school_email;
+
+
+-- ****************************************************
+-- School calendars for users for Google, via GAM script
+-- ****************************************************
+-- requires that users be in proper groups first
+--gam user <user>|group <group>|ou <ou>|all users add calendar <calendar email> [selected true|false] [hidden true|false] [reminder email|sms|popup <minutes>] [notification email|sms eventcreation|eventchange|eventcancellation|eventresponse|agenda] [summary <summary>] [colorindex <1-24>] [backgroundcolor <htmlcolor>] [foregroundcolor <htmlcolor>]
+-- SSCPS-FacStaff calendar for employees
+select concat(
+      'python ./gam/gam.py'
+      , ' user ', users.school_email
+      , ' add calendar sscps.org_mnh2vaotaksv4uf8cml2pgrsgg@group.calendar.google.com')
+  from users
+  where users.status = 'ACTIVE'
+    and users.population = 'EMP'
+    and users.school_email != ''
+  order by users.population, users.school_email;
+-- SSCPS-Main calendar for employees
+select concat(
+      'python ./gam/gam.py'
+      , ' user ', users.school_email
+      , ' add calendar sscps.org_2skq6kkh75tr8e8g0q3ooblh84@group.calendar.google.com')
+  from users
+  where users.status = 'ACTIVE'
+    and users.population = 'EMP'
+    and users.school_email != ''
+  order by users.population, users.school_email;
+-- SSCPS-Athletics calendar for employees
+select concat(
+      'python ./gam/gam.py'
+      , ' user ', users.school_email
+      , ' add calendar sscps.org_kiv73854jfpsvsh8luul29luj0@group.calendar.google.com')
+  from users
+  where users.status = 'ACTIVE'
+    and users.population = 'EMP'
+    and users.school_email != ''
+  order by users.population, users.school_email;
+-- library schedule calendar for employees
+select concat(
+      'python ./gam/gam.py'
+      , ' user ', users.school_email
+      , ' add calendar sscps.org_vl29nvplfr6s0avhmp8cpd39rk@group.calendar.google.com')
+  from users
+  where users.status = 'ACTIVE'
+    and users.population = 'EMP'
+    and users.school_email != ''
+  order by users.population, users.school_email;
+-- 100L Main Computer Lab calendar for employees
+select concat(
+      'python ./gam/gam.py'
+      , ' user ', users.school_email
+      , ' add calendar sscps.org_g58pmsteng42vtqrpc9pbsl1rk@group.calendar.google.com')
+  from users
+  where users.status = 'ACTIVE'
+    and users.population = 'EMP'
+    and users.school_email != ''
+  order by users.population, users.school_email;
+-- 100L Device Carts calendar for employees
+select concat(
+      'python ./gam/gam.py'
+      , ' user ', users.school_email
+      , ' add calendar sscps.org_9mded3l08bo9bf37cr48esu6us@group.calendar.google.com')
+  from users
+  where users.status = 'ACTIVE'
+    and users.population = 'EMP'
+    and users.school_email != ''
+  order by users.population, users.school_email;
+-- 700L Device Carts calendar for employees
+select concat(
+      'python ./gam/gam.py'
+      , ' user ', users.school_email
+      , ' add calendar sscps.org_cqs6p4h8fa9n3jfo6in3rhuha4@group.calendar.google.com')
+  from users
+  where users.status = 'ACTIVE'
+    and users.population = 'EMP'
+    and users.school_email != ''
+  order by users.population, users.school_email;
+
+-- ****************************************************
+-- Reimport to AdminPlus to update school_email field
+-- ****************************************************
 select unique_id, school_email
   from users
   where users.population = 'STU' and users.status = 'ACTIVE' and users.school_email != '';
