@@ -6,7 +6,7 @@
 -- Run these two before importing data
 truncate import_students;
 truncate import_employees;
-truncate import_mastercontacts;
+truncate import_contacts;
 truncate import_courses;
 truncate import_sections;
 truncate import_schedules;

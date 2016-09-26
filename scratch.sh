@@ -6,6 +6,9 @@
 #python ./gam/gam.py course 2245052193 add alias 5620-01-fy17
 
 # manually create classrooms
+python ./gam/gam.py create course alias 1407-02-fy17 teacher sconnors@sscps.org name "ELA7 - Yellow (Katie A.)" section "1407/02-FY17" status ACTIVE
+python ./gam/gam.py create course alias 1407-03-fy17 teacher sconnors@sscps.org name "ELA7 - Blue (Katie A.)" section "1407/03-FY17" status ACTIVE
+python ./gam/gam.py create course alias 1408-03-fy17 teacher sconnors@sscps.org name "ELA8 - Orange (Katie A.)" section "1408/03-FY17" status ACTIVE
 #python ./gam/gam.py create course alias 1407-01-fy17 teacher sconnors@sscps.org name "ELA7 - Green (Shawn)" section "1407/01-FY17" status ACTIVE
 #python ./gam/gam.py create course alias 1408-01-fy17 teacher sconnors@sscps.org name "ELA8 - Red (Shawn)" section "1408/01-FY17" status ACTIVE
 #python ./gam/gam.py create course alias 1408-02-fy17 teacher sconnors@sscps.org name "ELA8 - Purple (Shawn)" section "1408/02-FY17" status ACTIVE

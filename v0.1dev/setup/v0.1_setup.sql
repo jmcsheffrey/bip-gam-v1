@@ -208,7 +208,7 @@ CREATE TABLE `staging_employees` (
  UNIQUE KEY `unique_unique_id` (`unique_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
-CREATE TABLE `import_mastercontacts` (
+CREATE TABLE `import_contacts` (
  `PKEY` int(11) NOT NULL AUTO_INCREMENT,
  `APID` varchar(5) DEFAULT NULL,
  `STUDENT_FULL_NAME` varchar(24) DEFAULT NULL,
