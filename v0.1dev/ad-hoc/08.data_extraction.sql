@@ -4,28 +4,6 @@
 -- ****************************************************
 
 
-
--- ****************************************************
--- Re-import to AdminPlus via CSV upload
--- ****************************************************
--- load email addresses, needs just unique_id & school_email
--- only do after verified Google Apps accounts are good
--- export students
-select
-    unique_id,
-    school_email
-  from users
-  where users.status = 'ACTIVE' and users.population = 'STU' and school_email != ''
-  order by school_email
--- export employees
-select
-    unique_id,
-    school_email
-  from users
-  where users.status = 'ACTIVE' and users.population = 'EMP' and school_email != ''
-  order by school_email
-
-
 -- ****************************************************
 -- Library data for Joomla _lendee table via SQL script
 --    contact info done separately, but can use below in a spreadsheet
@@ -34,16 +12,18 @@ select
 -- ****************************************************
 -- export students & staff at same time
 select
-    unique_id as lendeecode,
-    concat (first_name, ' ', last_name) as full_name,
-    '' as contactname,
-    '' as contactemail,
-    grade,
-    concat (homeroom_teacher_first, ' ', homeroom_teacher_last) as homeroom_teacher,
+    users.unique_id as lendeecode,
+    concat (users.first_name, ' ', users.last_name) as full_name,
+    max(contacts.CONTACT_FULL_NAME) as contactname,
+    max(contacts.CONTACT_HOME_EMAIL) as contactemail,
+    users.grade,
+    concat (users.homeroom_teacher_first, ' ', users.homeroom_teacher_last) as homeroom_teacher,
     'Student' as population,
     0 as user_id
   from users
+  left join import_contacts as contacts on users.current_year_id = contacts.APID
   where users.status = 'ACTIVE' and users.population = 'STU'
+  group by users.unique_id
 union
 select
     unique_id as lendeecode,
