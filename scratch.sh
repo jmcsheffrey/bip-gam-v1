@@ -6,23 +6,29 @@
 #python ./gam/gam.py course 2245052193 add alias 5620-01-fy17
 
 # manually create classrooms
-python ./gam/gam.py create course alias 2407-01-fy17 teacher kodonnell@sscps.org name "World Cultures 1 - Orange (Katie O.)" section "2407/01-FY17" status ACTIVE
-python ./gam/gam.py create course alias 2407-02-fy17 teacher kodonnell@sscps.org name "World Cultures 1 - Red (Katie O.)" section "2407/02-FY17" status ACTIVE
-python ./gam/gam.py create course alias 2407-03-fy17 teacher kodonnell@sscps.org name "World Cultures 1 - Purple (Katie O.)" section "2407/03-FY17" status ACTIVE
-python ./gam/gam.py create course alias 2411-01-fy17 teacher kodonnell@sscps.org name "Ancient Civ - Blue (Katie O.)" section "2411/01-FY17" status ACTIVE
-python ./gam/gam.py create course alias 2411-02-fy17 teacher kodonnell@sscps.org name "Ancient Civ - Yellow (Katie O.)" section "2411/02-FY17" status ACTIVE
-python ./gam/gam.py create course alias 2411-03-fy17 teacher kodonnell@sscps.org name "Ancient Civ - Green (Katie O.)" section "2411/03-FY17" status ACTIVE
-
+python ./gam/gam.py create course alias 4407-01-fy17 teacher hedmondson@sscps.org name "Spanish Gr 7 - Blue (Haley)" section "4407/01-FY17" status ACTIVE
+python ./gam/gam.py create course alias 4407-02-fy17 teacher hedmondson@sscps.org name "Spanish Gr 7 - Yellow (Haley)" section "4407/02-FY17" status ACTIVE
+python ./gam/gam.py create course alias 4407-03-fy17 teacher hedmondson@sscps.org name "Spanish Gr 7 - Green (Haley)" section "4407/03-FY17" status ACTIVE
+python ./gam/gam.py create course alias 4408-01-fy17 teacher hedmondson@sscps.org name "Spanish Gr 8 - Orange (Haley)" section "4408/01-FY17" status ACTIVE
+python ./gam/gam.py create course alias 4408-02-fy17 teacher hedmondson@sscps.org name "Spanish Gr 8 - Red (Haley)" section "4408/02-FY17" status ACTIVE
+python ./gam/gam.py create course alias 4408-03-fy17 teacher hedmondson@sscps.org name "Spanish Gr 8 - Purple (Haley)" section "4408/03-FY17" status ACTIVE
+###
+#python ./gam/gam.py create course alias 2407-01-fy17 teacher kodonnell@sscps.org name "World Cultures 1 - Orange (Katie O.)" section "2407/01-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 2407-02-fy17 teacher kodonnell@sscps.org name "World Cultures 1 - Red (Katie O.)" section "2407/02-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 2407-03-fy17 teacher kodonnell@sscps.org name "World Cultures 1 - Purple (Katie O.)" section "2407/03-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 2411-01-fy17 teacher kodonnell@sscps.org name "Ancient Civ - Blue (Katie O.)" section "2411/01-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 2411-02-fy17 teacher kodonnell@sscps.org name "Ancient Civ - Yellow (Katie O.)" section "2411/02-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 2411-03-fy17 teacher kodonnell@sscps.org name "Ancient Civ - Green (Katie O.)" section "2411/03-FY17" status ACTIVE
+###
 #python ./gam/gam.py create course alias 1407-02-fy17 teacher kantonowicz@sscps.org name "ELA7 - Yellow (Katie A.)" section "1407/02-FY17" status ACTIVE
 #python ./gam/gam.py create course alias 1407-03-fy17 teacher kantonowicz@sscps.org name "ELA7 - Blue (Katie A.)" section "1407/03-FY17" status ACTIVE
 #python ./gam/gam.py create course alias 1408-03-fy17 teacher kantonowicz@sscps.org name "ELA8 - Orange (Katie A.)" section "1408/03-FY17" status ACTIVE
-
+###
 #python ./gam/gam.py create course alias 1407-01-fy17 teacher sconnors@sscps.org name "ELA7 - Green (Shawn)" section "1407/01-FY17" status ACTIVE
 #python ./gam/gam.py create course alias 1408-01-fy17 teacher sconnors@sscps.org name "ELA8 - Red (Shawn)" section "1408/01-FY17" status ACTIVE
 #python ./gam/gam.py create course alias 1408-02-fy17 teacher sconnors@sscps.org name "ELA8 - Purple (Shawn)" section "1408/02-FY17" status ACTIVE
-
+###
 #python ./gam/gam.py create course alias 5525-01-fy17 teacher jkostka@sscps.org name "Makers (Jenny)" section "5525/01-FY17" status ACTIVE
-
 
 #add students to google classrooms
 #python ./gam/gam.py course 9901-01-fy17 add student ssenior101@student.sscps.org
