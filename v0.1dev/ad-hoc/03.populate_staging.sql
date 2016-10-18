@@ -5,6 +5,7 @@
 --   * use cohorts for both level 3 & level 4
 --   * don't need the google data fields in the staging table for sections
 --   * for groupings stage statements, there should be "import" or "stage" as prefix, not sections
+--   * add in "newthisyear" vs. "newthisrun" (did not exist from FY vs. did not exist this specific running of scripts)
 
 -- ***********************************************************
 -- copy appropriate data from import_ tables to stagin_ tables
@@ -95,7 +96,7 @@ truncate staging_employees;
 -- copy employees
 insert into staging_employees
   select `PKEY`, `APID`, `full_name`, `unique_id`, `status`, '', `first_name`, `middle_name`, `last_name`,
-    `school_email`, `homeroom`, `referred_to_as`, `gender`,
+    `school_email`, `phone_home`, `phone_cell`, `homeroom`, `referred_to_as`, `gender`,
     STR_TO_DATE(`birthdate`,'%m/%d/%Y'),
     STR_TO_DATE(`date_of_hire`,'%m/%d/%Y'),
     position
@@ -115,10 +116,10 @@ update staging_employees
       , replace(replace(replace(replace(replace(lower(last_name),char(46),char(0)),char(45),char(0)),char(44),char(0)),char(39),char(0)),char(32),char(0))
     ),1,21), '@sscps.org')
   where isnull(school_email) or school_email = '';
-  -- make school_email null for everyone else so no duplicates (i.e. null is not checked as duplicate)
-  update staging_employees
-    set school_email = null
-    where school_email = '';
+-- make school_email null for everyone else so no duplicates (i.e. null is not checked as duplicate)
+update staging_employees
+  set school_email = null
+  where school_email = '';
 
 
 -- ** groupings statements

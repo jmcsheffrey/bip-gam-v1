@@ -2,6 +2,7 @@
 --  * check for malformed email addresses
 --  * after import of courses, check for over lapping "pretty names"
 --  * allow homerooms similar to "1107 & 7201" or alter how to ignore or just check for dupes on numbered homerooms
+--  * check for malformed phone numbers
 
 
 -- Run these two before importing data
@@ -48,8 +49,16 @@ select *
   );
 
 -- check for people in users and in import, but don't have emails in import, but do in users
-select users.unique_id, users.first_name, users.last_name, users.school_email as existing_email, import.school_email as new_email
+-- results should be zero
+select
+  users.unique_id, users.first_name, users.last_name, users.school_email as existing_email, import.school_email as new_email
 from import_students as import
+inner join users on import.unique_id = users.unique_id
+where users.school_email != '' and import.school_email = '';
+-- results should be zero
+select
+  users.unique_id, users.first_name, users.last_name, users.school_email as existing_email, import.school_email as new_email
+from import_employees as import
 inner join users on import.unique_id = users.unique_id
 where users.school_email != '' and import.school_email = '';
 
