@@ -13,9 +13,9 @@ truncate import_courses;
 truncate import_sections;
 truncate import_schedules;
 
----------------------------------
--- SCRIPTS TO RUN (after import)
----------------------------------
+---------------------------------------
+-- SCRIPTS FOR STUDENTS (after import)
+---------------------------------------
 -- check if students have bad expected graduation year
 -- results should be zero
 select * from import_students
@@ -32,6 +32,35 @@ select * from import_students where grade not in ('0K','01','02','03','04','05',
 -- results should be zero
 select * from import_students where status = 'ACTIVE' and not (upper(homeroom) REGEXP '^-?[0-9]+$');
 
+-- check for people in users and in import, but don't have emails in import, but do in users
+-- results should be zero
+select
+  users.unique_id, users.first_name, users.last_name, users.school_email as existing_email, import.school_email as new_email
+from import_students as import
+inner join users on import.unique_id = users.unique_id
+where users.school_email != '' and import.school_email = '';
+
+
+-- check for school_email that is non-empty & different between users and import_
+-- results should be zero
+select users.unique_id, users.first_name, users.last_name, users.school_email as existing_email, import.school_email as new_email
+  from users
+  left join import_students as import on users.unique_id = import.unique_id
+  where users.school_email != import.school_email and import.school_email != '';
+
+-- check for names with more then even chance of being problematic
+-- results should be zero
+select *
+  from import_students as import
+  left join users on import.unique_id = users.unique_id
+  where length(concat(import.first_name,import.last_name)) > 19
+    and import.school_email = NULL
+    and import.status != 'INACTIVE';
+
+
+---------------------------------------
+-- SCRIPTS FOR EMPLOYEES (after import)
+---------------------------------------
 -- homerooms for ACTIVE employees should be 3 digit room number, or "OFF" or "A" & then number, or NURSE or RECEPT
 -- results should be zero
 select *
@@ -52,23 +81,11 @@ select *
 -- results should be zero
 select
   users.unique_id, users.first_name, users.last_name, users.school_email as existing_email, import.school_email as new_email
-from import_students as import
-inner join users on import.unique_id = users.unique_id
-where users.school_email != '' and import.school_email = '';
--- results should be zero
-select
-  users.unique_id, users.first_name, users.last_name, users.school_email as existing_email, import.school_email as new_email
 from import_employees as import
 inner join users on import.unique_id = users.unique_id
 where users.school_email != '' and import.school_email = '';
 
-
 -- check for school_email that is non-empty & different between users and import_
--- results should be zero
-select users.unique_id, users.first_name, users.last_name, users.school_email as existing_email, import.school_email as new_email
-  from users
-  left join import_students as import on users.unique_id = import.unique_id
-  where users.school_email != import.school_email and import.school_email != '';
 -- results should be zero
 select users.unique_id, users.first_name, users.last_name, users.school_email as existing_email, import.school_email as new_email
   from users
@@ -76,13 +93,6 @@ select users.unique_id, users.first_name, users.last_name, users.school_email as
   where users.school_email != import.school_email and import.school_email != '';
 
 -- check for names with more then even chance of being problematic
--- results should be zero
-select *
-  from import_students as import
-  left join users on import.unique_id = users.unique_id
-  where length(concat(import.first_name,import.last_name)) > 19
-    and import.school_email = NULL
-    and import.status != 'INACTIVE';
 -- results should be zero
 select *
   from import_employees as import

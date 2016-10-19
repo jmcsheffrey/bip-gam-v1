@@ -1,7 +1,7 @@
 -- ****************************************************
--- Keep order of items because of new/update flag
+-- Scripts to run to update final tables.
+-- NOTE:  Keep order of items!!!
 -- ****************************************************
-
 
 
 -- ****************************************************
@@ -37,6 +37,7 @@ insert into users
     stage.last_name,
     substring(stage.school_email,1,instr(stage.school_email, '@')-1),
     stage.school_email,
+    '' as home_email,
     '' as phone_home,
     '' as phone_cell,
     stage.grade,

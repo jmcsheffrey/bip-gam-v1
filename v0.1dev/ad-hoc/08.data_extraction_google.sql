@@ -2,13 +2,13 @@
 -- Keep order of items for everything before CSV outputs
 -- ****************************************************
 -- ToDo:
+--   * for all groups, should have command to remove inactive users, don't empty & re-add
 --   * fix issue with pre-3rd graders that exist in users without UID confuse newthisrun
 --   * add field that is "newthisyear"
 --   * add Level calendars to folks?
 --   * create table for "owners" of email lists & then adjust SQL to add users
 --   * figure out how to deal with archiving last year classrooms
 --   * have a table for calendars & who should be added, sorta like groupings
---   * for all groups, should have command to remove inactive users, don't empty & re-add
 --   * need to figure out how to test for a folder & create if missing, specifically for ePortfolio
 
 -- ****************************************************
@@ -20,8 +20,8 @@ select concat(
       , ' update user '
       , users.school_email
       , ' suspended on'
-      ,(case when users.population = 'STU' then ' org /Test/Archive/Aging/Students'
-        when users.population = 'EMP' then ' org /Test/Archive/Aging/Employees'
+      ,(case when users.population = 'STU' then ' org /Archive/Aging/Students'
+        when users.population = 'EMP' then ' org /Archive/Aging/Employees'
         else 'ERROR' end)
     )
   from users
@@ -90,7 +90,6 @@ select concat(
 -- ****************************************************
 -- User/Google groups for users, via GAM script
 -- ****************************************************
--- make sure google groups for levels is set correctly
 -- make sure employees@sscps.org is populated correctly
 --need to add in empty & re-add of owners
 select concat(

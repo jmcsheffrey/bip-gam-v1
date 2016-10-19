@@ -1,16 +1,19 @@
+-- ***********************************************************
+-- copy appropriate data from import_ tables to stagin_ tables
+-- ***********************************************************
 -- don't ever empty import_ tables until process is done, only do it when importing
 -- stuff below is for "down & dirty" direct workings on the database
 -- TODO:
 --   * fixup groupings to keep PKEY in staging like other data areas
+--   * allow for students in lower levels (no login, but needed for Library)
 --   * use cohorts for both level 3 & level 4
 --   * don't need the google data fields in the staging table for sections
 --   * for groupings stage statements, there should be "import" or "stage" as prefix, not sections
 --   * add in "newthisyear" vs. "newthisrun" (did not exist from FY vs. did not exist this specific running of scripts)
 
--- ***********************************************************
--- copy appropriate data from import_ tables to stagin_ tables
--- ***********************************************************
--- ** student statements
+------------------------
+-- SCRIPTS FOR STUDENTS
+------------------------
 -- remove any student data from previous runs
 truncate staging_students;
 -- copy students
@@ -90,7 +93,9 @@ update staging_students
   where school_email = '';
 
 
--- ** employee statements
+-------------------------
+-- SCRIPTS FOR EMPLOYEES
+-------------------------
 -- remove any employee data from previous runs
 truncate staging_employees;
 -- copy employees
@@ -122,7 +127,9 @@ update staging_employees
   where school_email = '';
 
 
--- ** groupings statements
+-------------------------
+-- SCRIPTS FOR GROUPINGS
+-------------------------
 -- remove groupings data from previous runs
 truncate staging_groupings;
 -- insert new groupings
@@ -153,7 +160,9 @@ insert into staging_groupings
   where sections.table_name = ''
   order by concat(sections.course_id, '-',sections.section_id,'-','fy17');
 
--- ** groupings_users statements
+-------------------------------
+-- SCRIPTS FOR GROUPINGS_USERS
+-------------------------------
 -- remove groupings data from previous runs
 truncate staging_groupings_users;
 -- insert teacher related records (from import_sections)
