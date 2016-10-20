@@ -28,3 +28,14 @@ select * from users where status = 'ACTIVE' and current_year_id = null;
 select * from users
 where (users.population = 'EMP' and users.school_email is null) or
       (users.population = 'STU' and grade in ('03','04','05','06','07','08','09','10','11','12') and users.school_email is null)
+
+-------------------------
+-- SCRIPTS FOR STUDENTS
+-------------------------
+-- for Naviance, all High School students should have expected_grad_year
+-- results should be zero
+select * from users
+where users.population = 'STU'
+  and grade in ('09','10','11','12')
+  and users.expected_grad_year = ''
+  and status = 'ACTIVE'
