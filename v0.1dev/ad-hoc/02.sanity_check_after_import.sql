@@ -57,6 +57,13 @@ select *
     and import.school_email = NULL
     and import.status != 'INACTIVE';
 
+-- for Naviance, all High School students should have expected_grad_year
+-- results should be zero
+select * from users
+where users.population = 'STU'
+  and grade in ('09','10','11','12')
+  and users.expected_grad_year = ''
+  and status = 'ACTIVE'
 
 ---------------------------------------
 -- SCRIPTS FOR EMPLOYEES (after import)

@@ -15,6 +15,8 @@
 -- Inactive users for Google, via GAM script
 -- ****************************************************
 -- suspend inactive users
+--   employees are all former employees,
+--   students hold off on last year graudates until afte Thanksgiving
 select concat(
       'python ./gam/gam.py'
       , ' update user '
@@ -25,7 +27,16 @@ select concat(
         else 'ERROR' end)
     )
   from users
-  where users.status = 'INACTIVE' and users.school_email != ''
+  where
+    (users.status = 'INACTIVE'
+      and users.school_email != ''
+      and users.population = 'EMP'
+    or (
+      users.status = 'INACTIVE'
+      and users.school_email != ''
+      and users.population = 'STU'
+      and users.expected_grad_year != '2016'
+    )
   order by users.population, users.school_email
 
 -- ****************************************************
