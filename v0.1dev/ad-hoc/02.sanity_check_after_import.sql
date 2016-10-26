@@ -1,11 +1,6 @@
--- TODO
---  * check for malformed email addresses
---  * after import of courses, check for over lapping "pretty names"
---  * allow homerooms similar to "1107 & 7201" or alter how to ignore or just check for dupes on numbered homerooms
---  * check for malformed phone numbers
-
-
+-- ****************************************************
 -- Run these two before importing data
+-- ****************************************************
 truncate import_students;
 truncate import_employees;
 truncate import_contacts;

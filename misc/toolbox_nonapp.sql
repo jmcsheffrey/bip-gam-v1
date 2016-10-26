@@ -8,7 +8,8 @@ SHOW CREATE TABLE import_employees;
 SHOW CREATE TABLE staging_employees;
 SHOW CREATE TABLE users;
 
-SHOW CREATE TABLE import_mastercontacts;
+SHOW CREATE TABLE import_contacts;
+SHOW CREATE TABLE import_naviance_parents;
 
 SHOW CREATE TABLE import_courses;
 SHOW CREATE TABLE import_sections;

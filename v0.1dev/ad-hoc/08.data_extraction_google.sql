@@ -1,15 +1,6 @@
 -- ****************************************************
 -- Keep order of items for everything before CSV outputs
 -- ****************************************************
--- ToDo:
---   * for all groups, should have command to remove inactive users, don't empty & re-add
---   * fix issue with pre-3rd graders that exist in users without UID confuse newthisrun
---   * add field that is "newthisyear"
---   * add Level calendars to folks?
---   * create table for "owners" of email lists & then adjust SQL to add users
---   * figure out how to deal with archiving last year classrooms
---   * have a table for calendars & who should be added, sorta like groupings
---   * need to figure out how to test for a folder & create if missing, specifically for ePortfolio
 
 -- ****************************************************
 -- Inactive users for Google, via GAM script

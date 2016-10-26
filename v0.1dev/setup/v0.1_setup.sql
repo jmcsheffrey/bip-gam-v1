@@ -223,6 +223,7 @@ CREATE TABLE `import_contacts` (
  `STUDENT_FULL_NAME` varchar(24) DEFAULT NULL,
  `CONTACT_GUID` varchar(32) DEFAULT NULL,
  `CONTACT_HOUSEHOLD_ID` varchar(7) DEFAULT NULL,
+ `NAVIANCE_PARENT_ID` varchar(250) DEFAULT NULL,
  `CONTACT_FULL_NAME` varchar(32) DEFAULT NULL,
  `SALUTATION` varchar(250) NOT NULL,
  `CONTACT_FIRST_NAME` varchar(12) DEFAULT NULL,
@@ -257,6 +258,38 @@ CREATE TABLE `import_contacts` (
  `DO_NOT_EMAIL` varchar(1) DEFAULT NULL,
  PRIMARY KEY (`PKEY`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8
+
+-- parent data that is downloaded from Naviance
+CREATE TABLE `import_naviance_parents` (
+ `succeed_parent_id` int(8) DEFAULT NULL,
+ `hs_parent_id` varchar(10) DEFAULT NULL,
+ `parent_full_name` varchar(26) DEFAULT NULL,
+ `parent_last_name` varchar(15) DEFAULT NULL,
+ `parent_first_name` varchar(9) DEFAULT NULL,
+ `succeed_student_id` int(8) DEFAULT NULL,
+ `hs_student_id` int(8) DEFAULT NULL,
+ `state_student_id` varchar(10) DEFAULT NULL,
+ `student_first_name` varchar(11) DEFAULT NULL,
+ `student_last_name` varchar(12) DEFAULT NULL,
+ `email` varchar(29) DEFAULT NULL,
+ `home_phone` varchar(12) DEFAULT NULL,
+ `work_phone` varchar(10) DEFAULT NULL,
+ `mobile_phone` varchar(12) DEFAULT NULL,
+ `use_student_address` int(8) DEFAULT NULL,
+ `street` varchar(10) DEFAULT NULL,
+ `apt_suite` varchar(10) DEFAULT NULL,
+ `city` varchar(10) DEFAULT NULL,
+ `state` varchar(10) DEFAULT NULL,
+ `zip` varchar(10) DEFAULT NULL,
+ `country` varchar(10) DEFAULT NULL,
+ `occupation` varchar(10) DEFAULT NULL,
+ `custodial` varchar(3) DEFAULT NULL,
+ `receives_communication` varchar(3) DEFAULT NULL,
+ `has_financial_responsibility` varchar(3) DEFAULT NULL,
+ `fc_registration_code` varchar(6) DEFAULT NULL,
+ `alma_mater_name` varchar(10) DEFAULT NULL,
+ `alma_mater_ceeb_code` varchar(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
 -- groups for users related tables
 CREATE TABLE `import_courses` (

@@ -1,7 +1,11 @@
 -- ****************************************************
--- Naviance data via CSV upload
+-- Extract data to upload to Naviance via CSV upload
 -- ****************************************************
--- export students
+
+-- ****************************************************
+-- Export all students,
+--   existing will be ignored on import to Naviance
+-- ****************************************************
 select
     unique_id as 'Student_ID',
     expected_grad_year as 'Class_Year',
@@ -23,10 +27,13 @@ select
     and grade in ('09','10','11','12')
   order by grade, first_name, last_name
 
--- export parents
+-- ****************************************************
+-- Export new parents, no Naviance ID
+-- ****************************************************
 select
     users.unique_id as 'Student_ID',
     parents.CONTACT_GUID as 'Parent_ID',
+    parents.NAVIANCE_PARENT_ID as 'Naviance_ID',
     parents.CONTACT_FIRST_NAME as 'first_name',
     parents.CONTACT_LAST_NAME as 'last_name',
     parents.CONTACT_HOME_EMAIL as 'Parent_Email',
@@ -38,5 +45,26 @@ select
   where users.status = 'ACTIVE'
     and users.population = 'STU'
     and users.grade in ('09','10','11','12')
-    and parents.CONTACT_HOME_EMAIL != ''
+    and parents.NAVIANCE_PARENT_ID = ''
+    and parents.PRIMARY_CONTACT = 'Y'
+
+-- *****************************************************
+-- Export parents already in Naviance (has Naviance ID)
+-- *****************************************************
+select
+    users.unique_id as 'Student_ID',
+    parents.CONTACT_GUID as 'Parent_ID',
+    parents.NAVIANCE_PARENT_ID as 'Naviance_ID',
+    parents.CONTACT_FIRST_NAME as 'first_name',
+    parents.CONTACT_LAST_NAME as 'last_name',
+    parents.CONTACT_HOME_EMAIL as 'Parent_Email',
+    parents.HOMEPHONE as 'HomePhone',
+    parents.PRIMARY_CONTACT as 'Has_Financial_Responsibility',
+    parents.PRIMARY_CONTACT as 'Custodial'
+  from import_contacts as parents
+  inner join users on users.current_year_id = parents.APID
+  where parents.NAVIANCE_PARENT_ID !=  ''
+    and users.status = 'ACTIVE'
+    and users.population = 'STU'
+    and users.grade in ('09','10','11','12')
     and parents.PRIMARY_CONTACT = 'Y'

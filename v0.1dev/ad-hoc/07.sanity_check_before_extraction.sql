@@ -1,10 +1,6 @@
 -- ****************************************************
 -- Scripts to run after final tables updated.
 -- ****************************************************
--- TODO
---  check for missing grade
-
-
 
 -------------------------
 -- SCRIPTS FOR ALL USERS

@@ -1,10 +1,6 @@
 -- ****************************************************
 -- Scripts to run after populating staging.
 -- ****************************************************
--- TODO
--- check for any unique_id changed by using school_email to connect tables
--- check for any unique_id changed by using name fields to connect tables
--- check bad unique_id for sections unique_id
 
 
 ------------------------

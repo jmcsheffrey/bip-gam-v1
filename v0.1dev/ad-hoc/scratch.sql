@@ -19,7 +19,36 @@ select * from staging_students where unique_id not in (select unique_id from use
 select * from staging_students where status = 'ACTIVE' and unique_id not in (select unique_id from users) order by grade DESC, school_email
 select * from staging_students where grade in ('09','10','11','12') and status = 'ACTIVE' and unique_id not in (select unique_id from users) order by grade DESC, school_email
 
--- copy original list of users
+insert into users
+  select `unique_id`, `status`, 'N' as `manual_entry`, 'STU' as `population`, `first_name`, `middle_name`, `last_name`,
+    concat(lower(first_name), '_', lower(last_name)) as `user_name`,
+    concat(lower(first_name), '_', lower(last_name), '@student.sscps.org') as `school_email`,
+    `grade`, `homeroom`, `referred_to_as`, `gender`,
+    STR_TO_DATE(`birthdate`,'%m/%d/%Y'),
+    STR_TO_DATE(`entry_date`,'%m/%d/%Y'),
+    '' as position,
+    concat('SSCSPS Grade ', `grade`, ' Student') as description
+  from import_students
+  where `grade` in ('04','05','06','07','08','09','10','11','12')
+  order by grade, last_name, first_name, middle_name;
+
+insert into users
+  select `unique_id`, `status`, 'N' as `manual_entry`, 'STU' as `population`, `first_name`, `middle_name`, `last_name`,
+    concat (lower(substring(first_name,1,1)), lower(last_name)) as `user_name`,
+    concat (lower(substring(first_name,1,1)), lower(last_name), '@sscps.org') as `school_email`,
+    '' as `grade`, `homeroom`, `referred_to_as`, `gender`,
+    STR_TO_DATE(`birthdate`,'%m/%d/%Y'),
+    STR_TO_DATE(`date_of_hire`,'%m/%d/%Y'),
+    position,
+    'SSCSPS Employee' as description
+  from import_employees
+  order by last_name, first_name, middle_name;
+
+SELECT * FROM `users` where population = 'STU' order by school_email
+
+select * from users
+  left join staging_students as stu on users.unique_id = stu.unique_id
+  where users.status = 'ACTIVE' and stu.unique_id is not null
 
 -- list students in existing data that do not have emails that are not in 3rd or 4th grade
 select * from users

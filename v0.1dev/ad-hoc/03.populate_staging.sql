@@ -3,13 +3,6 @@
 -- ***********************************************************
 -- don't ever empty import_ tables until process is done, only do it when importing
 -- stuff below is for "down & dirty" direct workings on the database
--- TODO:
---   * fixup groupings to keep PKEY in staging like other data areas
---   * allow for students in lower levels (no login, but needed for Library)
---   * use cohorts for both level 3 & level 4
---   * don't need the google data fields in the staging table for sections
---   * for groupings stage statements, there should be "import" or "stage" as prefix, not sections
---   * add in "newthisyear" vs. "newthisrun" (did not exist from FY vs. did not exist this specific running of scripts)
 
 ------------------------
 -- SCRIPTS FOR STUDENTS
