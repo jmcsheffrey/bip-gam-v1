@@ -130,22 +130,54 @@ select concat(
 --need to add in empty & re-add of owners
 select concat(
       'python ./gam/gam.py update group '
-      ,(case when users.population = 'STU' and users.grade = '12' then 'students_lhs@sscps.org'
-        when users.population = 'STU' and users.grade = '11' then 'students_lhs@sscps.org'
-        when users.population = 'STU' and users.grade = '10' then 'students_lhs@sscps.org'
-        when users.population = 'STU' and users.grade = '09' then 'students_lhs@sscps.org'
-        when users.population = 'STU' and users.grade = '08' then 'students_l4@sscps.org'
-        when users.population = 'STU' and users.grade = '07' then 'students_l4@sscps.org'
-        when users.population = 'STU' and users.grade = '06' then 'students_l3@sscps.org'
-        when users.population = 'STU' and users.grade = '05' then 'students_l3@sscps.org'
-        when users.population = 'STU' and users.grade = '04' then 'students_l2@sscps.org'
-        when users.population = 'STU' and users.grade = '03' then 'students_l2@sscps.org'
+      ,(case when users.population = 'STU' and users.grade = '12' then 'students_lhs@student.sscps.org'
+        when users.population = 'STU' and users.grade = '11' then 'students_lhs@student.sscps.org'
+        when users.population = 'STU' and users.grade = '10' then 'students_lhs@student.sscps.org'
+        when users.population = 'STU' and users.grade = '09' then 'students_lhs@student.sscps.org'
+        when users.population = 'STU' and users.grade = '08' then 'students_l4@student.sscps.org'
+        when users.population = 'STU' and users.grade = '07' then 'students_l4@student.sscps.org'
+        when users.population = 'STU' and users.grade = '06' then 'students_l3@student.sscps.org'
+        when users.population = 'STU' and users.grade = '05' then 'students_l3@student.sscps.org'
+        when users.population = 'STU' and users.grade = '04' then 'students_l2@student.sscps.org'
+        when users.population = 'STU' and users.grade = '03' then 'students_l2@student.sscps.org'
         else 'ERROR' end)
       , ' add member ', users.school_email
     ) as statement
   from users
   where users.status = 'ACTIVE' and users.school_email != ''
     and users.population = 'STU'
+  order by users.population, users.grade, users.school_email;
+
+
+-- add students to their "Graduating Year of" groups
+--MUST create group manually first!!!
+--do not empty groups from graduated years
+select 'python ./gam/gam.py update group gco-fy2017@student.sscps.org remove group gco-fy2017@student.sscps.org' as statement
+union
+select 'python ./gam/gam.py update group gco-fy2017@student.sscps.org add owner mcarter@sscps.org' as statement
+union
+select 'python ./gam/gam.py update group gco-fy2018@student.sscps.org remove group gco-fy2018@student.sscps.org' as statement
+union
+select 'python ./gam/gam.py update group gco-fy2018@student.sscps.org add owner mcarter@sscps.org' as statement
+union
+select 'python ./gam/gam.py update group gco-fy2019@student.sscps.org remove group gco-fy2019@student.sscps.org' as statement
+union
+select 'python ./gam/gam.py update group gco-fy2019@student.sscps.org add owner mcarter@sscps.org' as statement
+union
+select 'python ./gam/gam.py update group gco-fy2020@student.sscps.org remove group gco-fy2020@student.sscps.org' as statement
+union
+select 'python ./gam/gam.py update group gco-fy2020@student.sscps.org add owner mcarter@sscps.org' as statement
+--for some reason can't union the statement below
+select concat(
+      'python ./gam/gam.py update group '
+      , concat('gco-fy',users.expected_grad_year,'@student.sscps.org')
+      , ' add member ', users.school_email
+    ) as statement
+  from users
+  where users.status = 'ACTIVE' and users.school_email != ''
+    and users.population = 'STU'
+    and users.expected_grad_year is not null
+    and users.grade in ('09','10','11','12')
   order by users.population, users.grade, users.school_email;
 
 

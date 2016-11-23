@@ -1,3 +1,22 @@
+
+# print list of courses for a student
+#python ./gam/gam.py print course-participants student ldohert101@student.sscps.org todrive
+
+# list everyone who sees a calendar
+#echo PE Space-Project and Workshop
+#python ./gam/gam.py calendar sscps.org_adir45ii0ale3reas48meesnfk@group.calendar.google.com showacl
+#echo PE Space Use
+#python ./gam/gam.py calendar sscps.org_go6pig0m7ovfoosrojei6nuv9o@group.calendar.google.com showacl
+
+# list all calendars a users sees
+#python ./gam/gam.py user apepin@sscps.org show calendar
+
+# add users to a calendar
+#python ./gam/gam.py calendar <calendar email> add freebusy|read|editor|owner <user email>
+#python ./gam/gam.py calendar sscps.org_adir45ii0ale3reas48meesnfk@group.calendar.google.com add owner rdegennaro@sscps.org
+#python ./gam/gam.py calendar sscps.org_adir45ii0ale3reas48meesnfk@group.calendar.google.com add read mbuckleycurran@sscps.org
+#python ./gam/gam.py calendar sscps.org_adir45ii0ale3reas48meesnfk@group.calendar.google.com add read mflanagan@sscps.org
+
 #python ./gam/gam.py user admin.google@sscps.org add drivefileacl 0Byc5mfoLgdM3MDE0YjEyOWEtMjIxNi00YTE0LTgxZDgtODQxOGEwODU5YjE3 user jen_student@student.sscps.org role reader
 
 #python ./gam/gam.py user admin.google@sscps.org show filelist todrive allfields
@@ -5,13 +24,38 @@
 #python ./gam/gam.py print courses teacher rdegennaro@sscps.org
 #python ./gam/gam.py course 2245052193 add alias 5620-01-fy17
 
+#manually add students to classrooms
+#python ./gam/gam.py create course alias 4304-01-fy17 add student joe_student@student.sscps.org
+
+
 # manually create classrooms
-python ./gam/gam.py create course alias 4407-01-fy17 teacher hedmondson@sscps.org name "Spanish Gr 7 - Blue (Haley)" section "4407/01-FY17" status ACTIVE
-python ./gam/gam.py create course alias 4407-02-fy17 teacher hedmondson@sscps.org name "Spanish Gr 7 - Yellow (Haley)" section "4407/02-FY17" status ACTIVE
-python ./gam/gam.py create course alias 4407-03-fy17 teacher hedmondson@sscps.org name "Spanish Gr 7 - Green (Haley)" section "4407/03-FY17" status ACTIVE
-python ./gam/gam.py create course alias 4408-01-fy17 teacher hedmondson@sscps.org name "Spanish Gr 8 - Orange (Haley)" section "4408/01-FY17" status ACTIVE
-python ./gam/gam.py create course alias 4408-02-fy17 teacher hedmondson@sscps.org name "Spanish Gr 8 - Red (Haley)" section "4408/02-FY17" status ACTIVE
-python ./gam/gam.py create course alias 4408-03-fy17 teacher hedmondson@sscps.org name "Spanish Gr 8 - Purple (Haley)" section "4408/03-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 4304-01-fy17 teacher mlappas@sscps.org name "Spanish L3 - Yellow (Maria)" section "4304/01-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 4304-02-fy17 teacher mlappas@sscps.org name "Spanish L3 - Purple (Maria)" section "4304/02-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 4304-03-fy17 teacher mlappas@sscps.org name "Spanish L3 - Blue (Maria)" section "4304/03-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 4304-04-fy17 teacher mlappas@sscps.org name "Spanish L3 - Orange (Maria)" section "4304/04-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 4304-05-fy17 teacher mlappas@sscps.org name "Spanish L3 - Green (Maria)" section "4304/05-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 4304-06-fy17 teacher mlappas@sscps.org name "Spanish L3 - Red (Maria)" section "4304/06-FY17" status ACTIVE
+###
+#python ./gam/gam.py create course alias 7403-01-fy17 teacher tleonard@sscps.org name "Music L3 - Blue (Theron)" section "7403/01-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 7403-02-fy17 teacher tleonard@sscps.org name "Music L3 - Orange (Theron)" section "7403/02-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 7403-03-fy17 teacher tleonard@sscps.org name "Music L3 - Yellow (Theron)" section "7403/03-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 7403-04-fy17 teacher tleonard@sscps.org name "Music L3 - Green (Theron)" section "7403/04-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 7403-05-fy17 teacher tleonard@sscps.org name "Music L3 - Purple (Theron)" section "7403/05-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 7403-06-fy17 teacher tleonard@sscps.org name "Music L3 - Red (Theron)" section "7403/06-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 7302-01-fy17 teacher tleonard@sscps.org name "Music L4 - Yellow (Theron)" section "7302/01-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 7302-02-fy17 teacher tleonard@sscps.org name "Music L4 - Purple (Theron)" section "7302/02-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 7302-03-fy17 teacher tleonard@sscps.org name "Music L4 - Orange (Theron)" section "7302/03-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 7302-04-fy17 teacher tleonard@sscps.org name "Music L4 - Green (Theron)" section "7302/04-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 7302-05-fy17 teacher tleonard@sscps.org name "Music L4 - Blue (Theron)" section "7302/05-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 7302-06-fy17 teacher tleonard@sscps.org name "Music L4 - Red (Theron)" section "7302/06-FY17" status ACTIVE
+###
+###
+#python ./gam/gam.py create course alias 4407-01-fy17 teacher hedmondson@sscps.org name "Spanish Gr 7 - Blue (Haley)" section "4407/01-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 4407-02-fy17 teacher hedmondson@sscps.org name "Spanish Gr 7 - Yellow (Haley)" section "4407/02-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 4407-03-fy17 teacher hedmondson@sscps.org name "Spanish Gr 7 - Green (Haley)" section "4407/03-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 4408-01-fy17 teacher hedmondson@sscps.org name "Spanish Gr 8 - Orange (Haley)" section "4408/01-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 4408-02-fy17 teacher hedmondson@sscps.org name "Spanish Gr 8 - Red (Haley)" section "4408/02-FY17" status ACTIVE
+#python ./gam/gam.py create course alias 4408-03-fy17 teacher hedmondson@sscps.org name "Spanish Gr 8 - Purple (Haley)" section "4408/03-FY17" status ACTIVE
 ###
 #python ./gam/gam.py create course alias 2407-01-fy17 teacher kodonnell@sscps.org name "World Cultures 1 - Orange (Katie O.)" section "2407/01-FY17" status ACTIVE
 #python ./gam/gam.py create course alias 2407-02-fy17 teacher kodonnell@sscps.org name "World Cultures 1 - Red (Katie O.)" section "2407/02-FY17" status ACTIVE
