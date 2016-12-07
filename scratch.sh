@@ -1,4 +1,3 @@
-
 # print list of courses for a student
 #python ./gam/gam.py print course-participants student ldohert101@student.sscps.org todrive
 
@@ -29,6 +28,14 @@
 
 
 # manually create classrooms
+#python ./gam/gam.py create course alias misc-acept-fy17 teacher jcohen@sscps.org name "ACE Personal Training" section "ACE-PT/01-FY17" status ACTIVE
+###
+#python ./gam/gam.py create course alias techl2-01-fy17 teacher rdegennaro@sscps.org name "Technology L2 - Monday (John)" section "TechL2/01-FY17" status ACTIVE
+#python ./gam/gam.py create course alias techl2-02-fy17 teacher rdegennaro@sscps.org name "Technology L2 - Tuesday (Krista)" section "TechL2/02-FY17" status ACTIVE
+#python ./gam/gam.py create course alias techl2-03-fy17 teacher rdegennaro@sscps.org name "Technology L2 - Wednesday (Darlene)" section "TechL2/03-FY17" status ACTIVE
+#python ./gam/gam.py create course alias techl2-04-fy17 teacher rdegennaro@sscps.org name "Technology L2 - Thursday (Nicole)" section "TechL2/04-FY17" status ACTIVE
+#python ./gam/gam.py create course alias techl2-05-fy17 teacher rdegennaro@sscps.org name "Technology L2 - Friday (Mariah)" section "TechL2/05-FY17" status ACTIVE
+###
 #python ./gam/gam.py create course alias 4304-01-fy17 teacher mlappas@sscps.org name "Spanish L3 - Yellow (Maria)" section "4304/01-FY17" status ACTIVE
 #python ./gam/gam.py create course alias 4304-02-fy17 teacher mlappas@sscps.org name "Spanish L3 - Purple (Maria)" section "4304/02-FY17" status ACTIVE
 #python ./gam/gam.py create course alias 4304-03-fy17 teacher mlappas@sscps.org name "Spanish L3 - Blue (Maria)" section "4304/03-FY17" status ACTIVE
