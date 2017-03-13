@@ -1,5 +1,27 @@
+#python ./gam/gam.py course 2245052193 add alias 5620-01-fy17
+#python ./gam/gam.py user admin.google@sscps.org add drivefileacl 0Byc5mfoLgdM3MDE0YjEyOWEtMjIxNi00YTE0LTgxZDgtODQxOGEwODU5YjE3 user jen_student@student.sscps.org role reader
+#python ./gam/gam.py user admin.google@sscps.org show filelist todrive allfields
+
+# remove email from group
+python ./gam/gam.py update group parents@sscps.org remove marvensely2@yahoo.com
+python ./gam/gam.py update group parents@sscps.org remove natacha1julien@hotmail.com
+python ./gam/gam.py update group parents@sscps.org remove tinahillson@yahoo.com
+python ./gam/gam.py update group parents@sscps.org remove rlinda71@comcast.net:
+
+
+# print list of courses for a teacher
+#python ./gam/gam.py print course-participants teacher edormady@sscps.org todrive
 # print list of courses for a student
 #python ./gam/gam.py print course-participants student ldohert101@student.sscps.org todrive
+
+# add SSCPS-GroupDocs to user, view-only in root folder
+#python ./gam/gam.py user nvigneau@sscps.org update drivefile id 0Byc5mfoLgdM3MDE0YjEyOWEtMjIxNi00YTE0LTgxZDgtODQxOGEwODU5YjE3 parentid root
+# add SSCPS-FacStaff calendar
+#python ./gam/gam.py user nvigneau@sscps.org add calendar sscps.org_mnh2vaotaksv4uf8cml2pgrsgg@group.calendar.google.com
+# add SSCPS-Main calendar
+#python ./gam/gam.py user nvigneau@sscps.org add calendar sscps.org_2skq6kkh75tr8e8g0q3ooblh84@group.calendar.google.com
+# add SSCPS-Atheletics calendar
+#python ./gam/gam.py user nvigneau@sscps.org add calendar sscps.org_kiv73854jfpsvsh8luul29luj0@group.calendar.google.com
 
 # list everyone who sees a calendar
 #echo PE Space-Project and Workshop
@@ -16,18 +38,10 @@
 #python ./gam/gam.py calendar sscps.org_adir45ii0ale3reas48meesnfk@group.calendar.google.com add read mbuckleycurran@sscps.org
 #python ./gam/gam.py calendar sscps.org_adir45ii0ale3reas48meesnfk@group.calendar.google.com add read mflanagan@sscps.org
 
-#python ./gam/gam.py user admin.google@sscps.org add drivefileacl 0Byc5mfoLgdM3MDE0YjEyOWEtMjIxNi00YTE0LTgxZDgtODQxOGEwODU5YjE3 user jen_student@student.sscps.org role reader
-
-#python ./gam/gam.py user admin.google@sscps.org show filelist todrive allfields
-
-#python ./gam/gam.py print courses teacher rdegennaro@sscps.org
-#python ./gam/gam.py course 2245052193 add alias 5620-01-fy17
-
-#manually add students to classrooms
-#python ./gam/gam.py create course alias 4304-01-fy17 add student joe_student@student.sscps.org
-
-
 # manually create classrooms
+#python ./gam/gam.py create course alias 5625-01-fy17 teacher kodonnell@sscps.org name "Environment Literacy" section "5625/01-FY17" status ACTIVE
+#python ./gam/gam.py course 5625-01-fy17 add teacher emerwin@sscps.org
+###
 #python ./gam/gam.py create course alias misc-acept-fy17 teacher jcohen@sscps.org name "ACE Personal Training" section "ACE-PT/01-FY17" status ACTIVE
 ###
 #python ./gam/gam.py create course alias techl2-01-fy17 teacher rdegennaro@sscps.org name "Technology L2 - Monday (John)" section "TechL2/01-FY17" status ACTIVE
@@ -82,6 +96,93 @@
 #python ./gam/gam.py create course alias 5525-01-fy17 teacher jkostka@sscps.org name "Makers (Jenny)" section "5525/01-FY17" status ACTIVE
 
 #add students to google classrooms
+###
+#python ./gam/gam.py course techl2-01-fy17 add student staylor101@student.sscps.org
+###
+#python ./gam/gam.py course techl2-02-fy17 add student alex_hill@student.sscps.org
+#python ./gam/gam.py course techl2-02-fy17 add student aeze101@student.sscps.org
+#python ./gam/gam.py course techl2-02-fy17 add student adore101@student.sscps.org
+#python ./gam/gam.py course techl2-02-fy17 add student ariana_silveira@student.sscps.org
+#python ./gam/gam.py course techl2-02-fy17 add student benjamin_walker@student.sscps.org
+#python ./gam/gam.py course techl2-02-fy17 add student cpolefk101@student.sscps.org
+#python ./gam/gam.py course techl2-02-fy17 add student dblaise101@student.sscps.org
+#python ./gam/gam.py course techl2-02-fy17 add student ebeals101@student.sscps.org
+#python ./gam/gam.py course techl2-02-fy17 add student ecadet101@student.sscps.org
+#python ./gam/gam.py course techl2-02-fy17 add student emma_mullen@student.sscps.org
+#python ./gam/gam.py course techl2-02-fy17 add student imani_williams@student.sscps.org
+#python ./gam/gam.py course techl2-02-fy17 add student jack_daley@student.sscps.org
+#python ./gam/gam.py course techl2-02-fy17 add student james_mccrorey@student.sscps.org
+#python ./gam/gam.py course techl2-02-fy17 add student jtilden101@student.sscps.org
+#python ./gam/gam.py course techl2-02-fy17 add student lantoni101@student.sscps.org
+#python ./gam/gam.py course techl2-02-fy17 add student misabel101@student.sscps.org
+#python ./gam/gam.py course techl2-02-fy17 add student mmccror101@student.sscps.org
+#python ./gam/gam.py course techl2-02-fy17 add student rebecca_greenaway@student.sscps.org
+#python ./gam/gam.py course techl2-02-fy17 add student william_hnath@student.sscps.org
+#python ./gam/gam.py course techl2-02-fy17 add student xpinap101@student.sscps.org
+###
+#python ./gam/gam.py course techl2-03-fy17 add student amuturi101@student.sscps.org
+#python ./gam/gam.py course techl2-03-fy17 add student avery_youngclaus@student.sscps.org
+#python ./gam/gam.py course techl2-03-fy17 add student ckalui101@student.sscps.org
+#python ./gam/gam.py course techl2-03-fy17 add student corinne_manning@student.sscps.org
+#python ./gam/gam.py course techl2-03-fy17 add student emerson_harward@student.sscps.org
+#python ./gam/gam.py course techl2-03-fy17 add student ewalsh101@student.sscps.org
+#python ./gam/gam.py course techl2-03-fy17 add student emmauel_david@student.sscps.org
+#python ./gam/gam.py course techl2-03-fy17 add student enoch_sowale@student.sscps.org
+#python ./gam/gam.py course techl2-03-fy17 add student glong101@student.sscps.org
+#python ./gam/gam.py course techl2-03-fy17 add student gpennin101@student.sscps.org
+#python ./gam/gam.py course techl2-03-fy17 add student jmckern101@student.sscps.org
+#python ./gam/gam.py course techl2-03-fy17 add student jhiggin101@student.sscps.org
+#python ./gam/gam.py course techl2-03-fy17 add student klarosa101@student.sscps.org
+#python ./gam/gam.py course techl2-03-fy17 add student llarue101@student.sscps.org
+#python ./gam/gam.py course techl2-03-fy17 add student mimi_takeishi@student.sscps.org
+#python ./gam/gam.py course techl2-03-fy17 add student quinten_collins@student.sscps.org
+#python ./gam/gam.py course techl2-03-fy17 add student rcheran101@student.sscps.org
+#python ./gam/gam.py course techl2-03-fy17 add student thomas_guthro@student.sscps.org
+#python ./gam/gam.py course techl2-03-fy17 add student vcarrol101@student.sscps.org
+#python ./gam/gam.py course techl2-03-fy17 add student zevi_mckeestevens@student.sscps.org
+###
+#python ./gam/gam.py course techl2-04-fy17 add student abigail_cary@student.sscps.org
+#python ./gam/gam.py course techl2-04-fy17 add student abram_dehner@student.sscps.org
+#python ./gam/gam.py course techl2-04-fy17 add student alani_rosario@student.sscps.org
+#python ./gam/gam.py course techl2-04-fy17 add student aleesha_almeda@student.sscps.org
+#python ./gam/gam.py course techl2-04-fy17 add student alijah_souza@student.sscps.org
+#python ./gam/gam.py course techl2-04-fy17 add student aburgoy101@student.sscps.org
+#python ./gam/gam.py course techl2-04-fy17 add student andesky_occeus@student.sscps.org
+#python ./gam/gam.py course techl2-04-fy17 add student bpolito101@student.sscps.org
+#python ./gam/gam.py course techl2-04-fy17 add student dnjugun101@student.sscps.org
+#python ./gam/gam.py course techl2-04-fy17 add student emustin101@student.sscps.org
+#python ./gam/gam.py course techl2-04-fy17 add student emmanuela_izidore@student.sscps.org
+#python ./gam/gam.py course techl2-04-fy17 add student estherhope_manigat@student.sscps.org
+#python ./gam/gam.py course techl2-04-fy17 add student fisher_roman@student.sscps.org
+#python ./gam/gam.py course techl2-04-fy17 add student jada_flavin@student.sscps.org
+#python ./gam/gam.py course techl2-04-fy17 add student mmiddle101@student.sscps.org
+#python ./gam/gam.py course techl2-04-fy17 add student mhillso101@student.sscps.org
+#python ./gam/gam.py course techl2-04-fy17 add student nfrank101@student.sscps.org
+#python ./gam/gam.py course techl2-04-fy17 add student rthibau101@student.sscps.org
+#python ./gam/gam.py course techl2-04-fy17 add student swatcho101@student.sscps.org
+#python ./gam/gam.py course techl2-04-fy17 add student scarlett_mcmahon@student.sscps.org
+#python ./gam/gam.py course techl2-04-fy17 add student wvilno101@student.sscps.org
+###
+#python ./gam/gam.py course techl2-05-fy17 add student amy_walsh@student.sscps.org
+#python ./gam/gam.py course techl2-05-fy17 add student andrew_muse@student.sscps.org
+#python ./gam/gam.py course techl2-05-fy17 add student anngiah_theodore@student.sscps.org
+#python ./gam/gam.py course techl2-05-fy17 add student chansco101@student.sscps.org
+#python ./gam/gam.py course techl2-05-fy17 add student donwuka101@student.sscps.org
+#python ./gam/gam.py course techl2-05-fy17 add student esharpe101@student.sscps.org
+#python ./gam/gam.py course techl2-05-fy17 add student emooney101@student.sscps.org
+#python ./gam/gam.py course techl2-05-fy17 add student john_olaoye@student.sscps.org
+#python ./gam/gam.py course techl2-05-fy17 add student lachlan_isabel@student.sscps.org
+#python ./gam/gam.py course techl2-05-fy17 add student lmullen101@student.sscps.org
+#python ./gam/gam.py course techl2-05-fy17 add student lpogore101@student.sscps.org
+#python ./gam/gam.py course techl2-05-fy17 add student michael_harlow@student.sscps.org
+#python ./gam/gam.py course techl2-05-fy17 add student neddins101@student.sscps.org
+#python ./gam/gam.py course techl2-05-fy17 add student niamh_hickey@student.sscps.org
+#python ./gam/gam.py course techl2-05-fy17 add student norma_laurent@student.sscps.org
+#python ./gam/gam.py course techl2-05-fy17 add student ocheran101@student.sscps.org
+#python ./gam/gam.py course techl2-05-fy17 add student orudino101@student.sscps.org
+#python ./gam/gam.py course techl2-05-fy17 add student varmstr101@student.sscps.org
+#python ./gam/gam.py course techl2-05-fy17 add student zachary_hall@student.sscps.org
+###
 #python ./gam/gam.py course 9901-01-fy17 add student ssenior101@student.sscps.org
 #python ./gam/gam.py course 9902-01-fy17 add student ttender102@student.sscps.org
 #python ./gam/gam.py course 9902-01-fy17 add student ddiscip101@student.sscps.org
@@ -179,8 +280,6 @@
 #python ./gam/gam.py create user ssophom101@student.sscps.org firstname Samuel lastname Sophomore password sscps123 changepassword on org /Test/Users-Normal/Students/Level-HS externalid organization 99999992
 #python ./gam/gam.py create user ttender101@student.sscps.org firstname Tabitha lastname Tenderfoot password sscps123 changepassword on org /Test/Users-Normal/Students/Level-HS externalid organization 99999993
 #python ./gam/gam.py create user ttender102@student.sscps.org firstname Terrance lastname Tenderfoot password sscps123 changepassword on org /Test/Users-Normal/Students/Level-4 externalid organization 99999984
-
-
 
 # archive users from extract sql
 #python ./gam/gam.py update user ssenior@sscps.org suspended on org /Test/Archive/Aging/Employees

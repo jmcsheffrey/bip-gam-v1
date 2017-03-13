@@ -1,5 +1,5 @@
 #python ./gam/gam.py info domain
-
+#change because I'm not confident everything is setup correctly
 
 # create new users
 # gam create user <email address> firstname <First Name> lastname <Last Name> password <Password> changepassword on org <Org Name>
