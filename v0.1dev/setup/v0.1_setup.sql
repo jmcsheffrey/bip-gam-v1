@@ -12,6 +12,7 @@ CREATE TABLE `users` (
  `middle_name` varchar(50) NOT NULL,
  `last_name` varchar(50) NOT NULL,
  `user_name` varchar(20) DEFAULT NULL,
+ `profile_server` varchar(100) DEFAULT NULL,
  `school_email` varchar(100) DEFAULT NULL,
  `home_email` varchar(250) DEFAULT NULL,
  `phone_home` varchar(250) DEFAULT NULL,
@@ -68,6 +69,7 @@ CREATE TABLE `staging_students` (
  `first_name` varchar(50) DEFAULT NULL,
  `middle_name` varchar(50) DEFAULT NULL,
  `last_name` varchar(50) DEFAULT NULL,
+ `profile_server` varchar(100) DEFAULT NULL,
  `school_email` varchar(100) DEFAULT NULL,
  `grade` varchar(2) DEFAULT NULL,
  `expected_grad_year` int(11) DEFAULT NULL,
@@ -128,6 +130,11 @@ select max_name, max(max_number) as max_number, max(next_number) as next_number
 from overall_nextsuffix
 group by max_name
 
+CREATE VIEW profile_server_by_population AS
+select population, profile_server, count(profile_server) AS profile_server_count
+from users
+group by population, profile_server
+
 CREATE TABLE `import_employees` (
  `PKEY` int(11) NOT NULL AUTO_INCREMENT,
  `APID` varchar(5) DEFAULT NULL,
@@ -161,6 +168,7 @@ CREATE TABLE `staging_employees` (
  `first_name` varchar(50) DEFAULT NULL,
  `middle_name` varchar(50) DEFAULT NULL,
  `last_name` varchar(50) DEFAULT NULL,
+ `profile_server` varchar(100) DEFAULT NULL,
  `school_email` varchar(100) DEFAULT NULL,
  `home_email` varchar(250) DEFAULT NULL,
  `phone_home` varchar(250) DEFAULT NULL,

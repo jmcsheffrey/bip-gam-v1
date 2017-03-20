@@ -19,12 +19,14 @@ insert into staging_students
   from import_students as import
   where import.grade in ('03','04','05','06','07','08','09','10','11','12')
   order by import.grade, import.last_name, import.first_name, import.middle_name;
+
 -- update "newthisrun" based on existing records in users table
 update staging_students as stage
 inner join users
 on stage.unique_id = users.unique_id
 set stage.newthisrun = 'N';
 update staging_students as stage set stage.newthisrun = 'Y' where stage.newthisrun = '';
+
 -- give emails to students who do not have it and need it
 --  this needs to be run until no students who need emails don't have it:
 --     select * from staging_students where (isnull(school_email) or school_email = '') and grade in ('03','04','05','06','07','08','09','10','11','12');
@@ -80,11 +82,24 @@ set school_email = concat (
     end)
   ,'@student.sscps.org')
 where (isnull(school_email) or school_email = '') and grade in ('03','04','05','06','07','08','09','10','11','12');
+
 -- make school_email null for everyone else so no duplicates (i.e. null is not checked as duplicate)
 update staging_students
   set school_email = null
   where school_email = '';
 
+-- grab existing profile_server value
+update staging_students as stage
+  inner join users on stage.unique_id = users.unique_id
+  set stage.profile_server = users.profile_server
+
+-- set file server for all 700L students (High School)
+update staging_students
+  set profile_server = 'RODRICK'
+  where grade in ('09','10','11','12');
+
+-- set file server for students at 100L, assumes 700L already set above
+--this should look to load balance students across servers in profile_server_by_population, ignoring RODRICK
 
 -------------------------
 -- SCRIPTS FOR EMPLOYEES
@@ -100,12 +115,14 @@ insert into staging_employees
     position
   from import_employees
   order by last_name, first_name, middle_name;
+
 -- update "newthisrun" based on existing records in users table
 update staging_employees as stage
 inner join users
 on stage.unique_id = users.unique_id
 set stage.newthisrun = 'N';
 update staging_employees as stage set stage.newthisrun = 'Y' where stage.newthisrun = '';
+
 -- give emails to all employees
 update staging_employees
   set school_email =
@@ -114,10 +131,21 @@ update staging_employees
       , replace(replace(replace(replace(replace(lower(last_name),char(46),char(0)),char(45),char(0)),char(44),char(0)),char(39),char(0)),char(32),char(0))
     ),1,21), '@sscps.org')
   where isnull(school_email) or school_email = '';
+
 -- make school_email null for everyone else so no duplicates (i.e. null is not checked as duplicate)
 update staging_employees
   set school_email = null
   where school_email = '';
+
+-- grab existing profile_server value
+update staging_employees as stage
+  inner join users on stage.unique_id = users.unique_id
+  set stage.profile_server = users.profile_server
+
+-- IMPORTANT: set file server manually for all 700L employees
+
+-- set file server for employees at 100L, assumes 700L already set manually
+--this should look to load balance students across servers in profile_server_by_population, ignoring RODRICK
 
 
 -------------------------

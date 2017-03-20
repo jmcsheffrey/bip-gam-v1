@@ -1,4 +1,7 @@
 -- TODO - overall
+--  * need to auto populate profile_server (or home folder server) for new 100L users (students & employees)
+--      * this should be "round-robin"
+--      * only for those without value in users (of course), so should copy value first
 --  * allow for students in lower levels (no login, but needed for Library)
 --      * check all extraction scripts for appropriate levels (e.g. Google is 3rd & above)
 --  * check out feasibility of putting contacts into users.
