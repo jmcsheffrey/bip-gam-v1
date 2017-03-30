@@ -24,8 +24,8 @@ CREATE TABLE `users` (
  `homeroom_teacher_last` varchar(50) DEFAULT NULL,
  `referred_to_as` varchar(50) DEFAULT NULL,
  `gender` varchar(1) NOT NULL,
- `birthdate` date NOT NULL,
- `start_date` date NOT NULL,
+ `birthdate` date DEFAULT NULL,
+ `startdate` varchar(11) DEFAULT NULL,
  `position` varchar(100) NOT NULL,
  `description` varchar(100) NOT NULL,
  PRIMARY KEY (`unique_id`),
@@ -73,13 +73,13 @@ CREATE TABLE `staging_students` (
  `school_email` varchar(100) DEFAULT NULL,
  `grade` varchar(2) DEFAULT NULL,
  `expected_grad_year` int(11) DEFAULT NULL,
- `homeroom_room` varchar(3) DEFAULT NULL,
+ `homeroom_room` varchar(4) DEFAULT NULL,
  `homeroom_teacher_first` varchar(50) DEFAULT NULL,
  `homeroom_teacher_last` varchar(50) DEFAULT NULL,
  `referred_to_as` varchar(50) DEFAULT NULL,
  `gender` varchar(1) DEFAULT NULL,
  `birthdate` date DEFAULT NULL,
- `entry_date` date DEFAULT NULL,
+ `entry_date` varchar(11) DEFAULT NULL,
  PRIMARY KEY (`PKEY`),
  UNIQUE KEY `unique_unique_id` (`unique_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8
@@ -177,7 +177,7 @@ CREATE TABLE `staging_employees` (
  `referred_to_as` varchar(50) DEFAULT NULL,
  `gender` varchar(1) DEFAULT NULL,
  `birthdate` date DEFAULT NULL,
- `date_of_hire` date DEFAULT NULL,
+ `date_of_hire` varchar(11) DEFAULT NULL,
  `position` varchar(100) DEFAULT NULL,
  PRIMARY KEY (`PKEY`),
  UNIQUE KEY `unique_unique_id` (`unique_id`)
@@ -222,6 +222,7 @@ CREATE TABLE `import_contacts` (
  `PARENT_PORTAL_ACCESS` varchar(1) DEFAULT NULL,
  `DO_NOT_CALL` varchar(1) DEFAULT NULL,
  `DO_NOT_EMAIL` varchar(1) DEFAULT NULL,
+ `NOTIFY_OFFICE` varchar(1) DEFAULT NULL,
  PRIMARY KEY (`PKEY`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8
 

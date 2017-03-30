@@ -36,6 +36,7 @@ insert into users
     stage.middle_name,
     stage.last_name,
     substring(stage.school_email,1,instr(stage.school_email, '@')-1),
+    stage.profile_server,
     stage.school_email,
     '' as home_email,
     '' as phone_home,
@@ -53,8 +54,8 @@ insert into users
     concat('SSCPS Grade ',stage.grade,' Student') as description
   from staging_students as stage
   where
-    stage.unique_id not in (select users.unique_id from users)
-      and stage.grade in ('03','04','05','06','07','08','09','10','11','12');
+    stage.unique_id not in (select users.unique_id from users);
+      -- and stage.grade in ('03','04','05','06','07','08','09','10','11','12');
 -- update existing student records
 update users
   left join staging_students as stage on users.unique_id = stage.unique_id
@@ -69,6 +70,7 @@ update users
     users.middle_name = stage.middle_name,
     users.last_name = stage.last_name,
     users.user_name = substring(stage.school_email,1,instr(stage.school_email, '@')-1),
+    users.profile_server = stage.profile_server,
     users.school_email = stage.school_email,
     users.grade = stage.grade,
     users.expected_grad_year = stage.expected_grad_year,
@@ -78,12 +80,12 @@ update users
     users.referred_to_as = stage.referred_to_as,
     users.gender = stage.gender,
     users.birthdate = stage.birthdate,
-    users.start_date = stage.entry_date,
+    users.startdate = stage.entry_date,
     users.position = '',
     users.description = concat('SSCPS Grade ',stage.grade,' Student')
   where
-    users.unique_id = stage.unique_id
-      and stage.grade in ('03','04','05','06','07','08','09','10','11','12');
+    users.unique_id = stage.unique_id;
+      -- and stage.grade in ('03','04','05','06','07','08','09','10','11','12');
 
 
 -- ****************************************************
@@ -104,11 +106,13 @@ insert into users
     stage.middle_name,
     stage.last_name,
     substring(stage.school_email,1,instr(stage.school_email, '@')-1),
+    stage.profile_server,
     stage.school_email,
+    stage.home_email,
     stage.phone_home as phone_home,
     stage.phone_cell as phone_cell,
     '' as grade,
-    '' as expected_grad_year,
+    null as expected_grad_year,
     stage.homeroom,
     '' as homeroom_teacher_first,
     '' as homeroom_teacher_last,
@@ -135,18 +139,20 @@ update users
     users.middle_name = stage.middle_name,
     users.last_name = stage.last_name,
     users.user_name = substring(stage.school_email,1,instr(stage.school_email, '@')-1),
+    users.profile_server = stage.profile_server,
+    users.home_email = stage.home_email,
     users.school_email = stage.school_email,
     users.phone_home = stage.phone_home,
     users.phone_cell = stage.phone_cell,
     users.grade = '',
-    users.expected_grad_year = '',
+    users.expected_grad_year = null,
     users.homeroom_room = stage.homeroom,
     users.homeroom_teacher_first = '',
     users.homeroom_teacher_last = '',
     users.referred_to_as = stage.referred_to_as,
     users.gender = stage.gender,
     users.birthdate = stage.birthdate,
-    users.start_date = stage.date_of_hire,
+    users.startdate = stage.date_of_hire,
     users.position = stage.position,
     users.description = 'SSCPS Employee'
   where

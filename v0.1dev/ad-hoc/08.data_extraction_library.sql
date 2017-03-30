@@ -1,71 +1,82 @@
 -- ****************************************************
--- Library data for Joomla _lendee table via SQL script
---    contact info done separately, but can use below in a spreadsheet
---    =(CONCATENATE("update s7rh8_booklibrary_lendee set contactname = '",A2,"' where lendeecode = '",C2,"';"))
---    =(CONCATENATE("update s7rh8_booklibrary_lendee set contactemail = '",B2,"' where lendeecode = '",C2,"';"))
+-- Library data for Gibbon
+--    Gibbon has different entities for import then AdminPlus
 -- ****************************************************
--- export students & staff at same time
-select
-    users.unique_id as lendeecode,
-    concat (users.first_name, ' ', users.last_name) as full_name,
-    max(contacts.CONTACT_FULL_NAME) as contactname,
-    max(contacts.CONTACT_HOME_EMAIL) as contactemail,
-    users.grade,
-    concat (users.homeroom_teacher_first, ' ', users.homeroom_teacher_last) as homeroom_teacher,
-    'Student' as population,
-    0 as user_id
-  from users
-  left join import_contacts as contacts on users.current_year_id = contacts.APID
-  where users.status = 'ACTIVE' and users.population = 'STU'
-  group by users.unique_id
-union
-select
-    unique_id as lendeecode,
-    concat (first_name, ' ', last_name) as full_name,
-    concat (first_name, ' ', last_name) as contactname,
-    school_email as contactemail,
-    '' as grade,
-    concat (first_name, ' ', last_name) as homeroom_teacher,
-    'Employee' as population,
-    0 as user_id
-  from users
-  where users.status = 'ACTIVE' and users.population = 'EMP'
+
+-- import users, which includes all teachers, students and parents
+--{leave empty} Title - e.g. Ms., Miss, Mr., Mrs., Dr.
+--Surname * - Family name
+--First Name * - Given name
+--Preferred Name * - Most common name, alias, nickname, handle, etc
+--Official Name * - Full name as shown in ID documents.
+--{leave empty} Name In Characters - e.g. Chinese name
+--Gender * - F or M
+--Username * - Must be unique
+--{leave empty} Password - If blank, default password or random password will be used.
+--{leave empty} House - House short name, as set in School Admin. Must already exist).
+--{leave empty} DOB - Date of birth (yyyy-mm-dd)
+--Role * - Teacher, Support Staff, Student or Parent
+--Email
+--{leave empty} Image (240) - path from /uploads/ to medium portrait image (240px by 320px)
+--{leave empty} Address 1 - Unit, Building, Street
+--{leave empty} Address 1 (District) - County, State, District
+--{leave empty} Address 1 (Country)
+--{leave empty} Address 2 - Unit, Building, Street
+--{leave empty} Address 2 (District) - County, State, District
+--{leave empty} Address 2 (Country)
+--Phone 1 (Type) - Mobile, Home, Work, Fax, Pager, Other
+--Phone 1 (Country Code) - IDD code, without 00 or +
+--Phone 1 - No spaces or punctuation, just numbers
+--Phone 2 (Type) - Mobile, Home, Work, Fax, Pager, Other
+--Phone 2 (Country Code) - IDD code, without 00 or +
+--Phone 2 - No spaces or punctuation, just numbers
+--Phone 3 (Type) - Mobile, Home, Work, Fax, Pager, Other
+--Phone 3 (Country Code) - IDD code, without 00 or +
+--Phone 3 - No spaces or punctuation, just numbers
+--Phone 4 (Type) - Mobile, Home, Work, Fax, Pager, Other
+--Phone 4 (Country Code) - IDD code, without 00 or +
+--Phone 4 - No spaces or punctuation, just numbers
+--{leave empty} Website - Must start with http:// or https://
+--{leave empty} First Language
+--{leave empty} Second Language
+--{leave empty} Profession - For parents only
+--{leave empty} Employer - For parents only
+--{leave empty} Job Title - For parents only
+--{leave empty} Emergency 1 Name - For students and staff only
+--{leave empty} Emergency 1 Number 1 - For students and staff only
+--{leave empty} Emergency 1 Number 2 - For students and staff only
+--{leave empty} Emergency 1 Relationship - For students and staff only
+--{leave empty} Emergency 2 Name - For students and staff only
+--{leave empty} Emergency 2 Number 1 - For students and staff only
+--{leave empty} Emergency 2 Number 2 - For students and staff only
+--{leave empty} Emergency 2 Relationship - For students and staff only
+--{leave empty} Start Date - yyyy-mm-dd
+
+-- import families, which is just connection between users to a family
+--   it has three separate CSVs: family file, parent file, child file
+
+-- family file
+--Family Sync Key * - Unique ID for family, according to source system.
+--Name * - Name by which family is known.
+--Address Name - Name to appear on written communication to family.
+--Home Address - Unit, Building, Street
+--Home Address (District) - County, State, District
+--Home Address (Country)
+--{leave empty} Marital Status - Married, Separated, Divorced, De Facto or Other
+--{leave empty} Home Language - Primary
+
+-- parent file
+--Family Sync Key * - Unique ID for family, according to source system.
+--Username * - Parent username.
+--{only import PRIMARY_CONTACT, so = 1} Contact Priority * - 1, 2 or 3 (each family needs one and only one 1).
+
+-- child file
+--Family Sync Key * - Unique ID for family, according to source system.
+--Username * - Child username.
 
 
--- ****************************************************
--- Library cards/book via CSV upload
---   note: contact info is separate table
--- ****************************************************
--- export students
-select
-    concat (first_name, ' ', last_name) as full_name,
-    unique_id as lendeecode,
-    concat (homeroom_teacher_first, ' ', homeroom_teacher_last) as homeroom_teacher,
-    grade,
-    (case when grade = '0K' then '1'
-      when grade = '01' then '1'
-      when grade = '02' then '1'
-      when grade = '03' then '2'
-      when grade = '04' then '2'
-      when grade = '05' then '3'
-      when grade = '06' then '3'
-      when grade = '07' then '4'
-      when grade = '08' then '4'
-      when grade = '09' then '5'
-      when grade = '10' then '5'
-      when grade = '11' then '5'
-      when grade = '12' then '5'
-      else 'ERROR' end) as level
-  from users
-  where users.status = 'ACTIVE' and users.population = 'STU'
-  order by level, homeroom_teacher, first_name, last_name
--- export facstaff
-select
-    concat (first_name, ' ', last_name) as full_name,
-    unique_id as lendeecode,
-    '' as homeroom_teacher,
-    '' as grade,
-    '' as level
-  from users
-  where users.status = 'ACTIVE' and users.population = 'EMP'
-  order by first_name, last_name
+-- import enrollement, which is just Homerooms (Roll Groups in Gibbon terms)
+--Username * - Must be unique.
+--{should homeroom teaher} Roll Group * - Roll group short name, as set in School Admim. Must already exist.
+--{can be FY####} Year Group * - Year group short name, as set in School Admin. Must already exist
+--{leave empty} Roll Order - Must be unique to roll group if set.

@@ -12,12 +12,13 @@ truncate staging_students;
 -- copy students
 insert into staging_students
   select `PKEY`, `APID`, `full_name`, `unique_id`, `status`, '', `household_id`, `first_name`, `middle_name`, `last_name`
-    , `school_email`, `grade`, convert(expected_grad_year, UNSIGNED INTEGER), `homeroom`, `homeroom_teacher_first`
+    , null, `school_email`, `grade`, convert(expected_grad_year, UNSIGNED INTEGER), `homeroom`, `homeroom_teacher_first`
     , `homeroom_teacher_last`, `referred_to_as`, `gender`
     , STR_TO_DATE(`birthdate`,'%m/%d/%Y')
-    , STR_TO_DATE(`entry_date`,'%m/%d/%Y')
+    , entry_date
   from import_students as import
-  where import.grade in ('03','04','05','06','07','08','09','10','11','12')
+  -- below is commented out because library & sendwordnow needs all students
+  -- where import.grade in ('03','04','05','06','07','08','09','10','11','12')
   order by import.grade, import.last_name, import.first_name, import.middle_name;
 
 -- update "newthisrun" based on existing records in users table
@@ -106,12 +107,14 @@ update staging_students
 -------------------------
 -- remove any employee data from previous runs
 truncate staging_employees;
+-- null missing dates so eaier to import
+update import_employees set birthdate = null where birthdate = '';
 -- copy employees
 insert into staging_employees
   select `PKEY`, `APID`, `full_name`, `unique_id`, `status`, '', `first_name`, `middle_name`, `last_name`,
-    `school_email`, `phone_home`, `phone_cell`, `homeroom`, `referred_to_as`, `gender`,
+    null, `school_email`, `home_email`, `phone_home`, `phone_cell`, `homeroom`, `referred_to_as`, `gender`,
     STR_TO_DATE(`birthdate`,'%m/%d/%Y'),
-    STR_TO_DATE(`date_of_hire`,'%m/%d/%Y'),
+    `date_of_hire`,
     position
   from import_employees
   order by last_name, first_name, middle_name;
