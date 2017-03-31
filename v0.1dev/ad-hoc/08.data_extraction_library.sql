@@ -73,10 +73,31 @@
 -- child file
 --Family Sync Key * - Unique ID for family, according to source system.
 --Username * - Child username.
+select
+    users.household_id as FamilySyncKey,
+    users.user_name as Username
+  from users
+  where users.status = 'ACTIVE' and users.population = 'STU'
 
 
 -- import enrollement, which is just Homerooms (Roll Groups in Gibbon terms)
---Username * - Must be unique.
---{should homeroom teaher} Roll Group * - Roll group short name, as set in School Admim. Must already exist.
---{can be FY####} Year Group * - Year group short name, as set in School Admin. Must already exist
---{leave empty} Roll Order - Must be unique to roll group if set.
+--below should be all unique
+select *
+  from (select
+            substring(concat (users.homeroom_teacher_first, users.homeroom_teacher_last),1,10) as LongRollGroup,
+            substring(concat (users.homeroom_teacher_first, users.homeroom_teacher_last),1,5) as ShortRollGroup
+          from users
+          where users.status = 'ACTIVE' and users.population = 'STU'
+            and users.homeroom_teacher_first != ''
+            and users.homeroom_teacher_last != ''
+  ) as RollGroupsCheck
+  group by LongRollGroup, ShortRollGroup
+
+--if rows above are unique, export with data below
+select
+    users.user_name as Username,
+    as RollGroup,
+    'FY2017' as YearGroup,
+    '' as RollOrder
+  from users
+  where users.status = 'ACTIVE' and users.population = 'STU'
