@@ -22,6 +22,10 @@ select * from (
     order by stage.APID) as stage_count
   where stage_count.count > 1;
 
+-- all students should have email because library software requires username
+-- results should be zero
+select * from staging_students where (school_email is null or school_email = '');
+
 -- check for duplicate email addresses where unique_id is not same between USERS & STAGING
 -- results should be zero
 select stage.unique_id as staging_id, users.unique_id as users_id
@@ -60,6 +64,10 @@ select users.unique_id, users.first_name, users.last_name, users.school_email, u
   left join staging_employees as stage on users.unique_id = stage.unique_id
   where users.population = 'EMP' and users.status = 'ACTIVE' and users.manual_entry = 'N' and stage.status is null
   order by users.unique_id desc;
+
+-- all employees should have email
+-- results should be zero
+select * from staging_employees where (school_email is null or school_email = '');
 
 -- check for duplicate email addresses where unique_id is not same between USERS & STAGING
 -- results should be zero

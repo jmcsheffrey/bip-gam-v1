@@ -17,6 +17,10 @@ CREATE TABLE `users` (
  `home_email` varchar(250) DEFAULT NULL,
  `phone_home` varchar(250) DEFAULT NULL,
  `phone_cell` varchar(250) DEFAULT NULL,
+ `street` varchar(250) DEFAULT NULL,
+ `city` varchar(250) DEFAULT NULL,
+ `state` varchar(250) DEFAULT NULL,
+ `zipcode` varchar(250) DEFAULT NULL,
  `grade` varchar(2) DEFAULT NULL,
  `expected_grad_year` int(11) DEFAULT NULL,
  `homeroom_room` varchar(25) DEFAULT NULL,
@@ -45,6 +49,12 @@ CREATE TABLE `import_students` (
  `middle_name` varchar(50) DEFAULT NULL,
  `last_name` varchar(50) DEFAULT NULL,
  `school_email` varchar(100) DEFAULT NULL,
+ `phone_home` varchar(250) DEFAULT NULL,
+ `phone_cell` varchar(250) DEFAULT NULL,
+ `street` varchar(250) DEFAULT NULL,
+ `city` varchar(250) DEFAULT NULL,
+ `state` varchar(250) DEFAULT NULL,
+ `zipcode` varchar(250) DEFAULT NULL,
  `grade` varchar(2) DEFAULT NULL,
  `expected_grad_year` varchar(4) DEFAULT NULL,
  `homeroom` varchar(3) DEFAULT NULL,
@@ -71,6 +81,12 @@ CREATE TABLE `staging_students` (
  `last_name` varchar(50) DEFAULT NULL,
  `profile_server` varchar(100) DEFAULT NULL,
  `school_email` varchar(100) DEFAULT NULL,
+ `phone_home` varchar(250) DEFAULT NULL,
+ `phone_cell` varchar(250) DEFAULT NULL,
+ `street` varchar(250) DEFAULT NULL,
+ `city` varchar(250) DEFAULT NULL,
+ `state` varchar(250) DEFAULT NULL,
+ `zipcode` varchar(250) DEFAULT NULL,
  `grade` varchar(2) DEFAULT NULL,
  `expected_grad_year` int(11) DEFAULT NULL,
  `homeroom_room` varchar(4) DEFAULT NULL,
@@ -101,7 +117,7 @@ select PKEY, unique_id, first_name, last_name
                 char(46),char(0)),char(45),char(0)),char(44),char(0)),char(39),char(0)),char(32),char(0))
       ) as prefix
 from staging_students
-where (isnull(school_email) or school_email = '') and grade in ('03','04','05','06','07','08','09','10','11','12')
+where (school_email is null or school_email = '')
 group by prefix
 
 CREATE VIEW users_nextsuffix AS
@@ -148,6 +164,10 @@ CREATE TABLE `import_employees` (
  `home_email` varchar(250) DEFAULT NULL,
  `phone_home` varchar(250) DEFAULT NULL,
  `phone_cell` varchar(250) DEFAULT NULL,
+ `street` varchar(250) DEFAULT NULL,
+ `city` varchar(250) DEFAULT NULL,
+ `state` varchar(250) DEFAULT NULL,
+ `zipcode` varchar(250) DEFAULT NULL,
  `homeroom` varchar(250) DEFAULT NULL,
  `referred_to_as` varchar(50) DEFAULT NULL,
  `gender` varchar(1) DEFAULT NULL,
@@ -173,6 +193,10 @@ CREATE TABLE `staging_employees` (
  `home_email` varchar(250) DEFAULT NULL,
  `phone_home` varchar(250) DEFAULT NULL,
  `phone_cell` varchar(250) DEFAULT NULL,
+ `street` varchar(250) DEFAULT NULL,
+ `city` varchar(250) DEFAULT NULL,
+ `state` varchar(250) DEFAULT NULL,
+ `zipcode` varchar(250) DEFAULT NULL,
  `homeroom` varchar(250) DEFAULT NULL,
  `referred_to_as` varchar(50) DEFAULT NULL,
  `gender` varchar(1) DEFAULT NULL,

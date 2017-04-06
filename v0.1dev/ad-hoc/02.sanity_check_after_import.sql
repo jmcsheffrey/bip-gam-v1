@@ -60,6 +60,27 @@ where users.population = 'STU'
   and users.expected_grad_year = ''
   and status = 'ACTIVE'
 
+-- check for bad phone numbers, format is ###-###-####
+-- results shoudl be zero
+select
+    import.PKEY
+    , import.APID
+    , import.unique_id
+    , import.full_name
+    , import.phone_home
+  from import_students as import
+  where import.phone_home not REGEXP '[0-9]{3}-[0-9]{3}-[0-9]{4}'
+    and import.phone_home != "";
+select
+    import.PKEY
+    , import.APID
+    , import.unique_id
+    , import.full_name
+    , import.phone_cell
+  from import_students as import
+  where import.phone_cell not REGEXP '[0-9]{3}-[0-9]{3}-[0-9]{4}'
+    and import.phone_cell != "";
+
 ---------------------------------------
 -- SCRIPTS FOR EMPLOYEES (after import)
 ---------------------------------------
@@ -102,3 +123,24 @@ select *
   where length(concat(import.first_name,import.last_name)) > 19
     and import.school_email = NULL
     and import.status != 'INACTIVE';
+
+-- check for bad phone numbers, format is ###-###-####
+-- results shoudl be zero
+select
+    import.PKEY
+    , import.APID
+    , import.unique_id
+    , import.full_name
+    , import.phone_home
+  from import_employees as import
+  where import.phone_home not REGEXP '[0-9]{3}-[0-9]{3}-[0-9]{4}'
+    and import.phone_home != "";
+select
+    import.PKEY
+    , import.APID
+    , import.unique_id
+    , import.full_name
+    , import.phone_cell
+  from import_employees as import
+  where import.phone_cell not REGEXP '[0-9]{3}-[0-9]{3}-[0-9]{4}'
+    and import.phone_cell != "";

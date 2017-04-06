@@ -11,9 +11,31 @@
 truncate staging_students;
 -- copy students
 insert into staging_students
-  select `PKEY`, `APID`, `full_name`, `unique_id`, `status`, '', `household_id`, `first_name`, `middle_name`, `last_name`
-    , null, `school_email`, `grade`, convert(expected_grad_year, UNSIGNED INTEGER), `homeroom`, `homeroom_teacher_first`
-    , `homeroom_teacher_last`, `referred_to_as`, `gender`
+  select `PKEY`
+    , `APID`
+    , `full_name`
+    , `unique_id`
+    , `status`
+    , ''
+    , `household_id`
+    , `first_name`
+    , `middle_name`
+    , `last_name`
+    , null
+    , `school_email`
+    , `phone_home`
+    , `phone_cell`
+    , `street`
+    , `city`
+    , `state`
+    , `zipcode`
+    , `grade`
+    , convert(expected_grad_year, UNSIGNED INTEGER)
+    , `homeroom`
+    , `homeroom_teacher_first`
+    , `homeroom_teacher_last`
+    , `referred_to_as`
+    , `gender`
     , STR_TO_DATE(`birthdate`,'%m/%d/%Y')
     , entry_date
   from import_students as import
@@ -28,10 +50,10 @@ on stage.unique_id = users.unique_id
 set stage.newthisrun = 'N';
 update staging_students as stage set stage.newthisrun = 'Y' where stage.newthisrun = '';
 
--- give emails to students who do not have it and need it
---  this needs to be run until no students who need emails don't have it:
---     select * from staging_students where (isnull(school_email) or school_email = '') and grade in ('03','04','05','06','07','08','09','10','11','12');
---  default is 101 to avoid having to enter leading zeros
+-- give emails to students who do not have it
+--   NOTE:  this needs to be run until no updates are done
+--   NOTE:  the library software requires all students to have username, so no filtering by grade level
+--   NOTE:  default is 101 to avoid having to enter leading zeros
 update staging_students as stage
 inner join (select prefix, max(unique_id) as unique_id
             from staging_students_prefix
@@ -82,7 +104,9 @@ set school_email = concat (
                     char(46),char(0)),char(45),char(0)),char(44),char(0)),char(39),char(0)),char(32),char(0))))
     end)
   ,'@student.sscps.org')
-where (isnull(school_email) or school_email = '') and grade in ('03','04','05','06','07','08','09','10','11','12');
+where (school_email is null or school_email = '');
+--  and grade in ('03','04','05','06','07','08','09','10','11','12');
+
 
 -- make school_email null for everyone else so no duplicates (i.e. null is not checked as duplicate)
 update staging_students
@@ -111,11 +135,30 @@ truncate staging_employees;
 update import_employees set birthdate = null where birthdate = '';
 -- copy employees
 insert into staging_employees
-  select `PKEY`, `APID`, `full_name`, `unique_id`, `status`, '', `first_name`, `middle_name`, `last_name`,
-    null, `school_email`, `home_email`, `phone_home`, `phone_cell`, `homeroom`, `referred_to_as`, `gender`,
-    STR_TO_DATE(`birthdate`,'%m/%d/%Y'),
-    `date_of_hire`,
-    position
+  select `PKEY`
+    , `APID`
+    , `full_name`
+    , `unique_id`
+    , `status`
+    , ''
+    , `first_name`
+    , `middle_name`
+    , `last_name`
+    , null
+    , `school_email`
+    , `home_email`
+    , `phone_home`
+    , `phone_cell`
+    , `street`
+    , `city`
+    , `state`
+    , `zipcode`
+    , `homeroom`
+    , `referred_to_as`
+    , `gender`
+    , STR_TO_DATE(`birthdate`,'%m/%d/%Y')
+    , `date_of_hire`
+    , position
   from import_employees
   order by last_name, first_name, middle_name;
 
@@ -164,12 +207,10 @@ insert into staging_groupings
     , 'ACTIVE' as status
     , 'FY17' as current_year
     , (case
-      when courses.display_level = '3'
-      then cohorts.cohort
-      when substring(sections.schedule,1,1) = 'M'
-      then 'Workshop'
-      else concat ('Block ', substring(sections.schedule,1,1))
-      end) as time_block
+         when courses.display_level = '3' then cohorts.cohort
+         when substring(sections.schedule,1,1) = 'M' then 'Workshop'
+         else concat ('Block ', substring(sections.schedule,1,1))
+       end) as time_block
     , courses.display_level as level
     , courses.display_name as name
     , courses.num as course_id
