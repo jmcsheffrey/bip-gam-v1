@@ -15,6 +15,7 @@ select users.unique_id, users.first_name, users.last_name, users.school_email, u
   order by users.unique_id desc;
 
 -- check for duplicate current_year_id
+-- results should be zero
 select * from (
   select stage.APID, count(stage.APID) as count
     from staging_students as stage

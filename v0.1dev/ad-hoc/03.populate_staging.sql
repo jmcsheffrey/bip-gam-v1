@@ -109,6 +109,7 @@ where (school_email is null or school_email = '');
 
 
 -- make school_email null for everyone else so no duplicates (i.e. null is not checked as duplicate)
+-- this probably isn't necessary as even K's get username/email assigned
 update staging_students
   set school_email = null
   where school_email = '';
@@ -124,7 +125,15 @@ update staging_students
   where grade in ('09','10','11','12');
 
 -- set file server for students at 100L, assumes 700L already set above
---this should look to load balance students across servers in profile_server_by_population, ignoring RODRICK
+--this load balances students across servers,
+--ignores 9-12 because they are assigned RODRICK above
+--ignores 0K, 01, 02 because they use generic login
+--only uses GREG, FREGLEY, ROWLEY because they are at 100L
+select *
+  from staging_students
+  where profile_server is null
+    and grade in ('03','04','05','06','07','08')
+
 
 -------------------------
 -- SCRIPTS FOR EMPLOYEES
@@ -197,7 +206,8 @@ update staging_employees as stage
 -------------------------
 -- SCRIPTS FOR GROUPINGS
 -------------------------
--- remove groupings data from previous runs
+-- NOTE: need to update "fy##" each year
+-- TODO: remove groupings data from previous runs
 truncate staging_groupings;
 -- insert new groupings
 insert into staging_groupings
@@ -231,6 +241,7 @@ insert into staging_groupings
 -- remove groupings data from previous runs
 truncate staging_groupings_users;
 -- insert teacher related records (from import_sections)
+-- NOTE: do not bring over PKEY as this is combined teacher/student table
 insert into staging_groupings_users
   select
     '' as PKEY
@@ -245,6 +256,7 @@ insert into staging_groupings_users
   where import.table_name = ''
   order by import.course_id, import.section_id;
 -- insert student related records (from import_sections)
+-- NOTE: do not bring over PKEY as this is combined teacher/student table
 insert into staging_groupings_users
   select
     '' as PKEY

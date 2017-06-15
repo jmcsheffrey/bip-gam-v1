@@ -1,16 +1,3 @@
-
-
------------------------------------------------------------------------------
--- systems based queries
------------------------------------------------------------------------------
--- select mac addresses for all windows workstations
-select macaddresses
-  --  , unique_id, machinename
-  from systems
-  where machineclass like '%workstation%' and ostype like '%windows%'
-  order by macaddresses
-
-
 -----------------------------------------------------------------------------
 -- users based queries
 -----------------------------------------------------------------------------
@@ -99,8 +86,11 @@ select concat(users.school_email, ",")
     and users.expected_grad_year = '2017'
   order by users.school_email
 
-
-
+-- update import table emails based on users where email not in import
+update import_students as import
+  inner join users on import.unique_id = users.unique_id
+  set import.school_email = users.school_email
+  where import.school_email = ''
 
 
 
@@ -154,3 +144,12 @@ select `unique_id`, `first_name`, `middle_name`, `last_name`,
     , replace(replace(replace(replace(replace(lower(last_name),char(46),char(0)),char(45),char(0)),char(44),char(0)),char(39),char(0)),char(32),char(0))
   ),1,21) as school_email_new
 from staging_employees
+
+-- describe this!!!!!
+select * from import_contacts_contactpoints as points
+where points.contact_point_value != '' and points.contact_point_value is not null
+  and points.CONTACT_HOUSEHOLD_ID = ''
+order by
+  points.CONTACT_GUID
+  , points.contact_point_type
+  , points.APID

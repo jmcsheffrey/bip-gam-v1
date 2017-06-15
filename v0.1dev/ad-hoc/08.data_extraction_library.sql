@@ -3,7 +3,7 @@
 --    Gibbon has different entities for import then AdminPlus
 -- ****************************************************
 
--- import users, which includes all teachers and students (see note below about parents)
+-- create import file for users, which includes all teachers and students (see note below about parents)
 select '' as Title
     , users.last_name as Surname
     , users.first_name as FirstName
@@ -68,44 +68,48 @@ select '' as Title
   where status = 'ACTIVE' and (population = 'STU' or population = 'EMP')
   order by population DESC, last_name, first_name;
 
--- update unique_id, alternateEmail (parent's) for all users
+-- create SQL update statement for unique_id, alternateEmail (parent's) for all users
 select concat(
     "update gibbonPerson"
     , " set studentID = ", char(34), users.unique_id, char(34)
+    , char(44), " dateStart = NULL"
     , char(44), " emailAlternate = ", char(34), (case when users.population = 'EMP' then ''
                                                    when users.population = 'STU' then contacts.CONTACT_HOME_EMAIL
                                                    else 'ERROR' end), char(34)
     , " where username = ", char(34), users.user_name, char(34)
-    , char(59))
+    , char(59)) as sql_output
   from users
   left join import_contacts as contacts on users.current_year_id = contacts.APID and contacts.PRIMARY_CONTACT = "Y"
   where status = 'ACTIVE' and (population = 'STU' or population = 'EMP')
   order by population DESC, user_name
 
--- import enrollement, which is just Homerooms (Roll Groups in Gibbon terms)
+-- for import enrollement, which is just Homerooms (Roll Groups in Gibbon terms)
+--get list of Homerooms
 --rows from the SQL below should be all unique
+--create them in Gibbon manually
 select *
   from (select
-            substring(concat (users.homeroom_teacher_first, users.homeroom_teacher_last),1,10) as LongRollGroup,
-            substring(concat (users.homeroom_teacher_first, users.homeroom_teacher_last),1,5) as ShortRollGroup
+            substring(concat (users.homeroom_teacher_first, users.homeroom_teacher_last),1,10) as LongRollGroup
+            , concat (substring(users.homeroom_teacher_first,1,4), substring(users.homeroom_teacher_last,1,1)) as ShortRollGroup
           from users
           where users.status = 'ACTIVE' and users.population = 'STU'
             and users.homeroom_teacher_first != ''
             and users.homeroom_teacher_last != ''
   ) as RollGroupsCheck
-  group by LongRollGroup, ShortRollGroup
---if rows above are unique, export with data below
+  group by LongRollGroup, ShortRollGroup;
+
+--if rows above are unique, use below to export data to CSV
 select *
   from (select
       users.user_name as Username
-      , substring(concat (users.homeroom_teacher_first, users.homeroom_teacher_last),1,5) as RollGroup
+      , concat (substring(users.homeroom_teacher_first,1,4), substring(users.homeroom_teacher_last,1,1)) as RollGroup
       , users.grade as YearGroup
       , '' as RollOrder
     from users
     where users.status = 'ACTIVE'
       and users.population = 'STU'
     order by users.user_name) as rollgroups
-  where rollgroups.RollGroup != ''
+  where rollgroups.RollGroup != '';
 
 -- import families, which is just connection between users to a family
 --   it has three separate CSVs: family file, parent file, child file

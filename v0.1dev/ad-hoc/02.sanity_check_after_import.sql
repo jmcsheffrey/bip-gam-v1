@@ -27,6 +27,14 @@ select * from import_students where grade not in ('0K','01','02','03','04','05',
 -- results should be zero
 select * from import_students where status = 'ACTIVE' and not (upper(homeroom) REGEXP '^-?[0-9]+$');
 
+-- all high school students should have a graduating year
+-- results should be zero
+select *
+  from import_students
+  where grade in ('09','10','11','12')
+    and (expected_grad_year is null or expected_grad_year = '');
+
+
 -- check for people in users and in import, but don't have emails in import, but do in users
 -- results should be zero
 select
@@ -58,7 +66,7 @@ select * from users
 where users.population = 'STU'
   and grade in ('09','10','11','12')
   and users.expected_grad_year = ''
-  and status = 'ACTIVE'
+  and status = 'ACTIVE';
 
 -- check for bad phone numbers, format is ###-###-####
 -- results shoudl be zero
@@ -86,19 +94,20 @@ select
 ---------------------------------------
 -- homerooms for ACTIVE employees should be 3 digit room number, or "OFF" or "A" & then number, or NURSE or RECEPT
 -- results should be zero
-select *
-  from import_employees
-  where (
-    (not (upper(homeroom) REGEXP '^-?[0-9]+$'))
-     and
-    ((substring(upper(homeroom),1,1) != 'A')
-      and (substring(upper(homeroom),1,3) != 'OFF')
-      and (substring(upper(homeroom),1,5) != 'NURSE')
-      and (substring(upper(homeroom),1,6) != 'RECEPT')
-    )
-     and
-    (status = 'ACTIVE')
-  );
+--homerooms are not needed anymore
+--select *
+--  from import_employees
+--  where (
+--    (not (upper(homeroom) REGEXP '^-?[0-9]+$'))
+--     and
+--    ((substring(upper(homeroom),1,1) != 'A')
+--      and (substring(upper(homeroom),1,3) != 'OFF')
+--      and (substring(upper(homeroom),1,5) != 'NURSE')
+--      and (substring(upper(homeroom),1,6) != 'RECEPT')
+--    )
+--     and
+--    (status = 'ACTIVE')
+--  );
 
 -- check for people in users and in import, but don't have emails in import, but do in users
 -- results should be zero

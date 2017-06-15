@@ -149,6 +149,7 @@ group by max_name
 CREATE VIEW profile_server_by_population AS
 select population, profile_server, count(profile_server) AS profile_server_count
 from users
+where profile_server is not null and profile_server != '(n/a)'
 group by population, profile_server
 
 CREATE TABLE `import_employees` (
@@ -244,11 +245,66 @@ CREATE TABLE `import_contacts` (
  `DS_REPORTS` varchar(1) DEFAULT NULL,
  `BI_REPORTS` varchar(1) DEFAULT NULL,
  `PARENT_PORTAL_ACCESS` varchar(1) DEFAULT NULL,
- `DO_NOT_CALL` varchar(1) DEFAULT NULL,
- `DO_NOT_EMAIL` varchar(1) DEFAULT NULL,
+ `NO_CALL_HOME` varchar(1) DEFAULT NULL,
+ `NO_CALL_CELL` varchar(1) DEFAULT NULL,
+ `NO_EMAIL` varchar(1) DEFAULT NULL,
  `NOTIFY_OFFICE` varchar(1) DEFAULT NULL,
  PRIMARY KEY (`PKEY`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8
+
+CREATE VIEW import_contacts_contactpoints AS
+select
+    import.APID
+    , import.STUDENT_FULL_NAME
+    , import.CONTACT_HOUSEHOLD_ID
+    , import.CONTACT_GUID
+    , import.PRIMARY_CONTACT
+    , 'Primary Home' as contact_point_type
+    , import.HOMEPHONE as contact_point_value
+  from import_contacts as import
+  inner join users on import.APID = users.current_year_id
+  where users.status = 'ACTIVE'
+    and import.NO_CALL_HOME != 'Y'
+union
+select
+    import.APID
+    , import.STUDENT_FULL_NAME
+    , import.CONTACT_HOUSEHOLD_ID
+    , import.CONTACT_GUID
+    , import.PRIMARY_CONTACT
+    , concat(import.RELATIONSHIP, ' Cell') as contact_point_type
+    , import.MOBILEPHONE as contact_point_value
+  from import_contacts as import
+  inner join users on import.APID = users.current_year_id
+  where users.status = 'ACTIVE'
+    and import.NO_CALL_HOME != 'Y'
+union
+select
+    import.APID
+    , import.STUDENT_FULL_NAME
+    , import.CONTACT_HOUSEHOLD_ID
+    , import.CONTACT_GUID
+    , import.PRIMARY_CONTACT
+    , concat(import.RELATIONSHIP, ' Office') as contact_point_type
+    , import.OFFICEPHONE as contact_point_value
+  from import_contacts as import
+  inner join users on import.APID = users.current_year_id
+  where users.status = 'ACTIVE'
+    and import.NOTIFY_OFFICE = 'Y'
+union
+select
+    import.APID
+    , import.STUDENT_FULL_NAME
+    , import.CONTACT_HOUSEHOLD_ID
+    , import.CONTACT_GUID
+    , import.PRIMARY_CONTACT
+    , concat(import.RELATIONSHIP, ' Home Email') as contact_point_type
+    , import.CONTACT_HOME_EMAIL as contact_point_value
+  from import_contacts as import
+  inner join users on import.APID = users.current_year_id
+  where users.status = 'ACTIVE'
+    and import.NO_EMAIL != 'Y'
+
 
 -- parent data that is downloaded from Naviance
 CREATE TABLE `import_naviance_parents` (
