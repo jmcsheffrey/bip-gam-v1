@@ -1,6 +1,17 @@
 -----------------------------------------------------------------------------
 -- users based queries
 -----------------------------------------------------------------------------
+-- lists users who aren't from AdminPlus based on unique_id
+SELECT population, first_name, last_name, home_email
+FROM `users`
+WHERE substring(unique_id,1,3) = 'OTH'
+  and STATUS = 'ACTIVE'
+  and not (population = 'STU' or population = 'EMP')
+ORDER BY population, first_name, last_name
+
+
+
+
 select * from staging_students where isnull(school_email) or school_email = ''
 select * from staging_students where unique_id not in (select unique_id from users)
 select * from staging_students where status = 'ACTIVE' and unique_id not in (select unique_id from users) order by grade DESC, school_email

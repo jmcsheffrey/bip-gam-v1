@@ -25,7 +25,7 @@ select concat(
   order by users.population, users.school_email
 
 -- suspend inactive students who where not seniors from previous year
--- NOTE:  need to adjust year in script
+-- NOTE:  need to adjust year in script so last year's seniors can use account, see next script
 select concat(
       '../bin/gam/gam'
       , ' update user '
@@ -39,11 +39,11 @@ select concat(
   where users.school_email != ''
     and users.status = 'INACTIVE'
     and users.population = 'STU'
-    and users.expected_grad_year != '2016'
+    and users.expected_grad_year != '2017'
   order by users.population, users.school_email
 
 -- suspend inactive seniors from previous year
--- NOTE:  need to adjust year in script
+-- NOTE:  need to adjust year in script to suspend last year's seniors (usually run after Thanksgiving)
 select concat(
       '../bin/gam/gam'
       , ' update user '
@@ -72,18 +72,19 @@ select concat(
       , ' lastname ', char(34), users.last_name, char(34)
       , ' password sscps123'
       , ' changepassword on'
-      ,(case when users.population = 'EMP' then ' org /Prod/Users-Normal/Employees'
-        when users.population = 'STU' and users.grade = '12' then ' org /Prod/Users-Normal/Students/Level-HS'
-        when users.population = 'STU' and users.grade = '11' then ' org /Prod/Users-Normal/Students/Level-HS'
-        when users.population = 'STU' and users.grade = '10' then ' org /Prod/Users-Normal/Students/Level-HS'
-        when users.population = 'STU' and users.grade = '09' then ' org /Prod/Users-Normal/Students/Level-HS'
-        when users.population = 'STU' and users.grade = '08' then ' org /Prod/Users-Normal/Students/Level-4'
-        when users.population = 'STU' and users.grade = '07' then ' org /Prod/Users-Normal/Students/Level-4'
-        when users.population = 'STU' and users.grade = '06' then ' org /Prod/Users-Normal/Students/Level-3'
-        when users.population = 'STU' and users.grade = '05' then ' org /Prod/Users-Normal/Students/Level-3'
-        when users.population = 'STU' and users.grade = '04' then ' org /Prod/Users-Normal/Students/Level-2'
-        when users.population = 'STU' and users.grade = '03' then ' org /Prod/Users-Normal/Students/Level-2'
-        else 'ERROR' end)
+      , ' org '
+      , char(34) ,(case when users.population = 'EMP' then '/Prod/Employees/Standard (EMP)'
+                        when users.population = 'STU' and users.grade = '12' then '/Prod/Students/Level-HS'
+                        when users.population = 'STU' and users.grade = '11' then '/Prod/Students/Level-HS'
+                        when users.population = 'STU' and users.grade = '10' then '/Prod/Students/Level-HS'
+                        when users.population = 'STU' and users.grade = '09' then '/Prod/Students/Level-HS'
+                        when users.population = 'STU' and users.grade = '08' then '/Prod/Students/Level-4'
+                        when users.population = 'STU' and users.grade = '07' then '/Prod/Students/Level-4'
+                        when users.population = 'STU' and users.grade = '06' then '/Prod/Students/Level-3'
+                        when users.population = 'STU' and users.grade = '05' then '/Prod/Students/Level-3'
+                        when users.population = 'STU' and users.grade = '04' then '/Prod/Students/Level-2'
+                        when users.population = 'STU' and users.grade = '03' then '/Prod/Students/Level-2'
+                        else 'ERROR' end), char(34)
       , ' externalid organization ', users.unique_id
     ) as '# create new users'
   from users
@@ -128,32 +129,66 @@ select concat(
 -- ****************************************************
 -- Update Google groups
 -- ****************************************************
+-- gam update group <group email> remove {user <email address> | group <group address> | org <org name> | file <file name> | all users}
 -- make sure employees@sscps.org is populated correctly
--- TODO: remove inactive users
+--empty sync group from previous runs (just in case)
+select '../bin/gam/gam update group sys-synctempgroup@sscps.org sync member group sys-syncemptygroup@sscps.org' as '# populate employees@sscps.org'
+union
+select '../bin/gam/gam update group sys-synctempgroup@sscps.org sync owner group sys-syncemptygroup@sscps.org' as '# populate employees@sscps.org'
+union
+select '../bin/gam/gam update group sys-synctempgroup@sscps.org sync manager group sys-syncemptygroup@sscps.org' as '# populate employees@sscps.org'
+union
+--add users to sync group
 select concat(
-      '../bin/gam/gam update group '
-      , 'employees@sscps.org'
+      '../bin/gam/gam'
+      , ' update group '
+      , 'sys-synctempgroup@sscps.org'
       , ' add member ', users.school_email
     ) as '# populate employees@sscps.org'
   from users
   where users.status = 'ACTIVE'
-    and users.newthisrun = 'Y'
     and users.school_email != ''
     and users.population = 'EMP'
-  order by users.population, users.school_email;
+--sync real group with sync group
+union
+select '../bin/gam/gam update group employees@sscps.org sync member group sys-synctempgroup@sscps.org' as '# populate employees@sscps.org'
+--clear out sync group for future runs
+union
+select '../bin/gam/gam update group sys-synctempgroup@sscps.org sync member group sys-syncemptygroup@sscps.org' as '# populate employees@sscps.org'
+union
+select '../bin/gam/gam update group sys-synctempgroup@sscps.org sync owner group sys-syncemptygroup@sscps.org' as '# populate employees@sscps.org'
+union
+select '../bin/gam/gam update group sys-synctempgroup@sscps.org sync manager group sys-syncemptygroup@sscps.org' as '# populate employees@sscps.org'
+
 -- make sure facstaff@sscps.org is populated correctly
--- TODO: remove inactive users
+--empty sync group from previous runs (just in case)
+select '../bin/gam/gam update group sys-synctempgroup@sscps.org sync member group sys-syncemptygroup@sscps.org' as '# populate facstaff@sscps.org'
+union
+select '../bin/gam/gam update group sys-synctempgroup@sscps.org sync owner group sys-syncemptygroup@sscps.org' as '# populate facstaff@sscps.org'
+union
+select '../bin/gam/gam update group sys-synctempgroup@sscps.org sync manager group sys-syncemptygroup@sscps.org' as '# populate facstaff@sscps.org'
+union
+--add users to sync group
 select concat(
-      '../bin/gam/gam update group '
-      , 'facstaff@sscps.org'
+      '../bin/gam/gam'
+      , ' update group '
+      , 'sys-synctempgroup@sscps.org'
       , ' add member ', users.school_email
-    ) as  '# populate facstaff@sscps.org'
+    ) as '# populate facstaff@sscps.org'
   from users
-  where users.school_email != ''
-    and users.status = 'ACTIVE'
-    and users.newthisrun = 'Y'
+  where users.status = 'ACTIVE'
+    and users.school_email != ''
     and users.population = 'EMP'
-  order by users.population, users.school_email;
+--sync real group with sync group
+union
+select '../bin/gam/gam update group employees@sscps.org sync member group sys-synctempgroup@sscps.org' as '# populate facstaff@sscps.org'
+--clear out sync group for future runs
+union
+select '../bin/gam/gam update group sys-synctempgroup@sscps.org sync member group sys-syncemptygroup@sscps.org' as '# populate facstaff@sscps.org'
+union
+select '../bin/gam/gam update group sys-synctempgroup@sscps.org sync owner group sys-syncemptygroup@sscps.org' as '# populate facstaff@sscps.org'
+union
+select '../bin/gam/gam update group sys-synctempgroup@sscps.org sync manager group sys-syncemptygroup@sscps.org' as '# populate facstaff@sscps.org'
 
 -- make sure students@student.sscps.org is populated correctly
 -- TODO: remove inactive users
@@ -191,6 +226,7 @@ select concat(
     and users.status = 'ACTIVE'
     and users.newthisrun = 'Y'
     and users.population = 'STU'
+    and users.grade in ('03', '04', '05', '06', '07', '08', '09', '10', '11', '12')
   order by users.population, users.grade, users.school_email;
 
 
@@ -244,6 +280,9 @@ select concat(
   where users.school_email != ''
     and users.status = 'ACTIVE'
     and users.newthisrun = 'Y'
+    and (users.population = 'EMP'
+         or users.grade in ('03', '04', '05', '06', '07', '08', '09', '10', '11', '12')
+        )
   order by users.population, users.school_email;
 
 
@@ -262,6 +301,9 @@ select concat(
   where users.school_email != ''
     and users.status = 'ACTIVE'
     and users.newthisrun = 'Y'
+    and (users.population = 'EMP'
+         or users.grade in ('03', '04', '05', '06', '07', '08', '09', '10', '11', '12')
+        )
   order by users.population, users.school_email;
 -- SSCPS-Athletics calendar for students & employees
 select concat(
@@ -272,6 +314,9 @@ select concat(
   where users.school_email != ''
     and users.status = 'ACTIVE'
     and users.newthisrun = 'Y'
+    and (users.population = 'EMP'
+         or users.grade in ('03', '04', '05', '06', '07', '08', '09', '10', '11', '12')
+        )
   order by users.population, users.school_email;
 
 -- SSCPS-FacStaff calendar for employees
@@ -298,17 +343,18 @@ select concat(
     and users.population = 'EMP'
   order by users.population, users.school_email;
 
+-- ROOM NO LONGER EXISTS
 -- 100L Main Computer Lab calendar for employees
-select concat(
-      '../bin/gam/gam'
-      , ' user ', users.school_email
-      , ' add calendar sscps.org_g58pmsteng42vtqrpc9pbsl1rk@group.calendar.google.com') as '# populate 100L Main Computer Lab calendar'
-  from users
-  where users.school_email != ''
-    and users.status = 'ACTIVE'
-    and users.newthisrun = 'Y'
-    and users.population = 'EMP'
-  order by users.population, users.school_email;
+--select concat(
+--      '../bin/gam/gam'
+--      , ' user ', users.school_email
+--      , ' add calendar sscps.org_g58pmsteng42vtqrpc9pbsl1rk@group.calendar.google.com') as '# populate 100L Main Computer Lab calendar'
+--  from users
+--  where users.school_email != ''
+--    and users.status = 'ACTIVE'
+--    and users.newthisrun = 'Y'
+--    and users.population = 'EMP'
+--  order by users.population, users.school_email;
 
 -- 100L Device Carts calendar for employees
 select concat(

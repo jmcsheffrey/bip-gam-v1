@@ -21,7 +21,7 @@ insert into staging_students
     , `first_name`
     , `middle_name`
     , `last_name`
-    , null
+    , ''
     , `school_email`
     , `phone_home`
     , `phone_cell`
@@ -30,13 +30,15 @@ insert into staging_students
     , `state`
     , `zipcode`
     , `grade`
-    , convert(expected_grad_year, UNSIGNED INTEGER)
+    , (case when expected_grad_year = '' then NULL
+       else convert(expected_grad_year, UNSIGNED INTEGER) end)
     , `homeroom`
     , `homeroom_teacher_first`
     , `homeroom_teacher_last`
     , `referred_to_as`
     , `gender`
-    , STR_TO_DATE(`birthdate`,'%m/%d/%Y')
+    , (case when birthdate = '' then NULL
+       else STR_TO_DATE(`birthdate`,'%m/%d/%Y') end)
     , entry_date
   from import_students as import
   -- below is commented out because library & sendwordnow needs all students
@@ -54,6 +56,7 @@ update staging_students as stage set stage.newthisrun = 'Y' where stage.newthisr
 --   NOTE:  this needs to be run until no updates are done
 --   NOTE:  the library software requires all students to have username, so no filtering by grade level
 --   NOTE:  default is 101 to avoid having to enter leading zeros
+SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
 update staging_students as stage
 inner join (select prefix, max(unique_id) as unique_id
             from staging_students_prefix
@@ -149,12 +152,14 @@ insert into staging_employees
     , `full_name`
     , `unique_id`
     , `status`
+    , `archive_acct`
     , ''
     , `first_name`
     , `middle_name`
     , `last_name`
-    , null
+    , ''
     , `school_email`
+    , `school_ext`
     , `home_email`
     , `phone_home`
     , `phone_cell`
@@ -165,8 +170,10 @@ insert into staging_employees
     , `homeroom`
     , `referred_to_as`
     , `gender`
-    , STR_TO_DATE(`birthdate`,'%m/%d/%Y')
+    , (case when birthdate = '' then NULL
+       else STR_TO_DATE(`birthdate`,'%m/%d/%Y') end)
     , `date_of_hire`
+    , `school_year_hired`
     , position
   from import_employees
   order by last_name, first_name, middle_name;
@@ -177,6 +184,11 @@ inner join users
 on stage.unique_id = users.unique_id
 set stage.newthisrun = 'N';
 update staging_employees as stage set stage.newthisrun = 'Y' where stage.newthisrun = '';
+
+-- changes in workflow adds new flag for INACTIVE status for employees, set status field to expected value
+update staging_employees as stage
+  set status = 'INACTIVE'
+  where upper(archive_acct) = 'Y' or upper(archive_acct) = 'YES'
 
 -- give emails to all employees
 update staging_employees

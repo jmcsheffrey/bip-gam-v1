@@ -1,0 +1,32 @@
+# EXAMPLE FILE, DO NOT EDIT!!! Make a copy and edit that copy as necessary.
+# below are the parts for manually creating a new employee
+# search & replace on <put email here>
+
+# create the user's Google account
+../bin/gam/gam create user <put email here> firstname <put firstname here> lastname <put lastname here> password sscps123 changepassword on org /Prod/Users-Normal/Employees externalid organization 99999895
+
+# add account to groups (uncomment as necessary)
+../bin/gam/gam update group employees@sscps.org add member <put email here>
+../bin/gam/gam update group facstaff@sscps.org add member <put email here>
+../bin/gam/gam update group fasa@sscps.org add member <put email here>
+#../bin/gam/gam update group facstaff_l1@sscps.org add member <put email here>
+#../bin/gam/gam update group facstaff_l2@sscps.org add member <put email here>
+#../bin/gam/gam update group facstaff_l3@sscps.org add member <put email here>
+#../bin/gam/gam update group facstaff_l4@sscps.org add member <put email here>
+#../bin/gam/gam update group facstaff_lhs@sscps.org add member <put email here>
+#../bin/gam/gam update group facstaff_ls@sscps.org add member <put email here>
+
+# add SSCPS-GroupDocs Google Drive folder
+#../bin/gam/gam user bip@sscps.org add drivefileacl 0Byc5mfoLgdM3MDE0YjEyOWEtMjIxNi00YTE0LTgxZDgtODQxOGEwODU5YjE3 user <put email here> roll VIEWER
+../bin/gam/gam user <put email here> update drivefile id 0Byc5mfoLgdM3MDE0YjEyOWEtMjIxNi00YTE0LTgxZDgtODQxOGEwODU5YjE3 parentid root
+
+# Add calendars
+# SSCPS-FacStaff calendar
+../bin/gam/gam user <put email here> add calendar sscps.org_mnh2vaotaksv4uf8cml2pgrsgg@group.calendar.google.com
+# SSCPS-Main calendar
+../bin/gam/gam user <put email here> add calendar sscps.org_2skq6kkh75tr8e8g0q3ooblh84@group.calendar.google.com
+# SSCPS-Atheletics calendar
+../bin/gam/gam user <put email here> add calendar sscps.org_kiv73854jfpsvsh8luul29luj0@group.calendar.google.com
+
+# suspend employee
+#../bin/gam/gam update user <put email here> suspended on org /Archive/Aging/Employees

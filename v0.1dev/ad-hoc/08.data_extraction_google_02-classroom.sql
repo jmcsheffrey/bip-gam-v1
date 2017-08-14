@@ -5,20 +5,30 @@
 
 
 -- ****************************************************
--- Setup Google Classrooms, via GAM script
+-- Archive prior year Google Classrooms, via GAM script
 -- ****************************************************
 -- unique_id must be alias to be able to connect to classroom without knowing Google ID
+
+-- mark all google classrooms from prior year as INACTIVE
+update groupings
+  set status = 'INACTIVE'
+  where current_year != 'FY18';
 
 -- archive appropriate classrooms
 -- gam update course <alias> status ARCHIVED
 select concat(
       '../bin/gam/gam'
       , ' update course ', g.unique_id
-      , ' ARCHIVED'
+      , ' status ARCHIVED'
     ) as '# archive classrooms'
   from groupings as g
   where g.status = 'INACTIVE'
   order by g.unique_id;
+
+-- ****************************************************
+-- Setup current year Google Classrooms, via GAM script
+-- ****************************************************
+-- unique_id must be alias to be able to connect to classroom without knowing Google ID
 
 -- create classrooms; teacher must be set so admin user is not added by default
 -- gam create course [alias <alias>] [name <name>] [section <section>] teacher <teacher email> status ACTIVE

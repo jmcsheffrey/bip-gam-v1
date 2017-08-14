@@ -4,25 +4,38 @@
 -- ****************************************************
 
 
--- ****************************************************
--- Pre-processing to get ready for insert/update
--- ****************************************************
 
--- Adjust users table first, be careful this is for both Students & Employees
+------------------------
+-- SCRIPTS FOR STUDENTS
+------------------------
+
+-- PRE-PROCESSING:  Adjust users table first for students
 -- mark all existing users not "newthisrun"
-update users set newthisrun = 'N';
--- mark all appropriate users as INACTIVE
+update users
+  set update_date = now(),
+    newthisrun = 'N'
+  where population = 'STU';
+-- set status in users who are INACTIVE in staging
 update users
   inner join staging_students as stage on users.unique_id = stage.unique_id
     and stage.status = 'INACTIVE'
   set users.update_date = now(),
     users.status = 'INACTIVE';
+-- mark in users not staging as INACTIVE (seniors & left students)
+update users
+  set update_date = now(),
+    status = 'INACTIVE'
+  where manual_entry = 'N'
+    and population = 'STU'
+    and status != 'INACTIVE'
+    and unique_id not in (select unique_id from staging_students);
 -- clear current_year_id because users may have been deleted from AdminPlus & ID reused
-update users set current_year_id = null;
+update users
+  set update_date = now(),
+    current_year_id = null
+  where population = 'STU';
 
--- ****************************************************
--- Populate users with student records
--- ****************************************************
+-- UPDATING:  add/update records for students
 -- insert new student records
 insert into users
   select
@@ -30,6 +43,7 @@ insert into users
     , stage.APID
     , now()
     , stage.status
+    , '' as archive_acct
     , stage.newthisrun
     , 'N' as manual_entry
     , 'STU' as population
@@ -40,6 +54,7 @@ insert into users
     , substring(stage.school_email,1,instr(stage.school_email, '@')-1)
     , stage.profile_server
     , stage.school_email
+    , '' as school_ext
     , '' as home_email
     , '' as phone_home
     , '' as phone_cell
@@ -56,6 +71,7 @@ insert into users
     , stage.gender
     , stage.birthdate
     , stage.entry_date
+    , '' as school_year_hired
     , '' as position
     , concat('SSCPS Grade ',stage.grade,' Student') as description
   from staging_students as stage
@@ -98,9 +114,37 @@ update users
       -- and stage.grade in ('03','04','05','06','07','08','09','10','11','12');
 
 
--- ****************************************************
--- Populate users with employee records
--- ****************************************************
+------------------------
+-- SCRIPTS FOR EMPLOYEES
+------------------------
+
+-- PRE-PROCESSING:  Adjust users table first for students
+-- mark all existing users not "newthisrun"
+update users
+  set update_date = now(),
+    newthisrun = 'N'
+  where population = 'EMP';
+-- set status in users who are INACTIVE in staging
+update users
+  inner join staging_employees as stage on users.unique_id = stage.unique_id
+    and stage.status = 'INACTIVE'
+  set users.update_date = now(),
+    users.status = 'INACTIVE';
+-- mark in users not staging as INACTIVE (this should not happen for employees)
+update users
+  set update_date = now(),
+    status = 'INACTIVE'
+  where manual_entry = 'N'
+    and population = 'EMP'
+    and status != 'INACTIVE'
+    and unique_id not in (select unique_id from staging_employees);
+-- clear current_year_id because users may have been deleted from AdminPlus & ID reused
+update users
+  set update_date = now(),
+    current_year_id = null
+  where population = 'EMP';
+
+-- UPDATING:  add/update records for students
 -- insert new employee records
 insert into users
   select
@@ -108,6 +152,7 @@ insert into users
     , stage.APID
     , now()
     , stage.status
+    , stage.archive_acct
     , stage.newthisrun
     , 'N' as manual_entry
     , 'EMP' as population
@@ -118,6 +163,7 @@ insert into users
     , substring(stage.school_email,1,instr(stage.school_email, '@')-1)
     , stage.profile_server
     , stage.school_email
+    , stage.school_ext
     , stage.home_email
     , stage.phone_home as phone_home
     , stage.phone_cell as phone_cell
@@ -134,6 +180,7 @@ insert into users
     , stage.gender
     , stage.birthdate
     , stage.date_of_hire
+    , stage.school_year_hired
     , stage.position as position
     , 'SSCPS Employee' as description
   from staging_employees as stage
