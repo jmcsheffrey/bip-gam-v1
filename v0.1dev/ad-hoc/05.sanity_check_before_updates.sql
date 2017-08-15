@@ -67,6 +67,27 @@ select 'ERROR:  Malformed existing school_email.'  as error_desc
   from staging_students
   where school_email not like '%_@_%._%' and school_email != '' and school_email is not null;
 
+-- double/triple/quadruple check for conflicting fields that are supposed to be unique
+-- results should be zero
+select 'ERROR: duplicate unique_id.' as error_desc
+    , unique_id, count
+  from (select unique_id, count(unique_id) as count
+          from stage_students
+          group by unique_id) as sumtable
+  where count > 1;
+select 'ERROR: duplicate school_email.' as error_desc
+    , unique_id, count
+  from (select school_email, count(school_email) as count
+          from stage_students
+          group by unique_id) as sumtable
+  where count > 1;
+select 'ERROR: duplicate user_name.' as error_desc
+    , unique_id, count
+  from (select user_name, count(user_name) as count
+          from stage_students
+          group by unique_id) as sumtable
+  where count > 1;
+
 
 -------------------------
 -- SCRIPTS FOR EMPLOYEES
@@ -115,3 +136,24 @@ select 'ERROR:  Malformed school_email field.'  as error_desc
     , unique_id, APID, full_name, school_email
   from staging_employees
   where school_email not like '%_@_%._%' and school_email != '' and school_email is not null;
+
+-- double/triple/quadruple check for conflicting fields that are supposed to be unique
+-- results should be zero
+select 'ERROR: duplicate unique_id.' as error_desc
+    , unique_id, count
+  from (select unique_id, count(unique_id) as count
+          from staging_employees
+          group by unique_id) as sumtable
+  where count > 1;
+select 'ERROR: duplicate school_email.' as error_desc
+    , unique_id, count
+  from (select school_email, count(school_email) as count
+          from staging_employees
+          group by unique_id) as sumtable
+  where count > 1;
+select 'ERROR: duplicate user_name.' as error_desc
+    , unique_id, count
+  from (select user_name, count(user_name) as count
+          from staging_employees
+          group by unique_id) as sumtable
+  where count > 1;

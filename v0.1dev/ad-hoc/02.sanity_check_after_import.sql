@@ -11,6 +11,27 @@ truncate import_schedules;
 ---------------------------------------
 -- SCRIPTS FOR STUDENTS (after import)
 ---------------------------------------
+-- double/triple/quadruple check for conflicting fields that are supposed to be unique
+-- results should be zero
+select 'ERROR: duplicate unique_id.' as error_desc
+    , unique_id, count
+  from (select unique_id, count(unique_id) as count
+          from import_students
+          group by unique_id) as sumtable
+  where count > 1;
+select 'ERROR: duplicate school_email.' as error_desc
+    , unique_id, count
+  from (select school_email, count(school_email) as count
+          from import_students
+          group by unique_id) as sumtable
+  where count > 1;
+select 'ERROR: duplicate user_name.' as error_desc
+    , unique_id, count
+  from (select user_name, count(user_name) as count
+          from import_students
+          group by unique_id) as sumtable
+  where count > 1;
+
 -- all high school students should have a graduating year of correct format
 -- results should be zero
 select 'ERROR:  Missing expected graduation year.' as error_desc, unique_id, APID, full_name, expected_grad_year
@@ -97,6 +118,26 @@ select 'ERROR:  PHONE_CELL field is malformed.' as error_desc,
 --     and
 --    (status = 'ACTIVE')
 --  );
+-- double/triple/quadruple check for conflicting fields that are supposed to be unique
+-- results should be zero
+select 'ERROR: duplicate unique_id.' as error_desc
+    , unique_id, count
+  from (select unique_id, count(unique_id) as count
+          from import_employees
+          group by unique_id) as sumtable
+  where count > 1;
+select 'ERROR: duplicate school_email.' as error_desc
+    , unique_id, count
+  from (select school_email, count(school_email) as count
+          from import_employees
+          group by unique_id) as sumtable
+  where count > 1;
+select 'ERROR: duplicate user_name.' as error_desc
+    , unique_id, count
+  from (select user_name, count(user_name) as count
+          from import_employees
+          group by unique_id) as sumtable
+  where count > 1;
 
 -- check for people in users and in import, but don't have emails in import, but do in users
 -- results should be zero
