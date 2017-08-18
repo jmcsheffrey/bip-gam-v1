@@ -75,7 +75,7 @@ select 'ERROR:  School email differs between USERS table and IMPORT_ table.'  as
 --    unique_id, APID, first_name, last_name
 --  from import_students as import
 --  where length(concat(import.first_name,import.last_name)) > 19
---    and import.school_email = NULL
+--    and import.school_email is NULL
 --    and import.status != 'INACTIVE';
 
 -- check for bad phone numbers, format is ###-###-####
@@ -161,7 +161,7 @@ select  'WARNING:  Name may cause problems with login or email.'  as error_desc,
     unique_id, APID, first_name, last_name
   from import_employees as import
   where length(concat(import.first_name,import.last_name)) > 19
-    and import.school_email = NULL
+    and import.school_email is NULL
     and import.status != 'INACTIVE';
 
 -- check for bad phone numbers, format is ###-###-####

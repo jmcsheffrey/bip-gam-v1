@@ -117,27 +117,6 @@ update staging_students
   set school_email = null
   where school_email = '';
 
--- grab existing profile_server value
-update staging_students as stage
-  inner join users on stage.unique_id = users.unique_id
-  set stage.profile_server = users.profile_server
-
--- set file server for all 700L students (High School)
-update staging_students
-  set profile_server = 'RODRICK'
-  where grade in ('09','10','11','12');
-
--- set file server for students at 100L, assumes 700L already set above
---this load balances students across servers,
---ignores 9-12 because they are assigned RODRICK above
---ignores 0K, 01, 02 because they use generic login
---only uses GREG, FREGLEY, ROWLEY because they are at 100L
-select *
-  from staging_students
-  where profile_server is null
-    and grade in ('03','04','05','06','07','08')
-
-
 -------------------------
 -- SCRIPTS FOR EMPLOYEES
 -------------------------
@@ -203,17 +182,6 @@ update staging_employees
 update staging_employees
   set school_email = null
   where school_email = '';
-
--- grab existing profile_server value
-update staging_employees as stage
-  inner join users on stage.unique_id = users.unique_id
-  set stage.profile_server = users.profile_server
-
--- IMPORTANT: set file server manually for all 700L employees
-
--- set file server for employees at 100L, assumes 700L already set manually
---this should look to load balance students across servers in profile_server_by_population, ignoring RODRICK
-
 
 -------------------------
 -- SCRIPTS FOR GROUPINGS

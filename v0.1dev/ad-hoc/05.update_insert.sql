@@ -4,7 +4,6 @@
 -- ****************************************************
 
 
-
 ------------------------
 -- SCRIPTS FOR STUDENTS
 ------------------------
@@ -23,17 +22,24 @@ update users
     users.status = 'INACTIVE';
 -- mark in users not staging as INACTIVE (seniors & left students)
 update users
-  set update_date = now(),
-    status = 'INACTIVE'
+  set update_date = now()
+    , status = 'INACTIVE'
   where manual_entry = 'N'
     and population = 'STU'
     and status != 'INACTIVE'
     and unique_id not in (select unique_id from staging_students);
 -- clear current_year_id because users may have been deleted from AdminPlus & ID reused
 update users
-  set update_date = now(),
-    current_year_id = null
+  set update_date = now()
+    , current_year_id = null
   where population = 'STU';
+-- future scripts need null or value from users for profile_server
+update staging_students as stage
+  set stage.profile_server = null;
+update staging_students as stage
+  inner join users on stage.unique_id = users.unique_id
+  set stage.profile_server = users.profile_server;
+
 
 -- UPDATING:  add/update records for students
 -- insert new student records
@@ -143,6 +149,12 @@ update users
   set update_date = now(),
     current_year_id = null
   where population = 'EMP';
+-- future scripts need null or value from users for profile_server
+update staging_employees as stage
+  set stage.profile_server = null;
+update staging_employees as stage
+  inner join users on stage.unique_id = users.unique_id
+  set stage.profile_server = users.profile_server;
 
 -- UPDATING:  add/update records for students
 -- insert new employee records
