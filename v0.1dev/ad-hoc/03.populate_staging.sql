@@ -21,7 +21,7 @@ insert into staging_students
     , `first_name`
     , `middle_name`
     , `last_name`
-    , null
+    , ''
     , `school_email`
     , `phone_home`
     , `phone_cell`
@@ -30,13 +30,15 @@ insert into staging_students
     , `state`
     , `zipcode`
     , `grade`
-    , convert(expected_grad_year, UNSIGNED INTEGER)
+    , (case when expected_grad_year = '' then NULL
+       else convert(expected_grad_year, UNSIGNED INTEGER) end)
     , `homeroom`
     , `homeroom_teacher_first`
     , `homeroom_teacher_last`
     , `referred_to_as`
     , `gender`
-    , STR_TO_DATE(`birthdate`,'%m/%d/%Y')
+    , (case when birthdate = '' then NULL
+       else STR_TO_DATE(`birthdate`,'%m/%d/%Y') end)
     , entry_date
   from import_students as import
   -- below is commented out because library & sendwordnow needs all students
@@ -54,6 +56,7 @@ update staging_students as stage set stage.newthisrun = 'Y' where stage.newthisr
 --   NOTE:  this needs to be run until no updates are done
 --   NOTE:  the library software requires all students to have username, so no filtering by grade level
 --   NOTE:  default is 101 to avoid having to enter leading zeros
+SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
 update staging_students as stage
 inner join (select prefix, max(unique_id) as unique_id
             from staging_students_prefix
@@ -109,30 +112,18 @@ where (school_email is null or school_email = '');
 
 
 -- make school_email null for everyone else so no duplicates (i.e. null is not checked as duplicate)
+-- this probably isn't necessary as even K's get username/email assigned
 update staging_students
   set school_email = null
   where school_email = '';
 
--- grab existing profile_server value
-update staging_students as stage
-  inner join users on stage.unique_id = users.unique_id
-  set stage.profile_server = users.profile_server
-
--- set file server for all 700L students (High School)
-update staging_students
-  set profile_server = 'RODRICK'
-  where grade in ('09','10','11','12');
-
--- set file server for students at 100L, assumes 700L already set above
---this should look to load balance students across servers in profile_server_by_population, ignoring RODRICK
-
 -------------------------
 -- SCRIPTS FOR EMPLOYEES
 -------------------------
+-- null missing dates so eaier to update
+update import_employees set birthdate = null where birthdate = '';
 -- remove any employee data from previous runs
 truncate staging_employees;
--- null missing dates so eaier to import
-update import_employees set birthdate = null where birthdate = '';
 -- copy employees
 insert into staging_employees
   select `PKEY`
@@ -140,12 +131,14 @@ insert into staging_employees
     , `full_name`
     , `unique_id`
     , `status`
+    , `archive_acct`
     , ''
     , `first_name`
     , `middle_name`
     , `last_name`
-    , null
+    , ''
     , `school_email`
+    , `school_ext`
     , `home_email`
     , `phone_home`
     , `phone_cell`
@@ -156,8 +149,10 @@ insert into staging_employees
     , `homeroom`
     , `referred_to_as`
     , `gender`
-    , STR_TO_DATE(`birthdate`,'%m/%d/%Y')
+    , (case when birthdate = '' then NULL
+       else STR_TO_DATE(`birthdate`,'%m/%d/%Y') end)
     , `date_of_hire`
+    , `school_year_hired`
     , position
   from import_employees
   order by last_name, first_name, middle_name;
@@ -168,6 +163,11 @@ inner join users
 on stage.unique_id = users.unique_id
 set stage.newthisrun = 'N';
 update staging_employees as stage set stage.newthisrun = 'Y' where stage.newthisrun = '';
+
+-- changes in workflow adds new flag for INACTIVE status for employees, set status field to expected value
+update staging_employees as stage
+  set status = 'INACTIVE'
+  where upper(archive_acct) = 'Y' or upper(archive_acct) = 'YES'
 
 -- give emails to all employees
 update staging_employees
@@ -183,29 +183,19 @@ update staging_employees
   set school_email = null
   where school_email = '';
 
--- grab existing profile_server value
-update staging_employees as stage
-  inner join users on stage.unique_id = users.unique_id
-  set stage.profile_server = users.profile_server
-
--- IMPORTANT: set file server manually for all 700L employees
-
--- set file server for employees at 100L, assumes 700L already set manually
---this should look to load balance students across servers in profile_server_by_population, ignoring RODRICK
-
-
 -------------------------
 -- SCRIPTS FOR GROUPINGS
 -------------------------
--- remove groupings data from previous runs
+-- NOTE: need to update "fy##" each year
+-- TODO: remove groupings data from previous runs
 truncate staging_groupings;
 -- insert new groupings
 insert into staging_groupings
   select sections.PKEY
-    , concat(sections.course_id, '-',sections.section_id,'-','fy17') as unique_id
+    , concat(sections.course_id, '-',sections.section_id,'-','fy18') as unique_id
     , now() as update_date
     , 'ACTIVE' as status
-    , 'FY17' as current_year
+    , 'FY18' as current_year
     , (case
          when courses.display_level = '3' then cohorts.cohort
          when substring(sections.schedule,1,1) = 'M' then 'Workshop'
@@ -223,7 +213,7 @@ insert into staging_groupings
   left join import_courses as courses on sections.course_id = courses.num
   left join section_cohorts as cohorts on sections.course_id = cohorts.course_id and sections.section_id = cohorts.section_id
   where sections.table_name = ''
-  order by concat(sections.course_id, '-',sections.section_id,'-','fy17');
+  order by concat(sections.course_id, '-',sections.section_id,'-','fy18');
 
 -------------------------------
 -- SCRIPTS FOR GROUPINGS_USERS
@@ -231,9 +221,10 @@ insert into staging_groupings
 -- remove groupings data from previous runs
 truncate staging_groupings_users;
 -- insert teacher related records (from import_sections)
+-- NOTE: do not bring over PKEY as this is combined teacher/student table
 insert into staging_groupings_users
   select
-    '' as PKEY
+    null as PKEY
     , import.course_id
     , import.section_id
     , 'fy17' as current_year
@@ -245,9 +236,10 @@ insert into staging_groupings_users
   where import.table_name = ''
   order by import.course_id, import.section_id;
 -- insert student related records (from import_sections)
+-- NOTE: do not bring over PKEY as this is combined teacher/student table
 insert into staging_groupings_users
   select
-    '' as PKEY
+    null as PKEY
     , import.course_number
     , import.section_number
     , 'fy17' as current_year
@@ -257,4 +249,4 @@ insert into staging_groupings_users
   from import_schedules as import
   order by import.course_number, import.section_number;
 -- set the unique_id to used
-update staging_groupings_users as stage set tobe_unique_id = concat(stage.course_id, '-',stage.section_id,'-','fy17');
+update staging_groupings_users as stage set tobe_unique_id = concat(stage.course_id, '-',stage.section_id,'-','fy18');

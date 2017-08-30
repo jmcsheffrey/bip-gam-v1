@@ -1,0 +1,34 @@
+# EXAMPLE FILE, DO NOT EDIT!!! Make a copy and edit that copy as necessary.
+
+# generic group modification
+#../bin/gam/gam update group <group email address> add member <users email address>
+
+
+# create google classroom classes manually
+#../bin/gam/gam create course alias <course_id>-<section_number>-fy<YY> name "<name> - Block <block> (<teacher>)" section "<course_id>/<section_number>-FY<YY>" teacher <teacher>@sscps.org status ACTIVE
+
+
+# add ttutor@sscps.org to classroom
+# gam course <id or alias> add student|teacher <email address>
+#../bin/gam/gam course 9901-01-fy17 add teacher ttutor@sscps.org
+#../bin/gam/gam course 9901-01-fy17 add student joe_student@student.sscps.org
+
+# archive classrooms (so teachers can nab things from previous years)
+#../bin/gam/gam update course 9901-01-fy17 status ARCHIVED
+
+# delete classrooms (archiving is better!)
+#../bin/gam/gam delete course 9901-01-fy17
+
+
+# "change owner" or "archive" of folder/files
+# 1) set sharing permission
+#../bin/gam/gam user <current owner>@sscps.org update drivefile id 1sVD54ocoCWdJYyKBKix84T0MzlVfo7tgW-rrH0skqg4 writerscantshare
+# 2) remove specific users
+#../bin/gam/gam user <current owner>@sscps.org delete drivefileacl 1sVD54ocoCWdJYyKBKix84T0MzlVfo7tgW-rrH0skqg4 <wrong user/group>@sscps.org
+# 3) change owner of file
+#../bin/gam/gam user <current owner>@sscps.org update drivefileacl 1sVD54ocoCWdJYyKBKix84T0MzlVfo7tgW-rrH0skqg4 <new owner>@sscps.org role owner transferownership true
+# 4) remove old owner
+#../bin/gam/gam user <new owner>@sscps.org delete drivefileacl 1sVD54ocoCWdJYyKBKix84T0MzlVfo7tgW-rrH0skqg4 <old/current owner>@sscps.org
+# 5) add appropriate user & group permisions
+#../bin/gam/gam user <newowner>@sscps.org add drivefileacl 1sVD54ocoCWdJYyKBKix84T0MzlVfo7tgW-rrH0skqg4 group <new read-only user/group>@sscps.org role reader withlink
+#../bin/gam/gam user <newowner>@sscps.org add drivefileacl 1sVD54ocoCWdJYyKBKix84T0MzlVfo7tgW-rrH0skqg4 group <new edit user/group>@sscps.org role writer withlink

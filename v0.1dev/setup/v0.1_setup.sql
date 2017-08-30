@@ -4,6 +4,7 @@ CREATE TABLE `users` (
  `current_year_id` varchar(5) DEFAULT NULL,
  `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
  `status` varchar(8) NOT NULL,
+ `archive_acct` varchar(1) NOT NULL,
  `newthisrun` varchar(1) NOT NULL,
  `manual_entry` varchar(2) NOT NULL DEFAULT 'N',
  `population` varchar(3) NOT NULL,
@@ -14,6 +15,7 @@ CREATE TABLE `users` (
  `user_name` varchar(20) DEFAULT NULL,
  `profile_server` varchar(100) DEFAULT NULL,
  `school_email` varchar(100) DEFAULT NULL,
+ `school_ext` varchar(100) DEFAULT NULL,
  `home_email` varchar(250) DEFAULT NULL,
  `phone_home` varchar(250) DEFAULT NULL,
  `phone_cell` varchar(250) DEFAULT NULL,
@@ -30,6 +32,7 @@ CREATE TABLE `users` (
  `gender` varchar(1) NOT NULL,
  `birthdate` date DEFAULT NULL,
  `startdate` varchar(11) DEFAULT NULL,
+ `school_year_hired` varchar(6) DEFAULT NULL,
  `position` varchar(100) NOT NULL,
  `description` varchar(100) NOT NULL,
  PRIMARY KEY (`unique_id`),
@@ -62,8 +65,8 @@ CREATE TABLE `import_students` (
  `homeroom_teacher_last` varchar(50) DEFAULT NULL,
  `referred_to_as` varchar(50) DEFAULT NULL,
  `gender` varchar(1) DEFAULT NULL,
- `birthdate` varchar(10) DEFAULT NULL,
- `entry_date` varchar(10) DEFAULT NULL,
+ `birthdate` varchar(50) DEFAULT NULL,
+ `entry_date` varchar(50) DEFAULT NULL,
  PRIMARY KEY (`PKEY`),
  UNIQUE KEY `unique_id` (`unique_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8
@@ -128,6 +131,51 @@ from users
 where population = 'STU'
 group by substring(school_email,1,instr(school_email, '@')-4)
 
+CREATE VIEW users_profileserver_counts AS
+select population, profile_server, count(profile_server) as profile_count
+from users
+where status = 'ACTIVE' and (population = 'EMP' or grade in ('03','04','05','06','07','08','09','10','11','12'))
+group by population, profile_server;
+
+CREATE VIEW users_profileserver_counts_employees AS
+select profile_server, profile_count
+from users_profileserver_counts
+where population = 'EMP'
+order by profile_server;
+
+CREATE VIEW users_profileserver_counts_students AS
+select profile_server, profile_count
+from users_profileserver_counts
+where population = 'STU'
+order by profile_server;
+
+CREATE VIEW nextuserneedprofileserver_100l_stu AS
+select min(unique_id) as next_unique_id
+from users
+where profile_server = null
+and population = 'STU'
+and grade in ('03','04','05','06','07','08');
+
+CREATE VIEW nextuserneedprofileserver_100l_emp AS
+select min(unique_id) as next_unique_id
+from users
+where profile_server = null
+and population = 'EMP';
+
+CREATE VIEW nextprofileserver_100l_stu AS
+select min(profile_server) as profile_server
+from users_profileserver_counts_students
+where profile_count = (select min(profile_count)
+from users_profileserver_counts_students
+where profile_server in ('GREG', 'FREGLEY', 'ROWLEY'));
+
+CREATE VIEW nextprofileserver_100l_emp AS
+select min(profile_server) as profile_server
+from users_profileserver_counts_employees
+where profile_count = (select min(profile_count)
+from users_profileserver_counts_employees
+where profile_server in ('GREG', 'FREGLEY', 'ROWLEY'));
+
 CREATE VIEW staging_students_nextsuffix AS
 select substring(max(school_email),1,instr(school_email, '@')-4) as max_name,
   substring(max(school_email),instr(school_email, '@')-3,3) as max_number,
@@ -146,21 +194,18 @@ select max_name, max(max_number) as max_number, max(next_number) as next_number
 from overall_nextsuffix
 group by max_name
 
-CREATE VIEW profile_server_by_population AS
-select population, profile_server, count(profile_server) AS profile_server_count
-from users
-group by population, profile_server
-
 CREATE TABLE `import_employees` (
  `PKEY` int(11) NOT NULL AUTO_INCREMENT,
  `APID` varchar(5) DEFAULT NULL,
  `full_name` varchar(100) DEFAULT NULL,
  `unique_id` varchar(8) DEFAULT NULL,
  `status` varchar(8) DEFAULT NULL,
+ `archive_acct` varchar(1) DEFAULT NULL,
  `first_name` varchar(50) DEFAULT NULL,
  `middle_name` varchar(50) DEFAULT NULL,
  `last_name` varchar(50) DEFAULT NULL,
  `school_email` varchar(100) DEFAULT NULL,
+ `school_ext` varchar(100) DEFAULT NULL,
  `home_email` varchar(250) DEFAULT NULL,
  `phone_home` varchar(250) DEFAULT NULL,
  `phone_cell` varchar(250) DEFAULT NULL,
@@ -173,6 +218,7 @@ CREATE TABLE `import_employees` (
  `gender` varchar(1) DEFAULT NULL,
  `birthdate` varchar(10) DEFAULT NULL,
  `date_of_hire` varchar(10) DEFAULT NULL,
+ `school_year_hired` varchar(6) DEFAULT NULL,
  `position` varchar(100) DEFAULT NULL,
  PRIMARY KEY (`PKEY`),
  UNIQUE KEY `unique_unique_id` (`unique_id`)
@@ -184,12 +230,14 @@ CREATE TABLE `staging_employees` (
  `full_name` varchar(100) DEFAULT NULL,
  `unique_id` varchar(8) DEFAULT NULL,
  `status` varchar(8) DEFAULT NULL,
+ `archive_acct` varchar(1) DEFAULT NULL,
  `newthisrun` varchar(1) DEFAULT NULL,
  `first_name` varchar(50) DEFAULT NULL,
  `middle_name` varchar(50) DEFAULT NULL,
  `last_name` varchar(50) DEFAULT NULL,
  `profile_server` varchar(100) DEFAULT NULL,
  `school_email` varchar(100) DEFAULT NULL,
+ `school_ext` varchar(100) DEFAULT NULL,
  `home_email` varchar(250) DEFAULT NULL,
  `phone_home` varchar(250) DEFAULT NULL,
  `phone_cell` varchar(250) DEFAULT NULL,
@@ -202,6 +250,7 @@ CREATE TABLE `staging_employees` (
  `gender` varchar(1) DEFAULT NULL,
  `birthdate` date DEFAULT NULL,
  `date_of_hire` varchar(11) DEFAULT NULL,
+ `school_year_hired` varchar(6) DEFAULT NULL,
  `position` varchar(100) DEFAULT NULL,
  PRIMARY KEY (`PKEY`),
  UNIQUE KEY `unique_unique_id` (`unique_id`)
@@ -214,11 +263,11 @@ CREATE TABLE `import_contacts` (
  `CONTACT_GUID` varchar(32) DEFAULT NULL,
  `CONTACT_HOUSEHOLD_ID` varchar(7) DEFAULT NULL,
  `NAVIANCE_PARENT_ID` varchar(250) DEFAULT NULL,
- `CONTACT_FULL_NAME` varchar(32) DEFAULT NULL,
+ `CONTACT_FULL_NAME` varchar(250) DEFAULT NULL,
  `SALUTATION` varchar(250) NOT NULL,
- `CONTACT_FIRST_NAME` varchar(12) DEFAULT NULL,
- `CONTACT_MIDDLE_NAME` varchar(8) DEFAULT NULL,
- `CONTACT_LAST_NAME` varchar(18) DEFAULT NULL,
+ `CONTACT_FIRST_NAME` varchar(250) DEFAULT NULL,
+ `CONTACT_MIDDLE_NAME` varchar(250) DEFAULT NULL,
+ `CONTACT_LAST_NAME` varchar(250) DEFAULT NULL,
  `SUFFIX` varchar(250) NOT NULL,
  `LANGUAGE` varchar(250) NOT NULL,
  `ADDRESSLINE1` varchar(250) NOT NULL,
@@ -228,14 +277,14 @@ CREATE TABLE `import_contacts` (
  `ADDRESSSTATE` varchar(250) NOT NULL,
  `ADDRESSCOUNTRY` varchar(250) NOT NULL,
  `ADDRESSZIP` varchar(250) NOT NULL,
- `HOMEPHONE` varchar(13) DEFAULT NULL,
+ `HOMEPHONE` varchar(250) DEFAULT NULL,
  `HOMEPHONEEXTENSION` varchar(250) NOT NULL,
- `MOBILEPHONE` varchar(14) DEFAULT NULL,
+ `MOBILEPHONE` varchar(250) DEFAULT NULL,
  `OFFICEPHONE` varchar(250) NOT NULL,
  `OFFICEPHONEEXTENSION` varchar(250) NOT NULL,
- `CONTACT_HOME_EMAIL` varchar(50) DEFAULT NULL,
- `CONTACT_OFFICE_EMAIL` varchar(50) DEFAULT NULL,
- `RELATIONSHIP` varchar(13) DEFAULT NULL,
+ `CONTACT_HOME_EMAIL` varchar(250) DEFAULT NULL,
+ `CONTACT_OFFICE_EMAIL` varchar(250) DEFAULT NULL,
+ `RELATIONSHIP` varchar(250) DEFAULT NULL,
  `PRIMARY_CONTACT` varchar(1) DEFAULT NULL,
  `DB_REPORTS` varchar(1) DEFAULT NULL,
  `AT_REPORTS` varchar(1) DEFAULT NULL,
@@ -244,11 +293,66 @@ CREATE TABLE `import_contacts` (
  `DS_REPORTS` varchar(1) DEFAULT NULL,
  `BI_REPORTS` varchar(1) DEFAULT NULL,
  `PARENT_PORTAL_ACCESS` varchar(1) DEFAULT NULL,
- `DO_NOT_CALL` varchar(1) DEFAULT NULL,
- `DO_NOT_EMAIL` varchar(1) DEFAULT NULL,
+ `NO_CALL_HOME` varchar(1) DEFAULT NULL,
+ `NO_CALL_CELL` varchar(1) DEFAULT NULL,
+ `NO_EMAIL` varchar(1) DEFAULT NULL,
  `NOTIFY_OFFICE` varchar(1) DEFAULT NULL,
  PRIMARY KEY (`PKEY`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8
+
+CREATE VIEW import_contacts_contactpoints AS
+select
+    import.APID
+    , import.STUDENT_FULL_NAME
+    , import.CONTACT_HOUSEHOLD_ID
+    , import.CONTACT_GUID
+    , import.PRIMARY_CONTACT
+    , 'Primary Home' as contact_point_type
+    , import.HOMEPHONE as contact_point_value
+  from import_contacts as import
+  inner join users on import.APID = users.current_year_id
+  where users.status = 'ACTIVE'
+    and import.NO_CALL_HOME != 'Y'
+union
+select
+    import.APID
+    , import.STUDENT_FULL_NAME
+    , import.CONTACT_HOUSEHOLD_ID
+    , import.CONTACT_GUID
+    , import.PRIMARY_CONTACT
+    , concat(import.RELATIONSHIP, ' Cell') as contact_point_type
+    , import.MOBILEPHONE as contact_point_value
+  from import_contacts as import
+  inner join users on import.APID = users.current_year_id
+  where users.status = 'ACTIVE'
+    and import.NO_CALL_HOME != 'Y'
+union
+select
+    import.APID
+    , import.STUDENT_FULL_NAME
+    , import.CONTACT_HOUSEHOLD_ID
+    , import.CONTACT_GUID
+    , import.PRIMARY_CONTACT
+    , concat(import.RELATIONSHIP, ' Office') as contact_point_type
+    , import.OFFICEPHONE as contact_point_value
+  from import_contacts as import
+  inner join users on import.APID = users.current_year_id
+  where users.status = 'ACTIVE'
+    and import.NOTIFY_OFFICE = 'Y'
+union
+select
+    import.APID
+    , import.STUDENT_FULL_NAME
+    , import.CONTACT_HOUSEHOLD_ID
+    , import.CONTACT_GUID
+    , import.PRIMARY_CONTACT
+    , concat(import.RELATIONSHIP, ' Home Email') as contact_point_type
+    , import.CONTACT_HOME_EMAIL as contact_point_value
+  from import_contacts as import
+  inner join users on import.APID = users.current_year_id
+  where users.status = 'ACTIVE'
+    and import.NO_EMAIL != 'Y'
+
 
 -- parent data that is downloaded from Naviance
 CREATE TABLE `import_naviance_parents` (
@@ -392,7 +496,7 @@ CREATE TABLE `staging_groupings` (
  `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
  `status` varchar(10) NOT NULL,
  `current_year` varchar(4) NOT NULL,
- `time_block` varchar(8) NOT NULL,
+ `time_block` varchar(12) NOT NULL,
  `level` varchar(2) NOT NULL,
  `name` varchar(250) NOT NULL,
  `course_id` varchar(250) NOT NULL,

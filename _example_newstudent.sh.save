@@ -1,0 +1,35 @@
+# EXAMPLE FILE, DO NOT EDIT!!! Make a copy and edit that copy as necessary.
+# below are the parts for manually creating a new student
+# search & replace on <put email here>, <put firstname here> and <put lastname here>
+
+# create the user's Google account
+../bin/gam/gam create user <put email here> firstname <put firstname here> lastname <put lastname here> password sscps123 changepassword on org /Prod/Users-Normal/Employees externalid organization 99999895
+
+# add account to groups (uncomment and/or modify as necessary)
+../bin/gam/gam update group student@student.sscps.org add member <put email here>
+#../bin/gam/gam update group students_l1@student.sscps.org add member <put email here>
+#../bin/gam/gam update group students_l2@student.sscps.org add member <put email here>
+#../bin/gam/gam update group students_l3@student.sscps.org add member <put email here>
+#../bin/gam/gam update group students_l4@student.sscps.org add member <put email here>
+#../bin/gam/gam update group students_lhs@student.sscps.org add member <put email here>
+#../bin/gam/gam update group gco-fy2018@student.sscps.org add member <put email here>
+#../bin/gam/gam update group gco-fy2019@student.sscps.org add member <put email here>
+#../bin/gam/gam update group gco-fy2020@student.sscps.org add member <put email here>
+#../bin/gam/gam update group gco-fy2021@student.sscps.org add member <put email here>
+#../bin/gam/gam update group gco-fy2022@student.sscps.org add member <put email here>
+#../bin/gam/gam update group gco-fy2023@student.sscps.org add member <put email here>
+#../bin/gam/gam update group gco-fy2024@student.sscps.org add member <put email here>
+#../bin/gam/gam update group gco-fy2025@student.sscps.org add member <put email here>
+
+# add SSCPS-GroupDocs Google Drive folder
+#../bin/gam/gam user bip@sscps.org add drivefileacl 0Byc5mfoLgdM3MDE0YjEyOWEtMjIxNi00YTE0LTgxZDgtODQxOGEwODU5YjE3 user <put email here> roll VIEWER
+../bin/gam/gam user <put email here> update drivefile id 0Byc5mfoLgdM3MDE0YjEyOWEtMjIxNi00YTE0LTgxZDgtODQxOGEwODU5YjE3 parentid root
+
+# Add calendars
+# SSCPS-Main calendar
+../bin/gam/gam user <put email here> add calendar sscps.org_2skq6kkh75tr8e8g0q3ooblh84@group.calendar.google.com
+# SSCPS-Atheletics calendar
+../bin/gam/gam user <put email here> add calendar sscps.org_kiv73854jfpsvsh8luul29luj0@group.calendar.google.com
+
+# suspend student
+#../bin/gam/gam update user <put email here> suspended on org /Archive/Aging/Students
