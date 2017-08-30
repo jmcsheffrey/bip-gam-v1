@@ -496,7 +496,7 @@ CREATE TABLE `staging_groupings` (
  `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
  `status` varchar(10) NOT NULL,
  `current_year` varchar(4) NOT NULL,
- `time_block` varchar(8) NOT NULL,
+ `time_block` varchar(12) NOT NULL,
  `level` varchar(2) NOT NULL,
  `name` varchar(250) NOT NULL,
  `course_id` varchar(250) NOT NULL,

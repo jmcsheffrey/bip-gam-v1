@@ -32,7 +32,7 @@ select  'ERROR:  Duplicate APID or current_year_id found.'  as error_desc
 
 -- all students should have email because library software requires username
 -- results should be zero
-select 'ERROR:  .'  as error_desc
+select 'ERROR:  school_email is empty for student.'  as error_desc
     , unique_id, full_name, school_email
   from staging_students
   where (school_email is null or school_email = '');
@@ -72,19 +72,13 @@ select 'ERROR:  Malformed existing school_email.'  as error_desc
 select 'ERROR: duplicate unique_id.' as error_desc
     , unique_id, count
   from (select unique_id, count(unique_id) as count
-          from stage_students
+          from staging_students
           group by unique_id) as sumtable
   where count > 1;
 select 'ERROR: duplicate school_email.' as error_desc
-    , unique_id, count
+    , school_email, count
   from (select school_email, count(school_email) as count
-          from stage_students
-          group by unique_id) as sumtable
-  where count > 1;
-select 'ERROR: duplicate user_name.' as error_desc
-    , unique_id, count
-  from (select user_name, count(user_name) as count
-          from stage_students
+          from staging_students
           group by unique_id) as sumtable
   where count > 1;
 
@@ -146,14 +140,8 @@ select 'ERROR: duplicate unique_id.' as error_desc
           group by unique_id) as sumtable
   where count > 1;
 select 'ERROR: duplicate school_email.' as error_desc
-    , unique_id, count
+    , school_email, count
   from (select school_email, count(school_email) as count
-          from staging_employees
-          group by unique_id) as sumtable
-  where count > 1;
-select 'ERROR: duplicate user_name.' as error_desc
-    , unique_id, count
-  from (select user_name, count(user_name) as count
           from staging_employees
           group by unique_id) as sumtable
   where count > 1;

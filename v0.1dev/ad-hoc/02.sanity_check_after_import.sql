@@ -20,24 +20,15 @@ select 'ERROR: duplicate unique_id.' as error_desc
           group by unique_id) as sumtable
   where count > 1;
 select 'ERROR: duplicate school_email.' as error_desc
-    , unique_id, count
+    , school_email, count
   from (select school_email, count(school_email) as count
           from import_students
-          group by unique_id) as sumtable
-  where count > 1;
-select 'ERROR: duplicate user_name.' as error_desc
-    , unique_id, count
-  from (select user_name, count(user_name) as count
-          from import_students
-          group by unique_id) as sumtable
+          where school_email != '' and not (school_email is null)
+          group by school_email) as sumtable
   where count > 1;
 
 -- all high school students should have a graduating year of correct format
 -- results should be zero
-select 'ERROR:  Missing expected graduation year.' as error_desc, unique_id, APID, full_name, expected_grad_year
-  from import_students
-  where grade in ('09','10','11','12')
-    and (expected_grad_year is null or expected_grad_year = '');
 select 'ERROR:  Malformed expected graduation year.' as error_desc, unique_id, APID, full_name, expected_grad_year from import_students
   where length(expected_grad_year) < 4 and length(expected_grad_year) > 0;
 select 'ERROR:  Malformed expected graduation year.' as error_desc, unique_id, APID, full_name, expected_grad_year from import_students
@@ -127,16 +118,11 @@ select 'ERROR: duplicate unique_id.' as error_desc
           group by unique_id) as sumtable
   where count > 1;
 select 'ERROR: duplicate school_email.' as error_desc
-    , unique_id, count
+    , school_email, count
   from (select school_email, count(school_email) as count
           from import_employees
-          group by unique_id) as sumtable
-  where count > 1;
-select 'ERROR: duplicate user_name.' as error_desc
-    , unique_id, count
-  from (select user_name, count(user_name) as count
-          from import_employees
-          group by unique_id) as sumtable
+          where school_email != '' and not (school_email is null)
+          group by school_email) as sumtable
   where count > 1;
 
 -- check for people in users and in import, but don't have emails in import, but do in users
@@ -184,3 +170,11 @@ select 'ERROR:  PHONE_CELL field is malformed.' as error_desc,
   from import_employees as import
   where import.phone_cell not REGEXP '[0-9]{3}-[0-9]{3}-[0-9]{4}'
     and import.phone_cell != "";
+
+-------------------------
+-- SCRIPTS FOR GROUPINGS
+-------------------------
+-- no courses with something scheduled should be missing display_name
+--results should be zero
+select 'ERROR: missing course name.' as error_desc
+    , import_courses.name, 

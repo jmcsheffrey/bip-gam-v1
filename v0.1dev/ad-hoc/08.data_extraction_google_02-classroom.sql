@@ -49,7 +49,7 @@ select concat(
     on g.unique_id = gu.unique_id_grouping and gu.user_type = 'TCH'
   left join users as teachers on gu.unique_id_user = teachers.unique_id
   where g.status = 'ACTIVE'
-  order by g.unique_id;
+  order by teachers.referred_to_as, teachers.first_name, g.unique_id;
 
 -- assign teachers to Classrooms
 -- gam course <alias> add teacher <email address>

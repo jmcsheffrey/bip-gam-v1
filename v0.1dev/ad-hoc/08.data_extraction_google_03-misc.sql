@@ -96,7 +96,6 @@ select concat(
   from import_contacts as import
   inner join users on import.APID = users.current_year_id and users.status = 'ACTIVE'
   where import.CONTACT_HOME_EMAIL != ''
-    and import.PRIMARY_CONTACT = 'Y'
     and import.NO_EMAIL != 'Y'
   group by import.CONTACT_HOME_EMAIL;
 
@@ -124,7 +123,6 @@ select concat(
   inner join users on import.APID = users.current_year_id and users.status = 'ACTIVE'
     and users.grade in ('0K','01','02')
   where import.CONTACT_HOME_EMAIL != ''
-    and import.PRIMARY_CONTACT = 'Y'
     and import.NO_EMAIL != 'Y'
   group by import.CONTACT_HOME_EMAIL
 -- clean up level2
@@ -149,7 +147,6 @@ select concat(
   inner join users on import.APID = users.current_year_id and users.status = 'ACTIVE'
     and users.grade in ('03','04')
   where import.CONTACT_HOME_EMAIL != ''
-    and import.PRIMARY_CONTACT = 'Y'
     and import.NO_EMAIL != 'Y'
   group by import.CONTACT_HOME_EMAIL
 -- clean up level3
@@ -174,7 +171,6 @@ select concat(
   inner join users on import.APID = users.current_year_id and users.status = 'ACTIVE'
     and users.grade in ('05','06')
   where import.CONTACT_HOME_EMAIL != ''
-    and import.PRIMARY_CONTACT = 'Y'
     and import.NO_EMAIL != 'Y'
   group by import.CONTACT_HOME_EMAIL
 -- clean up level4
@@ -199,7 +195,6 @@ select concat(
   inner join users on import.APID = users.current_year_id and users.status = 'ACTIVE'
     and users.grade in ('07','08')
   where import.CONTACT_HOME_EMAIL != ''
-    and import.PRIMARY_CONTACT = 'Y'
     and import.NO_EMAIL != 'Y'
   group by import.CONTACT_HOME_EMAIL
 -- clean up highschool
@@ -224,6 +219,5 @@ select concat(
   inner join users on import.APID = users.current_year_id and users.status = 'ACTIVE'
     and users.grade in ('09','10','11','12')
   where import.CONTACT_HOME_EMAIL != ''
-    and import.PRIMARY_CONTACT = 'Y'
     and import.NO_EMAIL != 'Y'
   group by import.CONTACT_HOME_EMAIL;

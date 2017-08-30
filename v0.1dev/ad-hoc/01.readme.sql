@@ -38,7 +38,11 @@
 -- TODO - 07.sanity_check_before_extraction.sql
 --  * check for missing grade on students
 
+-- TODO - 08.data_extraction_activedirectory.sql
+--   * need to create users for all 3 graders
+
 -- TODO - 08.data_extraction_google.sql
+--   * need to create users for all 3 graders
 --   * for all groups, should have command to remove inactive users, don't empty & re-add
 --   * fix issue with pre-3rd graders that exist in users without UID confuse newthisrun
 --   * add field that is "newthisyear"
@@ -47,6 +51,7 @@
 --   * figure out how to deal with archiving last year classrooms
 --   * have a table for calendars & who should be added, sorta like groupings
 --   * need to figure out how to test for a folder & create if missing, specifically for ePortfolio
+--   * add teachers to "Classroom Teachers" google group
 
 -- TODO - 08.data_extraction_sendwordnow.sql
 --   * there are multiple contacts per household_id & data could be different, but needs to be separate fields

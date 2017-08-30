@@ -40,6 +40,18 @@ update users
   set profile_server = (select profile_server from nextprofileserver_100l_stu)
   where unique_id = (select next_unique_id from nextuserneedprofileserver_100l_stu);
 
+-- set graduation year for those high school kids missing it
+--need to adjust script every year!!!!
+update users
+  set expected_grad_year = (case when users.grade = '09' then '2021'
+                              when users.grade = '10' then '2020'
+                              when users.grade = '11' then '2019'
+                              when users.grade = '12' then '2018'
+                              else 'ERROR' end)
+  where status = 'ACTIVE'
+    and population = 'STU'
+    and (expected_grad_year = '' or expected_grad_year is null)
+    and grade in ('09','10','11','12');
 
 -------------------------
 -- SCRIPTS FOR EMPLOYEES

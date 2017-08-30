@@ -73,18 +73,18 @@ select concat(
       , ' password sscps123'
       , ' changepassword on'
       , ' org '
-      , char(34) ,(case when users.population = 'EMP' then '/Prod/Employees/Standard (EMP)'
-                        when users.population = 'STU' and users.grade = '12' then '/Prod/Students/Level-HS'
-                        when users.population = 'STU' and users.grade = '11' then '/Prod/Students/Level-HS'
-                        when users.population = 'STU' and users.grade = '10' then '/Prod/Students/Level-HS'
-                        when users.population = 'STU' and users.grade = '09' then '/Prod/Students/Level-HS'
-                        when users.population = 'STU' and users.grade = '08' then '/Prod/Students/Level-4'
-                        when users.population = 'STU' and users.grade = '07' then '/Prod/Students/Level-4'
-                        when users.population = 'STU' and users.grade = '06' then '/Prod/Students/Level-3'
-                        when users.population = 'STU' and users.grade = '05' then '/Prod/Students/Level-3'
-                        when users.population = 'STU' and users.grade = '04' then '/Prod/Students/Level-2'
-                        when users.population = 'STU' and users.grade = '03' then '/Prod/Students/Level-2'
-                        else 'ERROR' end), char(34)
+      , char(34), (case when users.population = 'EMP' then '/Prod/Employees/Standard (EMP)'
+                    when users.population = 'STU' and users.grade = '12' then '/Prod/Students/Level-HS'
+                    when users.population = 'STU' and users.grade = '11' then '/Prod/Students/Level-HS'
+                    when users.population = 'STU' and users.grade = '10' then '/Prod/Students/Level-HS'
+                    when users.population = 'STU' and users.grade = '09' then '/Prod/Students/Level-HS'
+                    when users.population = 'STU' and users.grade = '08' then '/Prod/Students/Level-4'
+                    when users.population = 'STU' and users.grade = '07' then '/Prod/Students/Level-4'
+                    when users.population = 'STU' and users.grade = '06' then '/Prod/Students/Level-3'
+                    when users.population = 'STU' and users.grade = '05' then '/Prod/Students/Level-3'
+                    when users.population = 'STU' and users.grade = '04' then '/Prod/Students/Level-2'
+                    when users.population = 'STU' and users.grade = '03' then '/Prod/Students/Level-2'
+                    else 'ERROR' end), char(34)
       , ' externalid organization ', users.unique_id
     ) as '# create new users'
   from users
@@ -94,7 +94,7 @@ select concat(
     and (users.population = 'EMP'
          or users.grade in ('03', '04', '05', '06', '07', '08', '09', '10', '11', '12')
         )
-  order by users.population, users.school_email;
+  order by users.population, users.grade, users.school_email;
 -- update existing users
 --gam update user <email address> firstname <First Name> lastname <Last Name> org <Org Name> externalid employeeID <unique_id>
 select concat(
@@ -102,18 +102,19 @@ select concat(
       , ' update user ', users.school_email
       , ' firstname ', char(34), users.first_name, char(34)
       , ' lastname ', char(34), users.last_name, char(34)
-      ,(case when users.population = 'EMP' then ' org /Prod/Users-Normal/Employees'
-        when users.population = 'STU' and users.grade = '12' then ' org /Prod/Users-Normal/Students/Level-HS'
-        when users.population = 'STU' and users.grade = '11' then ' org /Prod/Users-Normal/Students/Level-HS'
-        when users.population = 'STU' and users.grade = '10' then ' org /Prod/Users-Normal/Students/Level-HS'
-        when users.population = 'STU' and users.grade = '09' then ' org /Prod/Users-Normal/Students/Level-HS'
-        when users.population = 'STU' and users.grade = '08' then ' org /Prod/Users-Normal/Students/Level-4'
-        when users.population = 'STU' and users.grade = '07' then ' org /Prod/Users-Normal/Students/Level-4'
-        when users.population = 'STU' and users.grade = '06' then ' org /Prod/Users-Normal/Students/Level-3'
-        when users.population = 'STU' and users.grade = '05' then ' org /Prod/Users-Normal/Students/Level-3'
-        when users.population = 'STU' and users.grade = '04' then ' org /Prod/Users-Normal/Students/Level-2'
-        when users.population = 'STU' and users.grade = '03' then ' org /Prod/Users-Normal/Students/Level-2'
-        else 'ERROR' end)
+      , ' org '
+      , char(34) ,(case when users.population = 'EMP' then '/Prod/Employees/Standard (EMP)', char(34)
+                   when users.population = 'STU' and users.grade = '12' then '/Prod/Students/Level-HS', char(34)
+                   when users.population = 'STU' and users.grade = '11' then '/Prod/Students/Level-HS', char(34)
+                   when users.population = 'STU' and users.grade = '10' then '/Prod/Students/Level-HS', char(34)
+                   when users.population = 'STU' and users.grade = '09' then '/Prod/Students/Level-HS', char(34)
+                   when users.population = 'STU' and users.grade = '08' then '/Prod/Students/Level-4', char(34)
+                   when users.population = 'STU' and users.grade = '07' then '/Prod/Students/Level-4', char(34)
+                   when users.population = 'STU' and users.grade = '06' then '/Prod/Students/Level-3', char(34)
+                   when users.population = 'STU' and users.grade = '05' then '/Prod/Students/Level-3', char(34)
+                   when users.population = 'STU' and users.grade = '04' then '/Prod/Students/Level-2', char(34)
+                   when users.population = 'STU' and users.grade = '03' then '/Prod/Students/Level-2', char(34)
+                   else 'ERROR' end)
       , ' externalid organization ', users.unique_id
     ) '# update user info'
   from users
@@ -130,6 +131,7 @@ select concat(
 -- Update Google groups
 -- ****************************************************
 -- gam update group <group email> remove {user <email address> | group <group address> | org <org name> | file <file name> | all users}
+
 -- make sure employees@sscps.org is populated correctly
 --empty sync group from previous runs (just in case)
 select '../bin/gam/gam update group sys-synctempgroup@sscps.org sync member group sys-syncemptygroup@sscps.org' as '# populate employees@sscps.org'
@@ -233,10 +235,6 @@ select concat(
 -- add students to their "Graduating Year of" groups
 -- NOTE: MUST create group manually first!!!
 -- TODO: remove inactive users, but from currently active years
-select '../bin/gam/gam update group gco-fy2017@student.sscps.org remove group gco-fy2017@student.sscps.org' as '# populate gco groups'
-union
-select '../bin/gam/gam update group gco-fy2017@student.sscps.org add owner mcarter@sscps.org' as '# populate gco groups'
-union
 select '../bin/gam/gam update group gco-fy2018@student.sscps.org remove group gco-fy2018@student.sscps.org' as '# populate gco groups'
 union
 select '../bin/gam/gam update group gco-fy2018@student.sscps.org add owner mcarter@sscps.org' as '# populate gco groups'
@@ -247,7 +245,11 @@ select '../bin/gam/gam update group gco-fy2019@student.sscps.org add owner mcart
 union
 select '../bin/gam/gam update group gco-fy2020@student.sscps.org remove group gco-fy2020@student.sscps.org' as '# populate gco groups'
 union
-select '../bin/gam/gam update group gco-fy2020@student.sscps.org add owner mcarter@sscps.org' as '# populate gco groups';
+select '../bin/gam/gam update group gco-fy2020@student.sscps.org add owner mcarter@sscps.org' as '# populate gco groups'
+union
+select '../bin/gam/gam update group gco-fy2021@student.sscps.org remove group gco-fy2021@student.sscps.org' as '# populate gco groups'
+union
+select '../bin/gam/gam update group gco-fy2021@student.sscps.org add owner mcarter@sscps.org' as '# populate gco groups'
 -- for some reason can't union the statement below
 select concat(
       '../bin/gam/gam update group '

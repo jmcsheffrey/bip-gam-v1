@@ -28,7 +28,9 @@ select concat(
       , ' -last_name ', char(34), users.last_name, char(34)
       , ' -description ', char(34), users.description, char(34)
       , ' -fileserver ', char(34), users.profile_server, char(34)
-      , ' -grade ', char(34), users.grade, char(34)
+      , ' -grade ', char(34), (case when users.grade is null then 'n/a'
+                               when users.grade = '' then 'n/a'
+                               else users.grade end), char(34)
     ) as '# create or update AD users'
   from users
   where users.school_email != '' and not (school_email is null)
@@ -46,8 +48,11 @@ select concat(
       , ' -population ', char(34), users.population, char(34)
       , ' -user_name ', char(34), users.user_name, char(34)
       , ' -fileserver ', char(34), users.profile_server, char(34)
-      , ' -grade ', char(34), users.grade, char(34)
-      , ' -gco ', char(34), (case when users.expected_grad_year is null then ''
+      , ' -grade ', char(34), (case when users.grade is null then 'n/a'
+                               when users.grade = '' then 'n/a'
+                               else users.grade end), char(34)
+      , ' -gco ', char(34), (case when users.expected_grad_year is null then 'n/a'
+                               when users.expected_grad_year = '' then 'n/a'
                                else users.expected_grad_year end), char(34)
     ) as '# adjust groups in AD for users'
   from users
@@ -56,4 +61,4 @@ select concat(
     and (users.population = 'EMP'
          or users.grade in ('03', '04', '05', '06', '07', '08', '09', '10', '11', '12')
         )
-  order by users.population, users.school_email;
+  order by users.population, users.grade, users.school_email;

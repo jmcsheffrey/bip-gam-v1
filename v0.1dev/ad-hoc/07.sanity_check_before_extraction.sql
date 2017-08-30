@@ -15,19 +15,27 @@ select 'ERROR:  New user created but marked INACTIVE.'  as error_desc
 -- results should be zero
 select 'ERROR:  User exists with no school_email.'  as error_desc
     , unique_id, first_name, last_name, school_email
-  from users where status = 'ACTIVE' and school_email = '';
+  from users where status = 'ACTIVE'
+    and population in ('EMP', 'STU')
+    and school_email = '';
 select 'ERROR:  User exists with no school_email.'  as error_desc
     , unique_id, first_name, last_name, school_email
-  from users where status = 'ACTIVE' and school_email is null;
+  from users where status = 'ACTIVE'
+    and population in ('EMP', 'STU')
+    and school_email is null;
 
 -- no users should exist as ACTIVE without current_year_id (bad for groupings)
 -- results should be zero
 select 'ERROR:  User exists with current_year_id.'  as error_desc
     , unique_id, first_name, last_name, current_year_id
-  from users where status = 'ACTIVE' and current_year_id = '';
+  from users where status = 'ACTIVE'
+    and population in ('EMP', 'STU')
+    and current_year_id = '';
 select 'ERROR:  User exists with current_year_id.'  as error_desc
     , unique_id, first_name, last_name, current_year_id
-  from users where status = 'ACTIVE' and current_year_id is null;
+  from users where status = 'ACTIVE'
+    and population in ('EMP', 'STU')
+    and current_year_id is null;
 
 -- all users who are employees or students in grade 3 or above should have an email
 -- results should be zero
@@ -59,13 +67,13 @@ select 'ERROR: duplicate unique_id.' as error_desc
           group by unique_id) as sumtable
   where count > 1;
 select 'ERROR: duplicate school_email.' as error_desc
-    , unique_id, count
+    , school_email, count
   from (select school_email, count(school_email) as count
           from users
           group by unique_id) as sumtable
   where count > 1;
 select 'ERROR: duplicate user_name.' as error_desc
-    , unique_id, count
+    , user_name, count
   from (select user_name, count(user_name) as count
           from users
           group by unique_id) as sumtable
@@ -74,8 +82,25 @@ select 'ERROR: duplicate user_name.' as error_desc
 -------------------------
 -- SCRIPTS STUDENTS ONLY
 -------------------------
+select 'ERROR:  Missing expected graduation year.' as error_desc, unique_id, current_year_id, first_name, last_name, expected_grad_year
+  from users
+  where grade in ('09','10','11','12')
+    and (expected_grad_year is null or expected_grad_year = '');
 
 
 -------------------------
 -- SCRIPTS EMPLOYEES ONLY
 -------------------------
+
+-------------------------
+-- SCRIPTS FOR GROUPINGS
+-------------------------
+-- no groups should have missing names for courses with teacher/student
+--results should be zero
+select 'ERROR:  Missing name from grouping.' as error_desc
+    , unique_id, course_id, section_id, current_year, name
+  from groupings as g
+  where g.status = 'ACTIVE'
+    and (g.name = '' or g.name is null)
+    and unique_id in (select unique_id_grouping from groupings_users group by unique_id_grouping)
+  order by unique_id

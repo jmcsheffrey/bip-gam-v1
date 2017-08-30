@@ -120,10 +120,10 @@ update staging_students
 -------------------------
 -- SCRIPTS FOR EMPLOYEES
 -------------------------
+-- null missing dates so eaier to update
+update import_employees set birthdate = null where birthdate = '';
 -- remove any employee data from previous runs
 truncate staging_employees;
--- null missing dates so eaier to import
-update import_employees set birthdate = null where birthdate = '';
 -- copy employees
 insert into staging_employees
   select `PKEY`
@@ -192,10 +192,10 @@ truncate staging_groupings;
 -- insert new groupings
 insert into staging_groupings
   select sections.PKEY
-    , concat(sections.course_id, '-',sections.section_id,'-','fy17') as unique_id
+    , concat(sections.course_id, '-',sections.section_id,'-','fy18') as unique_id
     , now() as update_date
     , 'ACTIVE' as status
-    , 'FY17' as current_year
+    , 'FY18' as current_year
     , (case
          when courses.display_level = '3' then cohorts.cohort
          when substring(sections.schedule,1,1) = 'M' then 'Workshop'
@@ -213,7 +213,7 @@ insert into staging_groupings
   left join import_courses as courses on sections.course_id = courses.num
   left join section_cohorts as cohorts on sections.course_id = cohorts.course_id and sections.section_id = cohorts.section_id
   where sections.table_name = ''
-  order by concat(sections.course_id, '-',sections.section_id,'-','fy17');
+  order by concat(sections.course_id, '-',sections.section_id,'-','fy18');
 
 -------------------------------
 -- SCRIPTS FOR GROUPINGS_USERS
@@ -224,7 +224,7 @@ truncate staging_groupings_users;
 -- NOTE: do not bring over PKEY as this is combined teacher/student table
 insert into staging_groupings_users
   select
-    '' as PKEY
+    null as PKEY
     , import.course_id
     , import.section_id
     , 'fy17' as current_year
@@ -239,7 +239,7 @@ insert into staging_groupings_users
 -- NOTE: do not bring over PKEY as this is combined teacher/student table
 insert into staging_groupings_users
   select
-    '' as PKEY
+    null as PKEY
     , import.course_number
     , import.section_number
     , 'fy17' as current_year
@@ -249,4 +249,4 @@ insert into staging_groupings_users
   from import_schedules as import
   order by import.course_number, import.section_number;
 -- set the unique_id to used
-update staging_groupings_users as stage set tobe_unique_id = concat(stage.course_id, '-',stage.section_id,'-','fy17');
+update staging_groupings_users as stage set tobe_unique_id = concat(stage.course_id, '-',stage.section_id,'-','fy18');

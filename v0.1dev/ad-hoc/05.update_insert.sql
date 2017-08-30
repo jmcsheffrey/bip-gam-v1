@@ -20,7 +20,7 @@ update users
     and stage.status = 'INACTIVE'
   set users.update_date = now(),
     users.status = 'INACTIVE';
--- mark in users not staging as INACTIVE (seniors & left students)
+-- mark students as INACTIVE if their unique_id is not in staging (seniors & left students)
 update users
   set update_date = now()
     , status = 'INACTIVE'
@@ -240,7 +240,7 @@ update users
 -- ****************************************************
 -- be sure to adjust current_year for the current year running
 -- mark all prior years courses inactive
-update groupings set status = 'INACTIVE' where current_year != 'FY17';
+update groupings set status = 'INACTIVE' where current_year != 'FY18';
 -- insert new groupings
 insert into groupings
   select sections.unique_id
@@ -283,7 +283,7 @@ update groupings
 update groupings_users as gu
   left join groupings as g on gu.unique_id_grouping = g.unique_id
   set gu.status = 'INACTIVE'
-  where g.current_year != 'FY17';
+  where g.current_year != 'FY18';
 -- insert new schedules
 insert into groupings_users
   select
