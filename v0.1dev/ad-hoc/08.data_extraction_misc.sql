@@ -1,8 +1,11 @@
 -- ****************************************************
--- NOTE:  This outputs all students by level.
--- NOTE:  For cut & paste to Google Sheets for SSCPS-GroupDocs.
+-- NOTE:  This file is for other miscellaneous scripts.
 -- ****************************************************
 
+
+
+-- For "Student Login List" Google Spreadsheets in SSCPS-GroupDocs.
+--order for each cut & paste
 select concat (homeroom_teacher_first, " ", homeroom_teacher_last) as homeroom
     , grade, first_name, last_name, user_name, school_email
     , (case when users.population = 'EMP' then '/Prod/Employees/Standard (EMP)'

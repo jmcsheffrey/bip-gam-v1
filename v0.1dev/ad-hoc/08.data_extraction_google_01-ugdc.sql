@@ -103,18 +103,18 @@ select concat(
       , ' firstname ', char(34), users.first_name, char(34)
       , ' lastname ', char(34), users.last_name, char(34)
       , ' org '
-      , char(34) ,(case when users.population = 'EMP' then '/Prod/Employees/Standard (EMP)', char(34)
-                   when users.population = 'STU' and users.grade = '12' then '/Prod/Students/Level-HS', char(34)
-                   when users.population = 'STU' and users.grade = '11' then '/Prod/Students/Level-HS', char(34)
-                   when users.population = 'STU' and users.grade = '10' then '/Prod/Students/Level-HS', char(34)
-                   when users.population = 'STU' and users.grade = '09' then '/Prod/Students/Level-HS', char(34)
-                   when users.population = 'STU' and users.grade = '08' then '/Prod/Students/Level-4', char(34)
-                   when users.population = 'STU' and users.grade = '07' then '/Prod/Students/Level-4', char(34)
-                   when users.population = 'STU' and users.grade = '06' then '/Prod/Students/Level-3', char(34)
-                   when users.population = 'STU' and users.grade = '05' then '/Prod/Students/Level-3', char(34)
-                   when users.population = 'STU' and users.grade = '04' then '/Prod/Students/Level-2', char(34)
-                   when users.population = 'STU' and users.grade = '03' then '/Prod/Students/Level-2', char(34)
-                   else 'ERROR' end)
+      , char(34) ,(case when users.population = 'EMP' then '/Prod/Employees/Standard (EMP)'
+                   when users.population = 'STU' and users.grade = '12' then '/Prod/Students/Level-HS'
+                   when users.population = 'STU' and users.grade = '11' then '/Prod/Students/Level-HS'
+                   when users.population = 'STU' and users.grade = '10' then '/Prod/Students/Level-HS'
+                   when users.population = 'STU' and users.grade = '09' then '/Prod/Students/Level-HS'
+                   when users.population = 'STU' and users.grade = '08' then '/Prod/Students/Level-4'
+                   when users.population = 'STU' and users.grade = '07' then '/Prod/Students/Level-4'
+                   when users.population = 'STU' and users.grade = '06' then '/Prod/Students/Level-3'
+                   when users.population = 'STU' and users.grade = '05' then '/Prod/Students/Level-3'
+                   when users.population = 'STU' and users.grade = '04' then '/Prod/Students/Level-2'
+                   when users.population = 'STU' and users.grade = '03' then '/Prod/Students/Level-2'
+                   else 'ERROR' end), char(34)
       , ' externalid organization ', users.unique_id
     ) '# update user info'
   from users
@@ -202,7 +202,6 @@ select concat(
   from users
   where users.school_email != ''
     and users.status = 'ACTIVE'
-    and users.newthisrun = 'Y'
     and users.population = 'STU'
   order by users.population, users.grade, users.school_email;
 
@@ -226,7 +225,6 @@ select concat(
   from users
   where users.school_email != ''
     and users.status = 'ACTIVE'
-    and users.newthisrun = 'Y'
     and users.population = 'STU'
     and users.grade in ('03', '04', '05', '06', '07', '08', '09', '10', '11', '12')
   order by users.population, users.grade, users.school_email;
@@ -381,12 +379,3 @@ select concat(
     and users.newthisrun = 'Y'
     and users.population = 'EMP'
   order by users.population, users.school_email;
-
--- ****************************************************
--- Get school_email field for reimport to AdminPlus
--- ****************************************************
-select unique_id, school_email
-  from users
-  where users.school_email != ''
-    and users.status = 'ACTIVE'
-    and (substring(unique_id,1,3) != 'OTH' or substring(unique_id,1,3) != 'TST');
