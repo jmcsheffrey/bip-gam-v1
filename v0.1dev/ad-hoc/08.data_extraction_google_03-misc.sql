@@ -1,4 +1,5 @@
 -- ****************************************************
+-- Integration for Weekly Update & Parent lists.
 -- NOTE:  Keep order of items for everything.
 -- NOTE:  This is third & misc queries:
 --        1.  parents@sscps.org

@@ -37,6 +37,8 @@ select concat(
     and (users.population = 'EMP'
          or users.grade in ('03', '04', '05', '06', '07', '08', '09', '10', '11', '12', 'LF')
         )
+    -- comment in/out depending if want to update everyone or not
+    and users.newthisrun = 'Y'
   order by users.population, users.status, users.newthisrun, users.grade, users.school_email;
 
 -- add/update groups in Active Directory user
@@ -61,4 +63,6 @@ select concat(
     and (users.population = 'EMP'
          or users.grade in ('03', '04', '05', '06', '07', '08', '09', '10', '11', '12')
         )
+    -- comment in/out depending if want to update everyone or not
+    and users.newthisrun = 'Y'
   order by users.population, users.grade, users.school_email;
