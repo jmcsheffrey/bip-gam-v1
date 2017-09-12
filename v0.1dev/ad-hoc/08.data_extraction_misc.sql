@@ -22,4 +22,6 @@ select concat (homeroom_teacher_first, " ", homeroom_teacher_last) as homeroom
                   else 'ERROR' end) as level
   from users
   where users.grade in ('03', '04', '05', '06', '07', '08', '09', '10', '11', '12')
+    -- comment in/out depending if want to update everyone or not
+    and users.newthisrun = 'Y'
   order by level, homeroom, grade, first_name, last_name
