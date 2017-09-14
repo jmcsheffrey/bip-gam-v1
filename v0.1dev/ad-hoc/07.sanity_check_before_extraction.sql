@@ -79,24 +79,24 @@ select 'ERROR: duplicate user_name.' as error_desc
           group by unique_id) as sumtable
   where count > 1;
 
--------------------------
+-- ======================
 -- SCRIPTS STUDENTS ONLY
--------------------------
+-- ======================
 select 'ERROR:  Missing expected graduation year.' as error_desc, unique_id, current_year_id, first_name, last_name, expected_grad_year
   from users
   where grade in ('09','10','11','12')
     and (expected_grad_year is null or expected_grad_year = '');
 
 
--------------------------
+-- ======================
 -- SCRIPTS EMPLOYEES ONLY
--------------------------
+-- ======================
 
--------------------------
+-- ======================
 -- SCRIPTS FOR GROUPINGS
--------------------------
+-- ======================
 -- no groups should have missing names for courses with teacher/student
---results should be zero
+-- results should be zero
 select 'ERROR:  Missing name from grouping.' as error_desc
     , unique_id, course_id, section_id, current_year, name
   from groupings as g

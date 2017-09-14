@@ -65,3 +65,5 @@ select concat(
   from groupings_users as gu
   inner join users as students on gu.unique_id_user = students.unique_id
   where gu.user_type = 'STU' and gu.status = 'ACTIVE'
+    -- comment in/out depending if want to update everyone or not
+    and students.newthisrun = 'Y'

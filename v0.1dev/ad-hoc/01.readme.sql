@@ -1,4 +1,7 @@
 -- TODO - overall
+--  * I'm starting to think that "business logic" should be in PowerShell or Python code.
+--    So that means output of BIP should be CSVs that have all the information for PowerShell or Python/GAM.
+--    Then PowerShell calls our own "APIs for AD" code and Python calls GAM (for now?).
 --  * need way to track different OU for employees (Standard, Trend Setters, Full Services)
 --  * need to auto populate profile_server (or home folder server) for new 100L users (students & employees)
 --      * this should be "round-robin"

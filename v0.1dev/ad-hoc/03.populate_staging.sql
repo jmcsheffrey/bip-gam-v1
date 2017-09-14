@@ -227,7 +227,7 @@ insert into staging_groupings_users
     null as PKEY
     , import.course_id
     , import.section_id
-    , 'fy17' as current_year
+    , 'fy18' as current_year
     , users.unique_id as person_id
     , 'TCH' as person_population
     , '' as tobe_unique_id
@@ -242,7 +242,7 @@ insert into staging_groupings_users
     null as PKEY
     , import.course_number
     , import.section_number
-    , 'fy17' as current_year
+    , 'fy18' as current_year
     , import.unique_id
     , 'STU' as person_population
     , '' as tobe_unique_id
