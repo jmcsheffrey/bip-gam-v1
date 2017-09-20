@@ -1,0 +1,7 @@
+#!/usr/bin/env python
+mysqlconfig = {'host': 'localhost',
+         'user': 'some_mysql_user',
+         'passwd': 'my secret password',
+         'db': 'some_database'}
+
+gamconfig = {'fullpath': '/home/someuser/bin/gam/gam'}

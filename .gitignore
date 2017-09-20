@@ -1,7 +1,9 @@
-# added for project so no one can get to your domain/data
+# added to not checkin real data, config, etc.
 gam/*
 !gam/README.txt
-
+output/*
+!output/README.txt
+bip_config.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -56,4 +58,3 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
-
