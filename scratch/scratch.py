@@ -12,7 +12,7 @@ import csv        # CSV is used to read output of drive commands that supply dat
 
 ### Variables that are used more for config then processing
 # setup to find GAM
-varCommandGam = "python ./gam/gam.py"
+varCommandGam = "../../bin/gam/gam"
 # setup for MySQLdb connection
 varMySQLHost = "localhost"
 varMySQLUser = "sscpssyncprod"
