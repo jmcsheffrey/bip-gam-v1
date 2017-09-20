@@ -3,6 +3,7 @@ bip_config.py
 output/*
 !output/README.txt
 scratch/*
+gam*
 gam/*
 !gam/README.txt
 
