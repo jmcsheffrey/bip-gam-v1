@@ -5,7 +5,7 @@
 import os
 
 # setup to find GAM
-varCommandGam = "python ./gam/gam.py"
+varCommandGam = "../../bin/gam/gam"
 
 varUserName = "dcostin@sscps.org"
 varFirstName = "Crash"
@@ -38,7 +38,7 @@ varCalendarEmail = "sscps.org_hvj4dnr5jebek8srk9q09l91tc@group.calendar.google.c
 #os.system(varCommandToExecute)
 
 # get list of all users
-varArguments = " user " + varUserName + " add calendar " + varCalendarEmail + " selected true hidden false"
-varCommandToExecute = varCommandGam + varArguments
-print varCommandToExecute
-os.system(varCommandToExecute)
+#varArguments = " user " + varUserName + " add calendar " + varCalendarEmail + " selected true hidden false"
+#varCommandToExecute = varCommandGam + varArguments
+#print varCommandToExecute
+#os.system(varCommandToExecute)

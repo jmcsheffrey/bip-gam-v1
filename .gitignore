@@ -1,9 +1,11 @@
 # added to not checkin real data, config, etc.
-gam/*
-!gam/README.txt
+bip_config.py
 output/*
 !output/README.txt
-bip_config.py
+scratch/*
+gam*
+gam/*
+!gam/README.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
