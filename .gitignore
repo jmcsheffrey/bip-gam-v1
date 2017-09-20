@@ -2,6 +2,7 @@
 gam/*
 !gam/README.txt
 output/*
+!output
 bip_config.py
 
 # Byte-compiled / optimized / DLL files
