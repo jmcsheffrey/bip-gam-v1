@@ -2,6 +2,9 @@
 --  * I'm starting to think that "business logic" should be in PowerShell or Python code.
 --    So that means output of BIP should be CSVs that have all the information for PowerShell or Python/GAM.
 --    Then PowerShell calls our own "APIs for AD" code and Python calls GAM (for now?).
+--  * For inactiving users, should have option to run by date.  Basically grab all users with last modified
+--    date entered or more recent (that is marked INACTIVE of course).
+--  * To be safe, all automated processes should have manual_entry = N
 --  * need way to track different OU for employees (Standard, Trend Setters, Full Services)
 --  * need to auto populate profile_server (or home folder server) for new 100L users (students & employees)
 --      * this should be "round-robin"
@@ -19,6 +22,7 @@
 --  * after import of courses, check for over lapping "pretty names"
 --  * allow homerooms similar to "1107 & 7201" or alter how to ignore or just check for dupes on numbered homerooms
 --  * check for malformed phone numbers
+--  * for dates, check that import is correctly formatted: birthdate (stu & emp), date_of_hire (emp)
 
 -- TODO - 03.populate_staging.sql
 --  * fixup groupings to keep PKEY in staging like other data areas

@@ -50,13 +50,15 @@ update staging_students as stage
 inner join users
 on stage.unique_id = users.unique_id
 set stage.newthisrun = 'N';
+-- update "newthisrun" for new students, assumes that any students with empty stage.newthisrun is new
 update staging_students as stage set stage.newthisrun = 'Y' where stage.newthisrun = '';
 
 -- give emails to students who do not have it
---   NOTE:  this needs to be run until no updates are done
 --   NOTE:  the library software requires all students to have username, so no filtering by grade level
 --   NOTE:  default is 101 to avoid having to enter leading zeros
+-- first, allow crazy groupings queries
 SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
+-- second, run this until no updates are done
 update staging_students as stage
 inner join (select prefix, max(unique_id) as unique_id
             from staging_students_prefix
@@ -120,8 +122,6 @@ update staging_students
 -------------------------
 -- SCRIPTS FOR EMPLOYEES
 -------------------------
--- null missing dates so eaier to update
-update import_employees set birthdate = null where birthdate = '';
 -- remove any employee data from previous runs
 truncate staging_employees;
 -- copy employees
@@ -150,12 +150,14 @@ insert into staging_employees
     , `referred_to_as`
     , `gender`
     , (case when birthdate = '' then NULL
-       else STR_TO_DATE(`birthdate`,'%m/%d/%Y') end)
-    , `date_of_hire`
+       else STR_TO_DATE(`birthdate`,'%m/%d/%Y') end) as birthdate
+    , (case when date_of_hire = '' then NULL
+       else STR_TO_DATE(`date_of_hire`,'%m/%d/%Y') end) as date_of_hire
     , `school_year_hired`
     , position
   from import_employees
   order by last_name, first_name, middle_name;
+
 
 -- update "newthisrun" based on existing records in users table
 update staging_employees as stage
@@ -195,9 +197,11 @@ insert into staging_groupings
     , concat(sections.course_id, '-',sections.section_id,'-','fy18') as unique_id
     , now() as update_date
     , 'ACTIVE' as status
+    , '' as newthisrun
     , 'FY18' as current_year
     , (case
          when courses.display_level = '3' then cohorts.cohort
+         when courses.display_level = '4' then cohorts.cohort
          when substring(sections.schedule,1,1) = 'M' then 'Workshop'
          else concat ('Block ', substring(sections.schedule,1,1))
        end) as time_block
@@ -212,8 +216,15 @@ insert into staging_groupings
   from `import_sections` as sections
   left join import_courses as courses on sections.course_id = courses.num
   left join section_cohorts as cohorts on sections.course_id = cohorts.course_id and sections.section_id = cohorts.section_id
-  where sections.table_name = ''
+  where sections.table_name = '' and courses.ignore_for_sync != 'Y' and (substr(import.name,length(import.name),1) != '!')
   order by concat(sections.course_id, '-',sections.section_id,'-','fy18');
+
+-- update "newthisrun" based on existing records in groupings table
+update staging_groupings as stage
+inner join groupings
+on stage.unique_id = groupings.unique_id
+set stage.newthisrun = 'N';
+update staging_groupings as stage set stage.newthisrun = 'Y' where stage.newthisrun = '';
 
 -------------------------------
 -- SCRIPTS FOR GROUPINGS_USERS
@@ -231,6 +242,7 @@ insert into staging_groupings_users
     , users.unique_id as person_id
     , 'TCH' as person_population
     , '' as tobe_unique_id
+    , '' as newthisrun
   from import_sections as import
   left join users on import.teacher_id = users.current_year_id
   where import.table_name = ''
@@ -246,7 +258,14 @@ insert into staging_groupings_users
     , import.unique_id
     , 'STU' as person_population
     , '' as tobe_unique_id
+    , '' as newthisrun
   from import_schedules as import
   order by import.course_number, import.section_number;
 -- set the unique_id to used
 update staging_groupings_users as stage set tobe_unique_id = concat(stage.course_id, '-',stage.section_id,'-','fy18');
+-- update "newthisrun" based on existing records in groupings_users table
+update staging_groupings_users as stage
+inner join groupings_users
+on stage.person_id = groupings_users.unique_id_user and stage.tobe_unique_id = groupings_users.unique_id_grouping
+set stage.newthisrun = 'N';
+update staging_groupings_users as stage set stage.newthisrun = 'Y' where stage.newthisrun = '';

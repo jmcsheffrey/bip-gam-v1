@@ -241,11 +241,16 @@ update users
 -- be sure to adjust current_year for the current year running
 -- mark all prior years courses inactive
 update groupings set status = 'INACTIVE' where current_year != 'FY18';
+-- mark all existing records as not "newthisrun"
+update groupings
+  set update_date = now(),
+    newthisrun = 'N'
 -- insert new groupings
 insert into groupings
   select sections.unique_id
     , now() as update_date
     , sections.status
+    , sections.newthisrun
     , sections.current_year
     , sections.time_block
     , sections.level
@@ -263,6 +268,7 @@ insert into groupings
 update groupings
   left join staging_groupings as stage on groupings.unique_id = stage.unique_id
   set groupings.status = stage.status
+    , groupings.newthisrun = stage.newthisrun
     , groupings.current_year = stage.current_year
     , groupings.time_block = stage.time_block
     , groupings.level = stage.level
@@ -284,6 +290,10 @@ update groupings_users as gu
   left join groupings as g on gu.unique_id_grouping = g.unique_id
   set gu.status = 'INACTIVE'
   where g.current_year != 'FY18';
+-- mark all existing records as not "newthisrun"
+update groupings_users
+  set update_date = now(),
+    newthisrun = 'N'
 -- insert new schedules
 insert into groupings_users
   select

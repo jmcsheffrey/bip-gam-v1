@@ -45,7 +45,7 @@ select 'ERROR:  Malformed homeroom.'  as error_desc, unique_id, APID, full_name,
 
 -- check for people in users and in import, but don't have emails in import, but do in users
 -- results should be zero
-select 'ERROR:  School email in USERS table, but not in IMPORT_ table.'  as error_desc,
+select 'WARNING:  School email in USERS table, but not in IMPORT_ table. Was reimport to AdminPlus completed?'  as error_desc,
   users.unique_id, users.first_name, users.last_name, users.school_email as existing_email, import.school_email as new_email
 from import_students as import
 inner join users on import.unique_id = users.unique_id
@@ -151,9 +151,9 @@ select  'WARNING:  Name may cause problems with login or email.'  as error_desc,
     and import.status != 'INACTIVE';
 
 -- check for bad phone numbers, format is ###-###-####
--- results shoudl be zero
-select 'ERROR:  PHONE_HOME field is malformed.' as error_desc,
-    import.PKEY
+-- results should be zero
+select 'ERROR:  PHONE_HOME field is malformed.' as error_desc
+    , import.PKEY
     , import.APID
     , import.unique_id
     , import.full_name
@@ -161,8 +161,8 @@ select 'ERROR:  PHONE_HOME field is malformed.' as error_desc,
   from import_employees as import
   where import.phone_home not REGEXP '[0-9]{3}-[0-9]{3}-[0-9]{4}'
     and import.phone_home != "";
-select 'ERROR:  PHONE_CELL field is malformed.' as error_desc,
-    import.PKEY
+select 'ERROR:  PHONE_CELL field is malformed.' as error_desc
+    , import.PKEY
     , import.APID
     , import.unique_id
     , import.full_name
@@ -174,7 +174,27 @@ select 'ERROR:  PHONE_CELL field is malformed.' as error_desc,
 -------------------------
 -- SCRIPTS FOR GROUPINGS
 -------------------------
--- no courses with something scheduled should be missing display_name
---results should be zero
-select 'ERROR: missing course name.' as error_desc
-    , import_courses.name, 
+-- every section should have an entry in course list
+-- results should be zero
+select 'ERROR:  Course in import_schedules is not in import_courses.' as error_desc
+    , import.course_id, import.course_name
+from import_sections as import
+where course_id not in (select num from import_courses)
+
+-- any scheduled course should have an entry in course list
+-- results should be zero
+select 'ERROR:  Course in import_schedules is not in import_courses.' as error_desc
+    , import.course_number, import.course_name
+from import_schedules as import
+where course_number not in (select num from import_courses)
+
+-- every scheduled course should have a display_name in course list
+-- results should be zero
+select 'ERROR:  Course in import_schedules does not have display_name in import_courses.' as error_desc
+    , import.course_number, import.course_name
+from import_schedules as import
+left join import_courses as courses
+  on import.course_number = courses.num
+where import.ignore_for_sync != 'Y'
+  and (courses.display_name is null or courses.display_name = '')
+group by import.course_number

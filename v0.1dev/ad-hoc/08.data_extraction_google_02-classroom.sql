@@ -17,7 +17,7 @@ update groupings
 -- archive appropriate classrooms
 -- gam update course <alias> status ARCHIVED
 select concat(
-      '../bin/gam/gam'
+      '../../bin/gam/gam'
       , ' update course ', g.unique_id
       , ' status ARCHIVED'
     ) as '# archive classrooms'
@@ -33,7 +33,7 @@ select concat(
 -- create classrooms; teacher must be set so admin user is not added by default
 -- gam create course [alias <alias>] [name <name>] [section <section>] teacher <teacher email> status ACTIVE
 select concat(
-      '../bin/gam/gam create course'
+      '../../bin/gam/gam create course'
       , ' alias ', g.unique_id
       , ' teacher ', teachers.school_email
       , ' name ', char(34), concat(g.name, ' - ', g.time_block, ' (', (case
@@ -58,7 +58,7 @@ select concat(
 -- assign students to Classrooms
 -- gam course <alias> add student <email address>
 select concat(
-      '../bin/gam/gam course'
+      '../../bin/gam/gam course'
       , ' ', gu.unique_id_grouping
       , ' add student ', students.school_email
     ) as '# assign classrooms to students'
