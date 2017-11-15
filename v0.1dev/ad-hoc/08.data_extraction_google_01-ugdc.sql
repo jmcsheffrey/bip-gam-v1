@@ -145,9 +145,9 @@ select concat(
   from users
   where users.school_email != ''
     and users.status = 'ACTIVE'
-    and users.population = 'STU'
     -- comment in/out depending if want to update everyone or not
     and users.newthisrun = 'Y'
+    and users.grade in ('03', '04', '05', '06', '07', '08', '09', '10', '11', '12')
   order by users.population, users.grade, users.school_email;
 
 -- make sure students_<level>@student.ssscps.org are populated correctly

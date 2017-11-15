@@ -99,7 +99,7 @@ select concat(
 ../../bin/gam/gam update group parents@sscps.org add owner asavage@sscps.org
 ../../bin/gam/gam update group parents@sscps.org add owner mtondorf@sscps.org
 ../../bin/gam/gam update group parents@sscps.org add member rdegennaro@sscps.org
-../../bin/gam/gam update group parents@sscps.org add member palgera@sscps.org
+../../bin/gam/gam update group parents@sscps.org add owner palgera@sscps.org
 -- now run the SQL below
 select concat(
       '../../bin/gam/gam update'
@@ -121,7 +121,7 @@ select concat(
 ../../bin/gam/gam update group parents_level1@sscps.org add owner asavage@sscps.org
 ../../bin/gam/gam update group parents_level1@sscps.org add owner mtondorf@sscps.org
 ../../bin/gam/gam update group parents_level1@sscps.org add member rdegennaro@sscps.org
-../../bin/gam/gam update group parents_level1@sscps.org add member palgera@sscps.org
+../../bin/gam/gam update group parents_level1@sscps.org add owner palgera@sscps.org
 -- now run the SQL below, level 1 parents
 select concat(
       '../../bin/gam/gam update'
@@ -140,7 +140,7 @@ select concat(
 ../../bin/gam/gam update group parents_level2@sscps.org add owner asavage@sscps.org
 ../../bin/gam/gam update group parents_level2@sscps.org add owner mtondorf@sscps.org
 ../../bin/gam/gam update group parents_level2@sscps.org add member rdegennaro@sscps.org
-../../bin/gam/gam update group parents_level2@sscps.org add member palgera@sscps.org
+../../bin/gam/gam update group parents_level2@sscps.org add owner palgera@sscps.org
 -- now run the SQL below, level 2 parents
 select concat(
       '../../bin/gam/gam update'
@@ -159,7 +159,7 @@ select concat(
 ../../bin/gam/gam update group parents_level3@sscps.org add owner asavage@sscps.org
 ../../bin/gam/gam update group parents_level3@sscps.org add owner mtondorf@sscps.org
 ../../bin/gam/gam update group parents_level3@sscps.org add member rdegennaro@sscps.org
-../../bin/gam/gam update group parents_level3@sscps.org add member palgera@sscps.org
+../../bin/gam/gam update group parents_level3@sscps.org add owner palgera@sscps.org
 -- now run the SQL below, level 3 parents
 select concat(
       '../../bin/gam/gam update'
@@ -178,7 +178,7 @@ select concat(
 ../../bin/gam/gam update group parents_level4@sscps.org add owner asavage@sscps.org
 ../../bin/gam/gam update group parents_level4@sscps.org add owner mtondorf@sscps.org
 ../../bin/gam/gam update group parents_level4@sscps.org add member rdegennaro@sscps.org
-../../bin/gam/gam update group parents_level4@sscps.org add member palgera@sscps.org
+../../bin/gam/gam update group parents_level4@sscps.org add owner palgera@sscps.org
 -- now run the SQL below, level 4 parents
 select concat(
       '../../bin/gam/gam update'
@@ -197,7 +197,7 @@ select concat(
 ../../bin/gam/gam update group parents_highschool@sscps.org add owner asavage@sscps.org
 ../../bin/gam/gam update group parents_highschool@sscps.org add owner mtondorf@sscps.org
 ../../bin/gam/gam update group parents_highschool@sscps.org add member rdegennaro@sscps.org
-../../bin/gam/gam update group parents_highschool@sscps.org add member palgera@sscps.org
+../../bin/gam/gam update group parents_highschool@sscps.org add owner palgera@sscps.org
 -- now run the SQL below, highschool parents
 select concat(
       '../../bin/gam/gam update'

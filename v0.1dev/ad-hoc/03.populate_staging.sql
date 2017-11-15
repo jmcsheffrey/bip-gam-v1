@@ -4,9 +4,9 @@
 -- don't ever empty import_ tables until process is done, only do it when importing
 -- stuff below is for "down & dirty" direct workings on the database
 
-------------------------
+-- ***********************************************************
 -- SCRIPTS FOR STUDENTS
-------------------------
+-- ***********************************************************
 -- remove any student data from previous runs
 truncate staging_students;
 -- copy students
@@ -38,7 +38,9 @@ insert into staging_students
     , `referred_to_as`
     , `gender`
     , (case when birthdate = '' then NULL
-       else STR_TO_DATE(`birthdate`,'%m/%d/%Y') end)
+       when instr(`birthdate`,'-') > 0 then STR_TO_DATE(`birthdate`,'%m-%d-%Y')
+       when instr(`birthdate`,'/') > 0 then STR_TO_DATE(`birthdate`,'%m/%d/%Y')
+       else STR_TO_DATE(`birthdate`,'%m-%d-%Y') end)
     , entry_date
   from import_students as import
   -- below is commented out because library & sendwordnow needs all students
@@ -56,7 +58,7 @@ update staging_students as stage set stage.newthisrun = 'Y' where stage.newthisr
 -- give emails to students who do not have it
 --   NOTE:  the library software requires all students to have username, so no filtering by grade level
 --   NOTE:  default is 101 to avoid having to enter leading zeros
--- first, allow crazy groupings queries
+-- even though set in 01.preimport.sql, set allowing crazy groupings queries
 SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
 -- second, run this until no updates are done
 update staging_students as stage
@@ -119,9 +121,9 @@ update staging_students
   set school_email = null
   where school_email = '';
 
--------------------------
+-- ***********************************************************
 -- SCRIPTS FOR EMPLOYEES
--------------------------
+-- ***********************************************************
 -- remove any employee data from previous runs
 truncate staging_employees;
 -- copy employees
@@ -150,9 +152,13 @@ insert into staging_employees
     , `referred_to_as`
     , `gender`
     , (case when birthdate = '' then NULL
-       else STR_TO_DATE(`birthdate`,'%m/%d/%Y') end) as birthdate
+       when instr(`birthdate`,'-') > 0 then STR_TO_DATE(`birthdate`,'%m-%d-%Y')
+       when instr(`birthdate`,'/') > 0 then STR_TO_DATE(`birthdate`,'%m/%d/%Y')
+       else STR_TO_DATE(`birthdate`,'%m-%d-%Y') end) as birthdate
     , (case when date_of_hire = '' then NULL
-       else STR_TO_DATE(`date_of_hire`,'%m/%d/%Y') end) as date_of_hire
+       when instr(`date_of_hire`,'-') > 0 then STR_TO_DATE(`date_of_hire`,'%m-%d-%Y')
+       when instr(`date_of_hire`,'/') > 0 then STR_TO_DATE(`date_of_hire`,'%m/%d/%Y')
+       else STR_TO_DATE(`date_of_hire`,'%m-%d-%Y') end) as date_of_hire
     , `school_year_hired`
     , position
   from import_employees
@@ -185,9 +191,9 @@ update staging_employees
   set school_email = null
   where school_email = '';
 
--------------------------
+-- ***********************************************************
 -- SCRIPTS FOR GROUPINGS
--------------------------
+-- ***********************************************************
 -- NOTE: need to update "fy##" each year
 -- TODO: remove groupings data from previous runs
 truncate staging_groupings;
@@ -213,10 +219,10 @@ insert into staging_groupings
     , '' as email_students
     , '' as folder_teachers
     , '' as google_id
-  from `import_sections` as sections
+  from import_sections as sections
   left join import_courses as courses on sections.course_id = courses.num
   left join section_cohorts as cohorts on sections.course_id = cohorts.course_id and sections.section_id = cohorts.section_id
-  where sections.table_name = '' and courses.ignore_for_sync != 'Y' and (substr(import.name,length(import.name),1) != '!')
+  where sections.table_name = '' and courses.ignore_for_sync != 'Y' and (substr(courses.name,length(courses.name),1) != '!')
   order by concat(sections.course_id, '-',sections.section_id,'-','fy18');
 
 -- update "newthisrun" based on existing records in groupings table

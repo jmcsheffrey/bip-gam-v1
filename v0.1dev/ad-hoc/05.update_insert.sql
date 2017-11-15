@@ -236,7 +236,7 @@ update users
     users.unique_id = stage.unique_id;
 
 -- ****************************************************
--- Populate groupings for Google Classrooms
+-- Populate groupings for GClassroom, schoology, etc.
 -- ****************************************************
 -- be sure to adjust current_year for the current year running
 -- mark all prior years courses inactive

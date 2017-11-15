@@ -60,7 +60,7 @@ CREATE TABLE `import_students` (
  `zipcode` varchar(250) DEFAULT NULL,
  `grade` varchar(2) DEFAULT NULL,
  `expected_grad_year` varchar(4) DEFAULT NULL,
- `homeroom` varchar(3) DEFAULT NULL,
+ `homeroom` varchar(250) DEFAULT NULL,
  `homeroom_teacher_first` varchar(50) DEFAULT NULL,
  `homeroom_teacher_last` varchar(50) DEFAULT NULL,
  `referred_to_as` varchar(50) DEFAULT NULL,
