@@ -339,7 +339,7 @@ select
   from import_contacts as import
   inner join users on import.APID = users.current_year_id
   where users.status = 'ACTIVE'
-    and import.NOTIFY_OFFICE = 'Y'
+    and import.CALL_OFFICE = 'Y'
 union
 select
     import.APID
@@ -553,6 +553,7 @@ CREATE TABLE `staging_groupings_users` (
 CREATE TABLE `groupings_users` (
  `unique_id_grouping` varchar(250) NOT NULL,
  `unique_id_user` varchar(8) NOT NULL,
+ `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
  `user_type` varchar(3) NOT NULL,
  `status` varchar(8) NOT NULL,
  `newthisrun` varchar(1) NOT NULL,

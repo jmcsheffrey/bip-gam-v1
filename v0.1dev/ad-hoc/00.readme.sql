@@ -1,4 +1,5 @@
 -- TODO - overall
+--  * When marking things INACTIVE, do set records already INACTIVE so timestamp isn't messed up.
 --  * I'm starting to think that "business logic" should be in PowerShell or Python code.
 --    So that means output of BIP should be CSVs that have all the information for PowerShell or Python/GAM.
 --    Then PowerShell calls our own "APIs for AD" code and Python calls GAM (for now?).

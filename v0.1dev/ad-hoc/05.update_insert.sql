@@ -243,8 +243,8 @@ update users
 update groupings set status = 'INACTIVE' where current_year != 'FY18';
 -- mark all existing records as not "newthisrun"
 update groupings
-  set update_date = now(),
-    newthisrun = 'N'
+  set update_date = now()
+    , newthisrun = 'N'
 -- insert new groupings
 insert into groupings
   select sections.unique_id
@@ -292,15 +292,17 @@ update groupings_users as gu
   where g.current_year != 'FY18';
 -- mark all existing records as not "newthisrun"
 update groupings_users
-  set update_date = now(),
-    newthisrun = 'N'
+  set update_date = now()
+    , newthisrun = 'N'
 -- insert new schedules
 insert into groupings_users
   select
     stage.tobe_unique_id as unique_id_grouping
     , stage.person_id as unique_id_user
+    , now() as update_date
     , stage.person_population as user_type
     , 'ACTIVE' as status
+    , 'Y' as newthisrun
   from staging_groupings_users as stage
   left join groupings_users as gu on stage.tobe_unique_id = gu.unique_id_grouping
     and stage.person_id = gu.unique_id_user
@@ -310,11 +312,13 @@ insert into groupings_users
 --    1) automatically mark last year schedules as INACTIVE
 --    2) any removals are kept track of
 update groupings_users as gu
-  left join staging_groupings_users as stage on stage.tobe_unique_id = gu.unique_id_grouping and stage.person_id = gu.unique_id_user
+  left join staging_groupings_users as stage
+    on stage.tobe_unique_id = gu.unique_id_grouping and stage.person_id = gu.unique_id_user
   set gu.status = 'INACTIVE'
   where stage.tobe_unique_id is null and stage.person_id is null;
 -- now update rows in case someone was added, removed and added back
 update groupings_users as gu
-  inner join staging_groupings_users as stage on stage.tobe_unique_id = gu.unique_id_grouping and stage.person_id = gu.unique_id_user
+  inner join staging_groupings_users as stage
+    on stage.tobe_unique_id = gu.unique_id_grouping and stage.person_id = gu.unique_id_user
   set gu.user_type = stage.person_population
     , gu.status = 'ACTIVE';
