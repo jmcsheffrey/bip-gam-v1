@@ -5,7 +5,7 @@
 
 
 -- For "Student Login List" Google Spreadsheets in SSCPS-GroupDocs.
---order for each cut & paste
+-- order for each cut & paste
 select concat (homeroom_teacher_first, " ", homeroom_teacher_last) as homeroom
     , grade, first_name, last_name, user_name, school_email
     , (case when users.population = 'EMP' then '/Prod/Employees/Standard (EMP)'
@@ -21,7 +21,8 @@ select concat (homeroom_teacher_first, " ", homeroom_teacher_last) as homeroom
                   when users.population = 'STU' and users.grade = '03' then 'Level 2'
                   else 'ERROR' end) as level
   from users
-  where users.grade in ('03', '04', '05', '06', '07', '08', '09', '10', '11', '12')
-    -- comment in/out depending if want to update everyone or not
+  where (users.population = 'EMP' or users.population = 'STU')
+    -- comment in/out each line depending who you want
+    and users.grade in ('03', '04', '05', '06', '07', '08', '09', '10', '11', '12')
     and users.newthisrun = 'Y'
   order by level, homeroom, grade, first_name, last_name

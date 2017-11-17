@@ -3,7 +3,7 @@
 # search & replace on <put email here>, <put firstname here> and <put lastname here>
 
 # create the user's Google account
-../bin/gam/gam create user <put email here> firstname <put firstname here> lastname <put lastname here> password sscps123 changepassword on org /Prod/Users-Normal/Employees externalid organization 99999895
+../bin/gam/gam create user <put email here> firstname <put firstname here> lastname <put lastname here> password <changemenow> changepassword on org '/Prod/Students/<put Level OU here' externalid organization <changemenow>
 
 # add account to groups (uncomment and/or modify as necessary)
 ../bin/gam/gam update group student@student.sscps.org add member <put email here>

@@ -26,16 +26,12 @@ select 'ERROR:  User exists with no school_email.'  as error_desc
 
 -- no users should exist as ACTIVE without current_year_id (bad for groupings)
 -- results should be zero
-select 'ERROR:  User exists with current_year_id.'  as error_desc
+select 'ERROR:  User exists without current_year_id.'  as error_desc
     , unique_id, first_name, last_name, current_year_id
   from users where status = 'ACTIVE'
     and population in ('EMP', 'STU')
-    and current_year_id = '';
-select 'ERROR:  User exists with current_year_id.'  as error_desc
-    , unique_id, first_name, last_name, current_year_id
-  from users where status = 'ACTIVE'
-    and population in ('EMP', 'STU')
-    and current_year_id is null;
+    and not (left(unique_id,3) = 'OTH' or left(unique_id,3) = 'TST')
+    and (current_year_id = '' or current_year_id is null);
 
 -- all users who are employees or students in grade 3 or above should have an email
 -- results should be zero

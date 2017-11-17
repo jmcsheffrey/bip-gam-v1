@@ -35,8 +35,10 @@ select import.contact_household_id as unique_id
     , '' as "Phone 2 Cascade"
     , 'Office Phone' as "Phone 3 Label"
     , '1' as "Phone 3 Country Code"
-    , import.officephone as "Phone 3"
-    , import.officephoneextension as "Phone 3 Extension"
+    , (case when import.CALL_OFFICE = 'Y' then import.officephone
+                  else '' end) as "Phone 3"
+    , (case when import.CALL_OFFICE = 'Y' then import.officephoneextension
+                  else '' end) as "Phone 3 Extension"
     , '' as "Phone 3 Cascade"
   from import_contacts as import
   inner join users on import.APID = users.current_year_id
@@ -120,8 +122,10 @@ select import.CONTACT_GUID as unique_id
     , '' as "Phone 2 Cascade"
     , 'Office Phone' as "Phone 3 Label"
     , '1' as "Phone 3 Country Code"
-    , import.officephone as "Phone 3"
-    , import.officephoneextension as "Phone 3 Extension"
+    , (case when import.CALL_OFFICE = 'Y' then import.officephone
+                  else '' end) as "Phone 3"
+    , (case when import.CALL_OFFICE = 'Y' then import.officephoneextension
+                  else '' end) as "Phone 3 Extension"
     , '' as "Phone 3 Cascade"
   from import_contacts as import
   inner join users on import.APID = users.current_year_id

@@ -80,7 +80,7 @@ select concat(
     , char(59)) as sql_output
   from users
   left join import_contacts as contacts on users.current_year_id = contacts.APID and contacts.PRIMARY_CONTACT = "Y"
-  where status = 'ACTIVE' and (population = 'STU' or population = 'EMP')
+  where status = 'ACTIVE' and (population = 'STU' or population = 'EMP') and current_year_id is not NULL
   order by population DESC, user_name
 
 -- for import enrollement, which is just Homerooms (Roll Groups in Gibbon terms)

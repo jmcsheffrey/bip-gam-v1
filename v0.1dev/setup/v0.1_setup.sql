@@ -60,7 +60,7 @@ CREATE TABLE `import_students` (
  `zipcode` varchar(250) DEFAULT NULL,
  `grade` varchar(2) DEFAULT NULL,
  `expected_grad_year` varchar(4) DEFAULT NULL,
- `homeroom` varchar(3) DEFAULT NULL,
+ `homeroom` varchar(250) DEFAULT NULL,
  `homeroom_teacher_first` varchar(50) DEFAULT NULL,
  `homeroom_teacher_last` varchar(50) DEFAULT NULL,
  `referred_to_as` varchar(50) DEFAULT NULL,
@@ -216,8 +216,8 @@ CREATE TABLE `import_employees` (
  `homeroom` varchar(250) DEFAULT NULL,
  `referred_to_as` varchar(50) DEFAULT NULL,
  `gender` varchar(1) DEFAULT NULL,
- `birthdate` varchar(10) DEFAULT NULL,
- `date_of_hire` varchar(10) DEFAULT NULL,
+ `birthdate` varchar(250) DEFAULT NULL,
+ `date_of_hire` varchar(250) DEFAULT NULL,
  `school_year_hired` varchar(6) DEFAULT NULL,
  `position` varchar(100) DEFAULT NULL,
  PRIMARY KEY (`PKEY`),
@@ -339,7 +339,7 @@ select
   from import_contacts as import
   inner join users on import.APID = users.current_year_id
   where users.status = 'ACTIVE'
-    and import.NOTIFY_OFFICE = 'Y'
+    and import.CALL_OFFICE = 'Y'
 union
 select
     import.APID
@@ -469,8 +469,8 @@ CREATE TABLE `import_schedules` (
  `room_number` varchar(254) NOT NULL,
  `min_grade` varchar(254) NOT NULL,
  `max_grade` varchar(254) NOT NULL,
- `size_best` int(11) NOT NULL,
- `size_current` int(11) NOT NULL,
+ `size_best` varchar(254) NOT NULL,
+ `size_current` varchar(254) NOT NULL,
  `locked` varchar(3) NOT NULL,
  `sectionx_record_num` varchar(254) NOT NULL,
  `long_description` varchar(254) NOT NULL,
@@ -496,6 +496,7 @@ CREATE TABLE `staging_groupings` (
  `unique_id` varchar(250) NOT NULL,
  `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
  `status` varchar(10) NOT NULL,
+ `newthisrun` varchar(1) NOT NULL,
  `current_year` varchar(4) NOT NULL,
  `time_block` varchar(12) NOT NULL,
  `level` varchar(2) NOT NULL,
@@ -513,6 +514,7 @@ CREATE TABLE `groupings` (
  `unique_id` varchar(250) NOT NULL,
  `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
  `status` varchar(10) NOT NULL,
+ `newthisrun` varchar(1) NOT NULL,
  `current_year` varchar(4) NOT NULL,
  `time_block` varchar(8) NOT NULL,
  `level` varchar(2) NOT NULL,
@@ -544,13 +546,16 @@ CREATE TABLE `staging_groupings_users` (
  `person_id` varchar(8) CHARACTER SET utf8 NOT NULL,
  `person_population` varchar(250) CHARACTER SET utf8 NOT NULL,
  `tobe_unique_id` varchar(250) CHARACTER SET utf8 NOT NULL,
+ `newthisrun` varchar(1) NOT NULL,
  PRIMARY KEY (`PKEY`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
 CREATE TABLE `groupings_users` (
  `unique_id_grouping` varchar(250) NOT NULL,
  `unique_id_user` varchar(8) NOT NULL,
+ `update_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
  `user_type` varchar(3) NOT NULL,
  `status` varchar(8) NOT NULL,
+ `newthisrun` varchar(1) NOT NULL,
  PRIMARY KEY (`unique_id_grouping`,`unique_id_user`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8

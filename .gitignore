@@ -1,5 +1,7 @@
 # added to not checkin real data, config, etc.
 bip_config.py
+input/*
+!input/README.txt
 output/*
 !output/README.txt
 scratch/*

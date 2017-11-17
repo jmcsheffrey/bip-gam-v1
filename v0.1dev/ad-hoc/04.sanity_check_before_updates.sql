@@ -67,6 +67,14 @@ select 'ERROR:  Malformed existing school_email.'  as error_desc
   from staging_students
   where school_email not like '%_@_%._%' and school_email != '' and school_email is not null;
 
+-- newthisrun field needs to be either Y|N
+-- results should be zero
+select 'ERROR:  The field newthisrun should be defined Y|N.'  as error_desc
+    , unique_id, full_name, newthisrun
+  from staging_students
+  where newthisrun != 'Y' and newthisrun != 'N';
+
+
 -- double/triple/quadruple check for conflicting fields that are supposed to be unique
 -- results should be zero
 select 'ERROR: duplicate unique_id.' as error_desc
@@ -131,6 +139,13 @@ select 'ERROR:  Malformed school_email field.'  as error_desc
   from staging_employees
   where school_email not like '%_@_%._%' and school_email != '' and school_email is not null;
 
+-- newthisrun field needs to be either Y|N
+-- results should be zero
+select 'ERROR:  The field newthisrun should be defined Y|N.'  as error_desc
+    , unique_id, full_name, newthisrun
+  from staging_employees
+  where newthisrun != 'Y' and newthisrun != 'N';
+
 -- double/triple/quadruple check for conflicting fields that are supposed to be unique
 -- results should be zero
 select 'ERROR: duplicate unique_id.' as error_desc
@@ -145,3 +160,21 @@ select 'ERROR: duplicate school_email.' as error_desc
           from staging_employees
           group by unique_id) as sumtable
   where count > 1;
+
+
+-------------------------
+-- SCRIPTS FOR GROUPINGS
+-------------------------
+-- newthisrun field needs to be either Y|N
+-- results should be zero
+select 'ERROR:  The field newthisrun should be defined Y|N.'  as error_desc
+    , unique_id, name, newthisrun
+  from staging_groupings
+  where newthisrun != 'Y' and newthisrun != 'N';
+
+-- no courses with something scheduled should be missing display_name
+--results should be zero
+select 'ERROR: missing course name.' as error_desc, import.name, import.display_name, import.ignore_for_sync
+  from import_courses as import
+  where ((import.ignore_for_sync != 'Y') and (substr(import.name,length(import.name),1) != '!'))
+    and (import.display_name is null or import.display_name = '')
